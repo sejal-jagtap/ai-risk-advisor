@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>AI Risk Advisor</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Public+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F3F5FC;
+            --sf: #fff;
+            --ink: #0E1330;
+            --mu: #566086;
+            --ln: #DCE1F2;
+            --nv: #00009C;
+            --am: #9A6204;
+            --amb: #F5B83D;
+            --hi: #B3463F;
+            --lo: #2F7D57;
+            --ti: #ECEFFC;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        html {
+            color-scheme: light;
+            scroll-padding-top: env(safe-area-inset-top, 0px)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font: 15px/1.6 "Public Sans", system-ui, sans-serif;
+            background: #00009C radial-gradient(900px 520px at 88% -8%, #2D2DD8 0%, transparent 62%) no-repeat
+        }
+
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 34px 22px 48px
+        }
+
+        .brand {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 40px
+        }
+
+        .brand i {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--amb);
+            box-shadow: inset 0 0 0 5px #00009C, 0 0 0 2px var(--amb)
+        }
+
+        header {
+            margin-bottom: 34px;
+            max-width: 780px
+        }
+
+        h1 {
+            font: 700 clamp(36px, 6vw, 62px)/1.04 Newsreader, Georgia, serif;
+            margin: 0 0 16px;
+            color: #fff;
+            letter-spacing: -.5px
+        }
+
+        header p {
+            margin: 0;
+            max-width: 58ch;
+            color: #D6DCFF;
+            font-size: 17px
+        }
+
+        .kbtag {
+            display: inline-block;
+            margin: 0 0 18px;
+            font-size: 12.5px;
+            color: #fff;
+            background: rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .3);
+            border-radius: 20px;
+            padding: 4px 12px
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 22px;
+            align-items: start
+        }
+
+        @media(max-width:860px) {
+            main {
+                grid-template-columns: 1fr
+            }
+
+            .panel.f {
+                position: static
+            }
+        }
+
+        .panel {
+            background: var(--sf);
+            border-radius: 16px;
+            padding: 26px;
+            box-shadow: 0 22px 50px -20px rgba(0, 0, 40, .6)
+        }
+
+        .panel.f {
+            position: sticky;
+            top: 18px
+        }
+
+        h2 {
+            font: 700 23px Newsreader, Georgia, serif;
+            margin: 0 0 14px;
+            color: var(--nv)
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            margin: 18px 0 7px
+        }
+
+        label:first-of-type {
+            margin-top: 0
+        }
+
+        textarea,
+        select {
+            width: 100%;
+            font: inherit;
+            color: var(--ink);
+            background: var(--bg);
+            border: 1.5px solid transparent;
+            border-radius: 10px;
+            padding: 11px 12px;
+            transition: border-color .15s, background .15s
+        }
+
+        textarea {
+            resize: vertical
+        }
+
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--nv);
+            background: #fff
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--amb);
+            outline-offset: 2px
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+
+        .chips button,
+        .presets button {
+            font: inherit;
+            font-size: 13px;
+            color: var(--ink);
+            background: var(--bg);
+            border: 1.5px solid var(--ln);
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: all .15s
+        }
+
+        .chips button:hover,
+        .presets button:hover {
+            border-color: var(--nv)
+        }
+
+        .chips button[aria-pressed=true] {
+            background: var(--nv);
+            color: #fff;
+            border-color: var(--nv)
+        }
+
+        .presets {
+            font-size: 13px;
+            color: var(--mu);
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--ln);
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .primary {
+            width: 100%;
+            margin-top: 22px;
+            font: 600 16px "Public Sans", sans-serif;
+            background: var(--nv);
+            color: #fff;
+            border: 0;
+            border-radius: 10px;
+            padding: 14px;
+            cursor: pointer;
+            transition: transform .12s;
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 156, .7)
+        }
+
+        .primary:hover {
+            transform: translateY(-1px)
+        }
+
+        .primary:disabled {
+            opacity: .6;
+            cursor: wait;
+            transform: none
+        }
+
+        .note {
+            font-size: 13px;
+            color: var(--mu);
+            margin: 10px 0 0
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 4px;
+            margin: 0 0 20px;
+            width: fit-content;
+            max-width: 100%;
+            flex-wrap: wrap
+        }
+
+        .tabs button {
+            font: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--mu);
+            background: none;
+            border: 0;
+            border-radius: 7px;
+            padding: 8px 16px;
+            cursor: pointer
+        }
+
+        .tabs button[aria-selected=true] {
+            background: #fff;
+            color: var(--nv);
+            box-shadow: 0 1px 4px rgba(0, 0, 60, .18)
+        }
+
+        .ledger {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 16px 0
+        }
+
+        .cell {
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: var(--nv);
+            color: #D6DCFF;
+            font-size: 13px
+        }
+
+        .cell b {
+            font: 700 34px/1 Newsreader, serif;
+            display: block;
+            color: #fff;
+            margin-bottom: 4px
+        }
+
+        .cell.z {
+            background: var(--ti);
+            color: var(--mu)
+        }
+
+        .cell.z b {
+            color: #9AA2C8
+        }
+
+        @media(max-width:560px) {
+            .ledger {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        .banner {
+            border-radius: 12px;
+            background: #FFF4DB;
+            border: 1px solid #F0D28A;
+            padding: 12px 16px;
+            margin: 0 0 16px;
+            font-size: 14px;
+            color: #5A3D00
+        }
+
+        .risk {
+            border: 1px solid var(--ln);
+            border-left: 6px solid var(--am);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            background: #fff
+        }
+
+        .risk.high {
+            border-left-color: var(--hi)
+        }
+
+        .risk.low {
+            border-left-color: var(--lo)
+        }
+
+        .risk.ok {
+            opacity: .65
+        }
+
+        .risk h3 {
+            font: 700 21px Newsreader, Georgia, serif;
+            margin: 6px 0 6px;
+            color: var(--ink)
+        }
+
+        .meta {
+            font-size: 12.5px;
+            color: var(--mu);
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .tag {
+            background: var(--ti);
+            border-radius: 999px;
+            padding: 1px 10px
+        }
+
+        .tag.rv {
+            background: #FFF4DB;
+            color: #7A4B00;
+            font-weight: 600
+        }
+
+        .risk p {
+            margin: 6px 0
+        }
+
+        .fix {
+            background: var(--ti);
+            border-radius: 8px;
+            padding: 10px 12px
+        }
+
+        .src a {
+            display: inline-block;
+            color: var(--nv);
+            border: 1px solid var(--ln);
+            border-radius: 999px;
+            padding: 2px 11px;
+            margin: 3px 6px 3px 0;
+            font-size: 13px;
+            text-decoration: none
+        }
+
+        .src a:hover {
+            border-color: var(--nv)
+        }
+
+        .rvl {
+            font-size: 13px;
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+            align-items: center
+        }
+
+        .cmp {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px
+        }
+
+        @media(max-width:700px) {
+            .cmp {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .col {
+            border: 1px solid var(--ln);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 13.5px;
+            white-space: pre-wrap;
+            max-height: 460px;
+            overflow: auto;
+            margin-top: 6px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 16px;
+            font-size: 14px
+        }
+
+        td,
+        th {
+            border-bottom: 1px solid var(--ln);
+            padding: 8px;
+            text-align: left
+        }
+
+        th {
+            color: var(--mu);
+            font-weight: 600
+        }
+
+        .empty {
+            color: var(--mu)
+        }
+
+        .how {
+            display: grid;
+            gap: 10px
+        }
+
+        .how div {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: var(--bg)
+        }
+
+        .how b {
+            flex: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--nv);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font: 700 15px Newsreader, serif
+        }
+
+        .how span {
+            color: var(--mu)
+        }
+
+        .how strong {
+            display: block;
+            color: var(--ink)
+        }
+
+        .disc {
+            font-size: 12.5px;
+            color: #D6DCFF;
+            margin-top: 22px;
+            max-width: 90ch
+        }
+
+        details {
+            margin-top: 14px;
+            font-size: 13px;
+            color: #D6DCFF
+        }
+
+        details li {
+            margin: 3px 0
+        }
+
+        details a {
+            color: #fff
+        }
+
+        a {
+            color: var(--nv)
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="brand"><i></i>AI Risk Advisor</div>
+        <header><span class="kbtag" id="kbtag"></span>
+            <h1>Know what to check<br>before you build.</h1>
+            <p>Describe an AI idea. Get the privacy, bias, security, and regulatory risks worth checking, with official
+                sources to verify and fixes to try. Built for Duke and North Carolina founders.</p>
+        </header>
+        <main>
+            <section class="panel f">
+                <h2>Tell us about your AI</h2>
+                <div class="presets">Try an example:<button data-p="0">Resume screener</button><button
+                        data-p="1">Wellness chatbot</button><button data-p="2">Loan pre-check</button></div>
+                <label for="idea">What does your AI do?</label><textarea id="idea" rows="5"
+                    placeholder="e.g. An assistant that reads customer emails and drafts replies..."></textarea>
+                <label for="users">Who uses it?</label><select id="users"></select>
+                <label for="dec">Does it decide things about people?</label><select id="dec"></select>
+                <label>Data it uses</label>
+                <div class="chips" id="data"></div>
+                <label>Where are your users?</label>
+                <div class="chips" id="geo"></div>
+                <label for="model">Model</label><select id="model"></select>
+                <button class="primary" id="run">Assess risks</button>
+                <p class="note" id="stat"></p>
+            </section>
+            <section class="panel">
+                <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="rep">Advisor
+                        report</button><button role="tab" aria-selected="false" data-t="cmp">Side by side with a plain
+                        prompt</button></div>
+                <div id="body"></div>
+            </section>
+        </main>
+        <p class="disc">Not legal advice. This tool points you to what to check. It does not state what any law requires
+            and can be incomplete or wrong. Verify every point at the linked official source and review with counsel
+            before relying on it.</p>
+        <details>
+            <summary>Knowledge base</summary>
+            <ul id="kbl"></ul>
+        </details>
+    </div>
+    <script>
+        const CATS = ["privacy", "bias", "security", "regulatory"], $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+        let KB = [], K = {}; const initKB = kb => { KB = kb; K = Object.fromEntries(KB.map(k => [k[0], k])); $("#kbtag").textContent = KB.length + " sources: NC layer + federal, state, EU"; $("#kbl").innerHTML = KB.map(k => `<li><a href="${k[5]}" target="_blank" rel="noopener">${esc(k[1])}: ${esc(k[3])}</a></li>`).join("") };
+        const O = {
+            users: ["Consumers", "Businesses (B2B)", "Employees or job candidates", "Students or minors"], dec: ["No, it only generates content or answers", "It informs a human who decides", "It makes or ranks decisions automatically"], model: ["Third-party API (OpenAI, Anthropic, etc.)", "Fine-tuned open model", "Own model trained from scratch"],
+            data: ["Personal contact info", "Health or wellbeing", "Financial", "Biometric (face, voice)", "Children's data", "Employee or candidate data", "User-generated content", "Scraped public data"], geo: ["North Carolina", "Other US states", "California", "EU/UK", "Elsewhere"]
+        };
+        ["users", "dec", "model"].forEach(k => $("#" + k).innerHTML = O[k].map(o => `<option>${esc(o)}</option>`).join(""));
+        ["data", "geo"].forEach(k => $("#" + k).innerHTML = O[k].map(o => `<button type="button" aria-pressed="false">${esc(o)}</button>`).join(""));
+        document.addEventListener("click", e => { const b = e.target.closest(".chips button"); if (b) b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true") });
+        const P = [["A resume-screening tool that ranks job applicants with an LLM and gives recruiters a 0-100 fit score.", 2, 2, [5], [0, 1, 2], 0], ["A mental-wellness chatbot for college students that remembers past chats and suggests coping exercises.", 3, 1, [1, 6, 0], [0, 3], 0], ["A loan pre-qualification tool that estimates eligibility from bank-linked transaction data.", 0, 2, [2, 0], [0, 2, 1], 2]];
+        const pick = k => [...document.querySelectorAll("#" + k + " button")].filter(b => b.getAttribute("aria-pressed") === "true").map(b => b.textContent);
+        document.querySelectorAll(".presets button").forEach(b => b.onclick = () => { const p = P[+b.dataset.p]; $("#idea").value = p[0]; $("#users").selectedIndex = p[1]; $("#dec").selectedIndex = p[2]; $("#model").selectedIndex = p[5];["data", "geo"].forEach((k, j) => document.querySelectorAll("#" + k + " button").forEach((c, i) => c.setAttribute("aria-pressed", p[3 + j].includes(i)))) });
+        let S = { tab: "rep", adv: null, plain: null, tally: null, err: "", rv: {}, notes: "", busy: false, desc: "" }, dl = { save: async ({ filename, data }) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/markdown" })); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000) } };
+        const api = async (p, b) => { const r = await fetch("/api/" + p, { method: "POST", headers: { "content-type": "application/json", "x-access-code": $("#code") ? $("#code").value : "" }, body: JSON.stringify(b) }); const j = await r.json().catch(() => ({})); if (!r.ok) throw { code: j.code || "upstream_error", message: j.error }; return j.data };
+        (async () => { try { const j = await (await fetch("/api/kb")).json(); initKB(j.kb); if (j.needsCode) $("#codewrap").hidden = false } catch (e) { $("#stat").textContent = "Could not load the knowledge base. Reload the page." } render() })();
+        const ERR = { unauthorized: "Missing or wrong access code.", not_granted: "Claude access was declined for this page. Reload and allow it to run assessments.", rate_limited: "Too many requests. Wait a moment and try again.", invalid_json: "The advisor returned an unreadable answer. Try again." };
+        const copy = e => ERR[e && e.code] || "Something went wrong. Try again.";
+        function form() { return { idea: $("#idea").value.trim(), users: $("#users").value, dec: $("#dec").value, data: pick("data"), geo: pick("geo"), model: $("#model").value } }
+        function describe(f) { return `Product: ${f.idea}\nUsers: ${f.users}\nMakes decisions about people: ${f.dec}\nData used: ${f.data.join(", ") || "not stated"}\nUser locations: ${f.geo.join(", ") || "not stated"}\nModel: ${f.model}` }
+        $("#run").onclick = async () => {
+            const f = form(); if (f.idea.length < 20) { $("#stat").textContent = "Describe what your AI does in at least a sentence."; return }
+            S = { ...S, adv: null, plain: null, tally: null, err: "", rv: {}, busy: true, desc: describe(f) }; $("#run").disabled = true; $("#stat").textContent = "Assessing. This takes up to a minute."; render();
+            const run = async () => { try { const a = await api("assess", f); if (!a || !Array.isArray(a.risks)) throw { code: "invalid_json" }; a.risks = a.risks.map(r => { const s = (r.sources || []).filter(i => K[i]), bad = s.length < (r.sources || []).length; return { ...r, category: CATS.includes(r.category) ? r.category : "regulatory", severity: ["high", "medium", "low"].includes(r.severity) ? r.severity : "medium", sources: s, confidence: bad || !s.length ? "low" : r.confidence, needsReview: bad || !s.length || !!r.needsReview } }); S.adv = a } catch (e) { S.err = copy(e) } S.busy = false; render() };
+            const plain = async () => { try { const t = (await api("plain", f)).text; S.plain = t; render(); const g = await api("tally", { text: t }); S.tally = g } catch (e) { S.plain = S.plain || "Could not run the plain prompt: " + copy(e) } render() };
+            await Promise.allSettled([run(), plain()]); $("#run").disabled = false; $("#stat").textContent = ""
+        };
+        document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { S.tab = b.dataset.t; document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === b)); render() });
+        const sevR = { high: 0, medium: 1, low: 2 };
+        function stats() { const r = S.adv.risks; return { cats: new Set(r.map(x => x.category)).size, cites: new Set(r.flatMap(x => x.sources)).size, fixes: r.filter(x => x.fix).length, flags: r.filter(x => x.needsReview).length } }
+        function rep() {
+            if (S.err) return `<p class="empty">${esc(S.err)}</p>`; if (!S.adv) return S.busy ? `<p class="empty">Mapping your idea to ${KB.length} sources...</p>` : `<h2>What you get</h2><div class="how"><div><b>1</b><span><strong>Risks that fit your idea</strong>Privacy, bias, security, and regulatory areas worth checking.</span></div><div><b>2</b><span><strong>Where to verify</strong>Links to the official source for each point, never legal conclusions.</span></div><div><b>3</b><span><strong>Fixes and a review step</strong>Concrete product changes, plus flags for what a human should check.</span></div></div>`;
+            const a = S.adv, rs = a.risks.map((r, i) => ({ r, i })).sort((x, y) => sevR[x.r.severity] - sevR[y.r.severity]), open = a.risks.filter((r, i) => r.needsReview && !S.rv[i]).length;
+            const led = CATS.map(c => { const n = a.risks.filter(r => r.category === c).length; return `<div class="cell ${n ? "" : "z"}"><b>${n}</b>${c[0].toUpperCase() + c.slice(1)}${n ? "" : " (none flagged)"}</div>` }).join("");
+            return `<p>${esc(a.summary)}</p><div class="ledger">${led}</div><div class="banner"><span>${open ? `<b>${open} of ${a.risks.length} risks need human review</b> before you rely on them. Tick each one once someone qualified has checked it.` : "All flagged items have been marked reviewed."}</span></div>` +
+                rs.map(({ r, i }) => `<div class="risk ${r.severity} ${S.rv[i] ? "ok" : ""}"><div class="meta"><span class="tag">${esc(r.category)}</span><span class="tag">${esc(r.severity)} severity</span><span class="tag">${esc(r.confidence)} confidence</span>${r.needsReview ? '<span class="tag rv">Needs human review</span>' : ""}</div><h3>${esc(r.title)}</h3><p>${esc(r.why)}</p><p class="fix"><b>Fix:</b> ${esc(r.fix)}</p><div class="src">${r.sources.length ? r.sources.map(s => `<a href="${K[s][5]}" target="_blank" rel="noopener">${esc(K[s][1])}: ${esc(K[s][3])}</a>`).join("") : '<span class="empty">No source in the knowledge base. Verify independently.</span>'}</div>${r.needsReview ? `<label class="rvl"><input type="checkbox" data-i="${i}" ${S.rv[i] ? "checked" : ""}> Reviewed by a human</label>` : ""}</div>`).join("") +
+                (a.askLawyer && a.askLawyer.length ? `<p><b>Ask a lawyer</b></p><ul>${a.askLawyer.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : "") + `<label for="nt">Reviewer notes</label><textarea id="nt" rows="3">${esc(S.notes)}</textarea><button class="primary" data-x="1" ${dl ? "" : "hidden"}>Download report (.md)</button>`
+        }
+        function cmp() {
+            if (!S.adv && !S.plain) return `<p class="empty">Run an assessment to compare the advisor with one generic "what are the risks?" prompt on the same description.</p>`;
+            const s = S.adv ? stats() : null, t = S.tally, c = t && Array.isArray(t.categories) ? t.categories.filter(x => CATS.includes(x)).length : null;
+            return `<table><tr><th></th><th>Plain prompt</th><th>Advisor</th></tr><tr><td>Risk areas covered (of 4)</td><td>${c ?? "..."}</td><td>${s ? s.cats : "..."}</td></tr><tr><td>Specific provisions cited</td><td>${t ? +t.cites || 0 : "..."}</td><td>${s ? s.cites + " (checked against the knowledge base)" : "..."}</td></tr><tr><td>Concrete fixes</td><td>${t ? +t.fixes || 0 : "..."}</td><td>${s ? s.fixes : "..."}</td></tr><tr><td>Flagged for human review</td><td>None</td><td>${s ? s.flags : "..."}</td></tr></table>
+<div class="cmp"><div><b>Plain prompt</b><div class="col">${S.plain ? esc(S.plain) : "Running..."}</div></div><div><b>Advisor</b><div class="col">${S.adv ? esc(S.adv.risks.map(r => `${r.title} [${r.category}, ${r.severity}]\n${r.fix}`).join("\n\n")) : "Running..."}</div></div></div><p class="note">Plain figures are tallied by an AI reader, so treat them as indicative. Repeat across 10 of your own cases before quoting a result.</p>`
+        }
+        function render() { $("#body").innerHTML = S.tab === "rep" ? rep() : cmp() }
+        $("#body").addEventListener("change", e => { if (e.target.dataset.i !== undefined) { S.rv[e.target.dataset.i] = e.target.checked; render() } });
+        $("#body").addEventListener("input", e => { if (e.target.id === "nt") S.notes = e.target.value });
+        $("#body").addEventListener("click", async e => {
+            if (!e.target.dataset.x || !dl) return; const a = S.adv;
+            const md = `# AI Risk Report\n\n${S.desc}\n\n## Summary\n${a.summary}\n\n## Risks\n` + a.risks.map((r, i) => `### ${r.title}\n- ${r.category}, ${r.severity} severity, ${r.confidence} confidence\n- Why: ${r.why}\n- Fix: ${r.fix}\n- Sources: ${r.sources.map(s => K[s][1] + ": " + K[s][3] + " (" + K[s][5] + ")").join("; ") || "none in knowledge base"}\n- Human review: ${r.needsReview ? (S.rv[i] ? "completed" : "REQUIRED") : "not flagged"}\n`).join("\n") + `\n## Ask a lawyer\n${(a.askLawyer || []).map(q => "- " + q).join("\n")}\n\n## Reviewer notes\n${S.notes || "(none)"}\n\nNot legal advice. Verify every point at the linked official sources.\n`;
+            try { await dl.save({ filename: "ai-risk-report.md", data: md }) } catch (x) { }
+        });
+    </script>
+</body>
+
+</html>
