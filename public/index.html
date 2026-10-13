@@ -4,23 +4,26 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>AI Risk Advisor</title>
+    <title>FairPlay: know what to check before you build</title>
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2716%27 fill=%27%23F5B83D%27/%3E%3Cpath d=%27M9 16.5l4.5 4.5L23 11%27 fill=%27none%27 stroke=%27%2300009C%27 stroke-width=%273.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E">
     <link
         href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Public+Sans:wght@400;500;600&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg: #F3F5FC;
+            --bg: #F4F6FB;
             --sf: #fff;
-            --ink: #0E1330;
-            --mu: #566086;
-            --ln: #DCE1F2;
+            --ink: #0D1233;
+            --mu: #5A6384;
+            --ln: #E1E5F2;
             --nv: #00009C;
-            --am: #9A6204;
             --amb: #F5B83D;
-            --hi: #B3463F;
-            --lo: #2F7D57;
-            --ti: #ECEFFC;
+            --am: #8A5A00;
+            --hi: #D6453D;
+            --md: #F0B323;
+            --lo: #2E9A67;
+            --ti: #EEF1FC;
             box-sizing: border-box;
             padding-top: env(safe-area-inset-top, 0px);
             padding-bottom: env(safe-area-inset-bottom, 0px)
@@ -39,106 +42,167 @@
             margin: 0;
             color: var(--ink);
             font: 15px/1.6 "Public Sans", system-ui, sans-serif;
-            background: #00009C radial-gradient(900px 520px at 88% -8%, #2D2DD8 0%, transparent 62%) no-repeat
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='900' fill='none' stroke='white' stroke-opacity='.09' stroke-width='2'%3E%3Ccircle cx='1180' cy='-20' r='300'/%3E%3Ccircle cx='1180' cy='-20' r='6' fill='white' fill-opacity='.09'/%3E%3Cpath d='M0 868H1400'/%3E%3C/svg%3E") no-repeat top right/1400px 900px, radial-gradient(900px 520px at 88% -8%, #2A2AD4 0%, transparent 60%) no-repeat, #00009C
         }
 
         .wrap {
-            max-width: 1180px;
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 34px 22px 48px
+            padding: 28px 24px 40px
+        }
+
+        .bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px
         }
 
         .brand {
             display: flex;
-            gap: 10px;
             align-items: center;
+            gap: 10px;
             color: #fff;
-            font-weight: 600;
-            margin-bottom: 40px
+            font: 700 28px Newsreader, Georgia, serif;
+            letter-spacing: -.3px
         }
 
-        .brand i {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--amb);
-            box-shadow: inset 0 0 0 5px #00009C, 0 0 0 2px var(--amb)
+        .brand b {
+            color: var(--amb)
         }
 
-        header {
-            margin-bottom: 34px;
-            max-width: 780px
+        .logo {
+            width: 32px;
+            height: 32px;
+            flex: none
         }
 
-        h1 {
-            font: 700 clamp(36px, 6vw, 62px)/1.04 Newsreader, Georgia, serif;
-            margin: 0 0 16px;
-            color: #fff;
-            letter-spacing: -.5px
-        }
-
-        header p {
+        .bar h1 {
             margin: 0;
-            max-width: 58ch;
-            color: #D6DCFF;
-            font-size: 17px
+            font: italic 500 clamp(18px, 2vw, 24px)/1.2 Newsreader, Georgia, serif;
+            color: #DCE1FF
+        }
+
+        .pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
         }
 
         .kbtag {
-            display: inline-block;
-            margin: 0 0 18px;
             font-size: 12.5px;
             color: #fff;
             background: rgba(255, 255, 255, .12);
-            border: 1px solid rgba(255, 255, 255, .3);
+            border: 1px solid rgba(255, 255, 255, .28);
             border-radius: 20px;
             padding: 4px 12px
         }
 
         main {
             display: grid;
-            grid-template-columns: 400px 1fr;
+            grid-template-columns: 420px 1fr;
             gap: 22px;
             align-items: start
         }
 
-        @media(max-width:860px) {
-            main {
-                grid-template-columns: 1fr
-            }
-
-            .panel.f {
-                position: static
-            }
-        }
-
         .panel {
             background: var(--sf);
-            border-radius: 16px;
-            padding: 26px;
-            box-shadow: 0 22px 50px -20px rgba(0, 0, 40, .6)
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 30px 60px -28px rgba(0, 0, 40, .75)
         }
 
-        .panel.f {
-            position: sticky;
-            top: 18px
+        .phead {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 12px
+        }
+
+        .hint {
+            font-size: 12.5px;
+            color: var(--mu)
         }
 
         h2 {
-            font: 700 23px Newsreader, Georgia, serif;
-            margin: 0 0 14px;
+            font: 700 24px Newsreader, Georgia, serif;
+            margin: 0;
             color: var(--nv)
         }
 
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            font-size: 12.5px
+        }
+
+        .presets button {
+            padding: 5px 6px
+        }
+
+        .presets button,
+        .chips button {
+            font: inherit;
+            font-size: 13px;
+            color: var(--ink);
+            background: var(--bg);
+            border: 1.5px solid transparent;
+            border-radius: 999px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: all .15s
+        }
+
+        .presets button {
+            background: var(--ti);
+            color: var(--nv);
+            font-weight: 600
+        }
+
+        .chips button:hover,
+        .presets button:hover {
+            border-color: var(--nv)
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+
+        .chips button[aria-pressed=true] {
+            background: var(--nv);
+            color: #fff;
+            border-color: var(--nv)
+        }
+
         label {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-weight: 600;
             font-size: 13px;
-            margin: 18px 0 7px
+            margin: 16px 0 6px
         }
 
         label:first-of-type {
-            margin-top: 0
+            margin-top: 14px
+        }
+
+        label i {
+            font: 700 12px Newsreader, serif;
+            font-style: normal;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--nv);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            flex: none
         }
 
         textarea,
@@ -149,7 +213,7 @@
             background: var(--bg);
             border: 1.5px solid transparent;
             border-radius: 10px;
-            padding: 11px 12px;
+            padding: 10px 12px;
             transition: border-color .15s, background .15s
         }
 
@@ -169,60 +233,28 @@
             outline-offset: 2px
         }
 
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px
+        .g2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
         }
 
-        .chips button,
-        .presets button {
-            font: inherit;
-            font-size: 13px;
-            color: var(--ink);
-            background: var(--bg);
-            border: 1.5px solid var(--ln);
-            border-radius: 999px;
-            padding: 5px 12px;
-            cursor: pointer;
-            transition: all .15s
-        }
-
-        .chips button:hover,
-        .presets button:hover {
-            border-color: var(--nv)
-        }
-
-        .chips button[aria-pressed=true] {
-            background: var(--nv);
-            color: #fff;
-            border-color: var(--nv)
-        }
-
-        .presets {
-            font-size: 13px;
-            color: var(--mu);
-            margin-bottom: 18px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--ln);
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center
+        .g2 label {
+            margin-top: 14px
         }
 
         .primary {
             width: 100%;
-            margin-top: 22px;
+            margin-top: 20px;
             font: 600 16px "Public Sans", sans-serif;
-            background: var(--nv);
+            background: linear-gradient(180deg, #1A1AD0, #00009C);
             color: #fff;
             border: 0;
-            border-radius: 10px;
-            padding: 14px;
+            border-radius: 11px;
+            padding: 13px;
             cursor: pointer;
             transition: transform .12s;
-            box-shadow: 0 8px 20px -8px rgba(0, 0, 156, .7)
+            box-shadow: 0 10px 22px -10px rgba(0, 0, 156, .8)
         }
 
         .primary:hover {
@@ -242,12 +274,15 @@
         }
 
         .tabs {
+            position: sticky;
+            top: 0;
+            z-index: 2;
             display: flex;
             gap: 4px;
             background: var(--bg);
-            border-radius: 10px;
+            border-radius: 11px;
             padding: 4px;
-            margin: 0 0 20px;
+            margin: 0 0 18px;
             width: fit-content;
             max-width: 100%;
             flex-wrap: wrap
@@ -260,7 +295,7 @@
             color: var(--mu);
             background: none;
             border: 0;
-            border-radius: 7px;
+            border-radius: 8px;
             padding: 8px 16px;
             cursor: pointer
         }
@@ -271,19 +306,26 @@
             box-shadow: 0 1px 4px rgba(0, 0, 60, .18)
         }
 
+        .lead {
+            font: 500 19px/1.45 Newsreader, Georgia, serif;
+            margin: 0 0 4px
+        }
+
         .ledger {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            margin: 16px 0
+            margin: 14px 0
         }
 
         .cell {
-            border-radius: 12px;
+            border-radius: 13px;
             padding: 12px 14px;
             background: var(--nv);
             color: #D6DCFF;
-            font-size: 13px
+            font-size: 13px;
+            animation: up .4s ease both;
+            box-shadow: 0 10px 20px -14px rgba(0, 0, 100, .8)
         }
 
         .cell b {
@@ -295,7 +337,8 @@
 
         .cell.z {
             background: var(--ti);
-            color: var(--mu)
+            color: var(--mu);
+            box-shadow: none
         }
 
         .cell.z b {
@@ -310,39 +353,87 @@
 
         .banner {
             border-radius: 12px;
-            background: #FFF4DB;
-            border: 1px solid #F0D28A;
-            padding: 12px 16px;
-            margin: 0 0 16px;
+            background: #FFF6DE;
+            border: 1px solid #F2D58A;
+            border-left: 5px solid var(--amb);
+            padding: 11px 14px;
+            margin: 0 0 14px;
             font-size: 14px;
             color: #5A3D00
         }
 
         .risk {
+            position: relative;
             border: 1px solid var(--ln);
-            border-left: 6px solid var(--am);
-            border-radius: 12px;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            background: #fff
+            border-radius: 14px;
+            padding: 16px 18px 14px 60px;
+            margin-bottom: 12px;
+            background: #fff;
+            transition: box-shadow .2s, transform .2s;
+            animation: up .4s ease both
         }
 
-        .risk.high {
-            border-left-color: var(--hi)
+        .risk::before {
+            content: "";
+            position: absolute;
+            left: 21px;
+            top: 21px;
+            width: 16px;
+            height: 22px;
+            border-radius: 3px;
+            background: var(--md);
+            transform: rotate(-9deg);
+            box-shadow: 0 3px 6px -2px rgba(0, 0, 0, .35)
         }
 
-        .risk.low {
-            border-left-color: var(--lo)
+        .risk.high::before {
+            background: var(--hi)
+        }
+
+        .risk.low::before {
+            background: var(--lo)
+        }
+
+        .risk:hover {
+            box-shadow: 0 12px 26px -16px rgba(0, 0, 80, .5);
+            transform: translateY(-1px)
         }
 
         .risk.ok {
-            opacity: .65
+            opacity: .6
+        }
+
+        .risk.ok::before {
+            background: #B9C0DA
+        }
+
+        .risk:nth-of-type(2) {
+            animation-delay: .05s
+        }
+
+        .risk:nth-of-type(3) {
+            animation-delay: .1s
+        }
+
+        .risk:nth-of-type(4) {
+            animation-delay: .15s
+        }
+
+        .risk:nth-of-type(5) {
+            animation-delay: .2s
+        }
+
+        .risk:nth-of-type(6) {
+            animation-delay: .25s
         }
 
         .risk h3 {
-            font: 700 21px Newsreader, Georgia, serif;
-            margin: 6px 0 6px;
-            color: var(--ink)
+            font: 700 21px/1.25 Newsreader, Georgia, serif;
+            margin: 6px 0 4px
+        }
+
+        .risk p {
+            margin: 6px 0
         }
 
         .meta {
@@ -360,19 +451,35 @@
         }
 
         .tag.rv {
-            background: #FFF4DB;
+            background: #FFF1D6;
             color: #7A4B00;
             font-weight: 600
         }
 
-        .risk p {
-            margin: 6px 0
+        .s-high {
+            background: #FBE5E3;
+            color: #8A2C26;
+            font-weight: 600
+        }
+
+        .s-medium {
+            background: #FFF1D6;
+            color: #7A4B00
+        }
+
+        .s-low {
+            background: #DFF3E8;
+            color: #1F5C3E
         }
 
         .fix {
             background: var(--ti);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 10px 12px
+        }
+
+        .fix b {
+            color: var(--nv)
         }
 
         .src a {
@@ -386,16 +493,93 @@
             text-decoration: none
         }
 
+        .src a::after {
+            content: " \2197"
+        }
+
         .src a:hover {
             border-color: var(--nv)
         }
 
         .rvl {
-            font-size: 13px;
-            margin-top: 10px;
+            margin: 10px 0 0;
+            font-weight: 500;
+            color: var(--mu);
+            font-size: 13px
+        }
+
+        .rvl input {
+            accent-color: var(--nv)
+        }
+
+        .acts {
             display: flex;
-            gap: 6px;
-            align-items: center
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        .sec {
+            font: 600 14px "Public Sans", sans-serif;
+            background: #fff;
+            color: var(--nv);
+            border: 1.5px solid var(--nv);
+            border-radius: 10px;
+            padding: 10px 16px;
+            cursor: pointer
+        }
+
+        .sec.pri {
+            background: var(--nv);
+            color: #fff
+        }
+
+        .exh {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 12px
+        }
+
+        .exh span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #7A4B00;
+            background: #FFF1D6;
+            border-radius: 999px;
+            padding: 2px 10px;
+            white-space: nowrap
+        }
+
+        .risk.exm {
+            border-style: dashed
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 16px
+        }
+
+        .steps div {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--mu)
+        }
+
+        .steps b {
+            display: block;
+            color: var(--ink)
+        }
+
+        @media(max-width:700px) {
+            .steps {
+                grid-template-columns: 1fr
+            }
         }
 
         .cmp {
@@ -444,92 +628,235 @@
             color: var(--mu)
         }
 
-        .how {
-            display: grid;
-            gap: 10px
-        }
-
-        .how div {
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-            padding: 14px 16px;
+        .sk {
+            height: 92px;
             border-radius: 12px;
-            background: var(--bg)
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, var(--bg) 25%, #fff 50%, var(--bg) 75%);
+            background-size: 200% 100%;
+            animation: sh 1.2s infinite
         }
 
-        .how b {
-            flex: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--nv);
-            color: #fff;
-            display: grid;
-            place-items: center;
-            font: 700 15px Newsreader, serif
+        .sk.w {
+            height: 60px
         }
 
-        .how span {
-            color: var(--mu)
+        @keyframes sh {
+            to {
+                background-position: -200% 0
+            }
         }
 
-        .how strong {
-            display: block;
-            color: var(--ink)
+        @keyframes up {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important;
+                transition: none !important
+            }
+        }
+
+        a {
+            color: var(--nv)
         }
 
         .disc {
             font-size: 12.5px;
             color: #D6DCFF;
-            margin-top: 22px;
-            max-width: 90ch
+            margin: 0;
+            flex: 1
         }
 
-        details {
-            margin-top: 14px;
+        .foot {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 14px
+        }
+
+        .foot details {
+            margin: 0;
             font-size: 13px;
             color: #D6DCFF
         }
 
-        details li {
+        .foot summary {
+            cursor: pointer;
+            color: #fff;
+            white-space: nowrap
+        }
+
+        .foot details ul {
+            position: absolute;
+            right: 0;
+            bottom: calc(100% + 8px);
+            width: min(520px, 92vw);
+            background: #fff;
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 14px 18px 14px 34px;
+            max-height: 50vh;
+            overflow: auto;
+            box-shadow: 0 18px 40px -12px rgba(0, 0, 40, .6);
+            z-index: 5;
+            margin: 0
+        }
+
+        .foot details li {
             margin: 3px 0
         }
 
-        details a {
-            color: #fff
+        .foot details a {
+            color: var(--nv)
         }
 
-        a {
-            color: var(--nv)
+        @media(max-width:860px) {
+            main {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(min-width:900px) and (min-height:620px) {
+
+            html,
+            body {
+                height: 100%
+            }
+
+            body {
+                overflow: hidden
+            }
+
+            .wrap {
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                padding: 16px 24px 12px
+            }
+
+            main {
+                flex: 1;
+                min-height: 0;
+                grid-template-rows: minmax(0, 1fr);
+                align-items: stretch
+            }
+
+            .panel {
+                min-height: 0;
+                overflow: auto;
+                padding: 20px 24px
+            }
+        }
+
+        .actbar {
+            position: sticky;
+            bottom: -20px;
+            margin: 8px -4px -20px;
+            padding: 14px 4px 20px;
+            background: linear-gradient(rgba(255, 255, 255, 0), #fff 28%)
+        }
+
+        .actbar .primary {
+            margin-top: 0
+        }
+
+        .actbar .note {
+            margin: 8px 0 0;
+            min-height: 0
+        }
+
+        @media(max-width:899px) {
+            .actbar {
+                position: static;
+                margin: 0;
+                padding: 0;
+                background: none
+            }
+
+            .actbar .primary {
+                margin-top: 20px
+            }
+        }
+
+        @media(min-width:900px) and (min-height:620px) {
+            .panel {
+                padding: 18px 22px
+            }
+
+            label {
+                margin: 11px 0 5px
+            }
+
+            .g2 label {
+                margin-top: 11px
+            }
+
+            .chips {
+                gap: 5px
+            }
+
+            .chips button {
+                font-size: 12.5px;
+                padding: 3px 10px
+            }
+
+            textarea,
+            select {
+                padding: 8px 11px
+            }
+
+            .phead {
+                margin-bottom: 10px
+            }
+
+            .primary {
+                padding: 12px
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="wrap">
-        <div class="brand"><i></i>AI Risk Advisor</div>
-        <header><span class="kbtag" id="kbtag"></span>
-            <h1>Know what to check<br>before you build.</h1>
-            <p>Describe an AI idea. Get the privacy, bias, security, and regulatory risks worth checking, with official
-                sources to verify and fixes to try. Built for Duke and North Carolina founders.</p>
-        </header>
+        <div class="bar">
+            <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+                    <circle cx="16" cy="16" r="16" fill="#F5B83D" />
+                    <path d="M9 16.5l4.5 4.5L23 11" fill="none" stroke="#00009C" stroke-width="3.2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg><span>Fair<b>Play</b></span></div>
+            <h1>Know what to check before you build.</h1>
+            <div class="pills"><span class="kbtag">Built for Duke and NC founders</span><span class="kbtag"
+                    id="kbtag"></span></div>
+        </div>
         <main>
             <section class="panel f">
-                <h2>Tell us about your AI</h2>
-                <div class="presets">Try an example:<button data-p="0">Resume screener</button><button
-                        data-p="1">Wellness chatbot</button><button data-p="2">Loan pre-check</button></div>
-                <label for="idea">What does your AI do?</label><textarea id="idea" rows="5"
+                <div class="phead">
+                    <h2>Describe your AI</h2><span class="hint">Takes about a minute</span>
+                </div>
+                <div class="presets"><button data-p="0" title="Resume screener">Hiring</button><button data-p="1"
+                        title="Wellness chatbot">Wellness</button><button data-p="2"
+                        title="Loan pre-check">Lending</button><button data-p="3" title="AI tutor">Tutor</button></div>
+                <label for="idea"><i>1</i>What does it do?</label><textarea id="idea" rows="3"
                     placeholder="e.g. An assistant that reads customer emails and drafts replies..."></textarea>
-                <label for="users">Who uses it?</label><select id="users"></select>
-                <label for="dec">Does it decide things about people?</label><select id="dec"></select>
-                <label>Data it uses</label>
+                <div class="g2">
+                    <div><label for="users"><i>2</i>Who uses it?</label><select id="users"></select></div>
+                    <div><label for="dec"><i>3</i>Decides about people?</label><select id="dec"></select></div>
+                </div>
+                <label><i>4</i>Data it uses</label>
                 <div class="chips" id="data"></div>
-                <label>Where are your users?</label>
+                <label><i>5</i>Where are your users?</label>
                 <div class="chips" id="geo"></div>
-                <label for="model">Model</label><select id="model"></select>
-                <button class="primary" id="run">Assess risks</button>
-                <p class="note" id="stat"></p>
+                <label for="model"><i>6</i>Model</label><select id="model"></select>
+                <div class="actbar"><button class="primary" id="run">Assess risks</button>
+                    <p class="note" id="stat"></p>
+                </div>
             </section>
             <section class="panel">
                 <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="rep">Advisor
@@ -538,25 +865,27 @@
                 <div id="body"></div>
             </section>
         </main>
-        <p class="disc">Not legal advice. This tool points you to what to check. It does not state what any law requires
-            and can be incomplete or wrong. Verify every point at the linked official source and review with counsel
-            before relying on it.</p>
-        <details>
-            <summary>Knowledge base</summary>
-            <ul id="kbl"></ul>
-        </details>
+        <div class="foot">
+            <p class="disc">Not legal advice. This tool points you to what to check. It does not state what any law
+                requires and can be incomplete or wrong. Verify every point at the linked official source and review
+                with counsel before relying on it.</p>
+            <details>
+                <summary>Sources</summary>
+                <ul id="kbl"></ul>
+            </details>
+        </div>
     </div>
     <script>
         const CATS = ["privacy", "bias", "security", "regulatory"], $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
         let KB = [], K = {}; const initKB = kb => { KB = kb; K = Object.fromEntries(KB.map(k => [k[0], k])); $("#kbtag").textContent = KB.length + " sources: NC layer + federal, state, EU"; $("#kbl").innerHTML = KB.map(k => `<li><a href="${k[5]}" target="_blank" rel="noopener">${esc(k[1])}: ${esc(k[3])}</a></li>`).join("") };
         const O = {
-            users: ["Consumers", "Businesses (B2B)", "Employees or job candidates", "Students or minors"], dec: ["No, it only generates content or answers", "It informs a human who decides", "It makes or ranks decisions automatically"], model: ["Third-party API (OpenAI, Anthropic, etc.)", "Fine-tuned open model", "Own model trained from scratch"],
+            users: ["Consumers", "Businesses (B2B)", "Employees or job candidates", "Students or minors"], dec: ["No", "Informs a human", "Decides automatically"], model: ["Third-party API (OpenAI, Anthropic, etc.)", "Fine-tuned open model", "Own model trained from scratch"],
             data: ["Personal contact info", "Health or wellbeing", "Financial", "Biometric (face, voice)", "Children's data", "Employee or candidate data", "User-generated content", "Scraped public data"], geo: ["North Carolina", "Other US states", "California", "EU/UK", "Elsewhere"]
         };
         ["users", "dec", "model"].forEach(k => $("#" + k).innerHTML = O[k].map(o => `<option>${esc(o)}</option>`).join(""));
         ["data", "geo"].forEach(k => $("#" + k).innerHTML = O[k].map(o => `<button type="button" aria-pressed="false">${esc(o)}</button>`).join(""));
         document.addEventListener("click", e => { const b = e.target.closest(".chips button"); if (b) b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true") });
-        const P = [["A resume-screening tool that ranks job applicants with an LLM and gives recruiters a 0-100 fit score.", 2, 2, [5], [0, 1, 2], 0], ["A mental-wellness chatbot for college students that remembers past chats and suggests coping exercises.", 3, 1, [1, 6, 0], [0, 3], 0], ["A loan pre-qualification tool that estimates eligibility from bank-linked transaction data.", 0, 2, [2, 0], [0, 2, 1], 2]];
+        const P = [["A resume-screening tool that ranks job applicants with an LLM and gives recruiters a 0-100 fit score.", 2, 2, [5], [0, 1, 2], 0], ["A mental-wellness chatbot for college students that remembers past chats and suggests coping exercises.", 3, 1, [1, 6, 0], [0, 3], 0], ["A loan pre-qualification tool that estimates eligibility from bank-linked transaction data.", 0, 2, [2, 0], [0, 2, 1], 2], ["An AI tutor app for high school students in North Carolina. It remembers each student's grades and weak topics, adapts lessons, and emails a weekly progress summary to parents.", 3, 1, [4, 0, 6], [0, 1], 0]];
         const pick = k => [...document.querySelectorAll("#" + k + " button")].filter(b => b.getAttribute("aria-pressed") === "true").map(b => b.textContent);
         document.querySelectorAll(".presets button").forEach(b => b.onclick = () => { const p = P[+b.dataset.p]; $("#idea").value = p[0]; $("#users").selectedIndex = p[1]; $("#dec").selectedIndex = p[2]; $("#model").selectedIndex = p[5];["data", "geo"].forEach((k, j) => document.querySelectorAll("#" + k + " button").forEach((c, i) => c.setAttribute("aria-pressed", p[3 + j].includes(i)))) });
         let S = { tab: "rep", adv: null, plain: null, tally: null, err: "", rv: {}, notes: "", busy: false, desc: "" }, dl = { save: async ({ filename, data }) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/markdown" })); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000) } };
@@ -577,12 +906,12 @@
         const sevR = { high: 0, medium: 1, low: 2 };
         function stats() { const r = S.adv.risks; return { cats: new Set(r.map(x => x.category)).size, cites: new Set(r.flatMap(x => x.sources)).size, fixes: r.filter(x => x.fix).length, flags: r.filter(x => x.needsReview).length } }
         function rep() {
-            if (S.err) return `<p class="empty">${esc(S.err)}</p>`; if (!S.adv) return S.busy ? `<p class="empty">Mapping your idea to ${KB.length} sources...</p>` : `<h2>What you get</h2><div class="how"><div><b>1</b><span><strong>Risks that fit your idea</strong>Privacy, bias, security, and regulatory areas worth checking.</span></div><div><b>2</b><span><strong>Where to verify</strong>Links to the official source for each point, never legal conclusions.</span></div><div><b>3</b><span><strong>Fixes and a review step</strong>Concrete product changes, plus flags for what a human should check.</span></div></div>`;
+            if (S.err) return `<p class="empty">${esc(S.err)}</p>`; if (!S.adv) return S.busy ? `<div class="sk w"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>` : `<div class="exh"><h2>What a FairPlay report looks like</h2><span>Example output</span></div><div class="risk high exm"><div class="meta"><span class="tag">bias</span><span class="tag s-high">high severity</span><span class="tag rv">Needs human review</span></div><h3>Scores may disadvantage some candidate groups</h3><p>Hiring models can repeat past patterns, and nobody is checking outcomes by group.</p><p class="fix"><b>Fix:</b> Compare score gaps across groups before launch, and keep a person on every rejection.</p><div class="src"><a href="https://www.nyc.gov/site/dca/about/automated-employment-decision-tools.page" target="_blank" rel="noopener">NYC Local Law 144: Hiring tools</a></div></div><div class="steps"><div><b>1. Describe</b>Your idea, users, and data.</div><div><b>2. Check</b>Risks, plus where to verify them.</div><div><b>3. Review</b>Flag what a human must confirm.</div></div>`;
             const a = S.adv, rs = a.risks.map((r, i) => ({ r, i })).sort((x, y) => sevR[x.r.severity] - sevR[y.r.severity]), open = a.risks.filter((r, i) => r.needsReview && !S.rv[i]).length;
             const led = CATS.map(c => { const n = a.risks.filter(r => r.category === c).length; return `<div class="cell ${n ? "" : "z"}"><b>${n}</b>${c[0].toUpperCase() + c.slice(1)}${n ? "" : " (none flagged)"}</div>` }).join("");
-            return `<p>${esc(a.summary)}</p><div class="ledger">${led}</div><div class="banner"><span>${open ? `<b>${open} of ${a.risks.length} risks need human review</b> before you rely on them. Tick each one once someone qualified has checked it.` : "All flagged items have been marked reviewed."}</span></div>` +
-                rs.map(({ r, i }) => `<div class="risk ${r.severity} ${S.rv[i] ? "ok" : ""}"><div class="meta"><span class="tag">${esc(r.category)}</span><span class="tag">${esc(r.severity)} severity</span><span class="tag">${esc(r.confidence)} confidence</span>${r.needsReview ? '<span class="tag rv">Needs human review</span>' : ""}</div><h3>${esc(r.title)}</h3><p>${esc(r.why)}</p><p class="fix"><b>Fix:</b> ${esc(r.fix)}</p><div class="src">${r.sources.length ? r.sources.map(s => `<a href="${K[s][5]}" target="_blank" rel="noopener">${esc(K[s][1])}: ${esc(K[s][3])}</a>`).join("") : '<span class="empty">No source in the knowledge base. Verify independently.</span>'}</div>${r.needsReview ? `<label class="rvl"><input type="checkbox" data-i="${i}" ${S.rv[i] ? "checked" : ""}> Reviewed by a human</label>` : ""}</div>`).join("") +
-                (a.askLawyer && a.askLawyer.length ? `<p><b>Ask a lawyer</b></p><ul>${a.askLawyer.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : "") + `<label for="nt">Reviewer notes</label><textarea id="nt" rows="3">${esc(S.notes)}</textarea><button class="primary" data-x="1" ${dl ? "" : "hidden"}>Download report (.md)</button>`
+            return `<p class="lead">${esc(a.summary)}</p><div class="ledger">${led}</div><div class="banner"><span>${open ? `<b>${open} of ${a.risks.length} risks need human review</b> before you rely on them. Tick each one once someone qualified has checked it.` : "All flagged items have been marked reviewed."}</span></div>` +
+                rs.map(({ r, i }) => `<div class="risk ${r.severity} ${S.rv[i] ? "ok" : ""}"><div class="meta"><span class="tag">${esc(r.category)}</span><span class="tag s-${r.severity}">${esc(r.severity)} severity</span><span class="tag">${esc(r.confidence)} confidence</span>${r.needsReview ? '<span class="tag rv">Needs human review</span>' : ""}</div><h3>${esc(r.title)}</h3><p>${esc(r.why)}</p><p class="fix"><b>Fix:</b> ${esc(r.fix)}</p><div class="src">${r.sources.length ? r.sources.map(s => `<a href="${K[s][5]}" target="_blank" rel="noopener">${esc(K[s][1])}: ${esc(K[s][3])}</a>`).join("") : '<span class="empty">No source in the knowledge base. Verify independently.</span>'}</div>${r.needsReview ? `<label class="rvl"><input type="checkbox" data-i="${i}" ${S.rv[i] ? "checked" : ""}> Reviewed by a human</label>` : ""}</div>`).join("") +
+                (a.askLawyer && a.askLawyer.length ? `<p><b>Ask a lawyer</b></p><ul>${a.askLawyer.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : "") + `<label for="nt">Reviewer notes</label><textarea id="nt" rows="3">${esc(S.notes)}</textarea><div class="acts"><button class="sec pri" data-x="1">Download report</button><button class="sec" data-x="2">Email this report</button><button class="sec" data-x="3">Copy summary</button></div>`
         }
         function cmp() {
             if (!S.adv && !S.plain) return `<p class="empty">Run an assessment to compare the advisor with one generic "what are the risks?" prompt on the same description.</p>`;
@@ -594,9 +923,13 @@
         $("#body").addEventListener("change", e => { if (e.target.dataset.i !== undefined) { S.rv[e.target.dataset.i] = e.target.checked; render() } });
         $("#body").addEventListener("input", e => { if (e.target.id === "nt") S.notes = e.target.value });
         $("#body").addEventListener("click", async e => {
-            if (!e.target.dataset.x || !dl) return; const a = S.adv;
-            const md = `# AI Risk Report\n\n${S.desc}\n\n## Summary\n${a.summary}\n\n## Risks\n` + a.risks.map((r, i) => `### ${r.title}\n- ${r.category}, ${r.severity} severity, ${r.confidence} confidence\n- Why: ${r.why}\n- Fix: ${r.fix}\n- Sources: ${r.sources.map(s => K[s][1] + ": " + K[s][3] + " (" + K[s][5] + ")").join("; ") || "none in knowledge base"}\n- Human review: ${r.needsReview ? (S.rv[i] ? "completed" : "REQUIRED") : "not flagged"}\n`).join("\n") + `\n## Ask a lawyer\n${(a.askLawyer || []).map(q => "- " + q).join("\n")}\n\n## Reviewer notes\n${S.notes || "(none)"}\n\nNot legal advice. Verify every point at the linked official sources.\n`;
-            try { await dl.save({ filename: "ai-risk-report.md", data: md }) } catch (x) { }
+            const x = e.target.dataset.x; if (!x || !dl) return; const a = S.adv;
+            const md = `# FairPlay Risk Report\n\n${S.desc}\n\n## Summary\n${a.summary}\n\n## Risks\n` + a.risks.map((r, i) => `### ${r.title}\n- ${r.category}, ${r.severity} severity, ${r.confidence} confidence\n- Why: ${r.why}\n- Fix: ${r.fix}\n- Sources: ${r.sources.map(s => K[s][1] + ": " + K[s][3] + " (" + K[s][5] + ")").join("; ") || "none in knowledge base"}\n- Human review: ${r.needsReview ? (S.rv[i] ? "completed" : "REQUIRED") : "not flagged"}\n`).join("\n") + `\n## Ask a lawyer\n${(a.askLawyer || []).map(q => "- " + q).join("\n")}\n\n## Reviewer notes\n${S.notes || "(none)"}\n\nNot legal advice. Verify every point at the linked official sources.\n`;
+            if (x === "1") { try { await dl.save({ filename: "ai-risk-report.md", data: md }) } catch (_) { } return }
+            if (x === "3") { try { await navigator.clipboard.writeText(md); e.target.textContent = "Copied" } catch (_) { e.target.textContent = "Copy failed" } return }
+            const top = a.risks.slice().sort((p, q) => sevR[p.severity] - sevR[q.severity]).slice(0, 5).map(r => `- ${r.title} (${r.severity}): ${r.fix}`).join("\n");
+            const body = `FairPlay check\n\n${a.summary}\n\nTop items:\n${top}\n\nVerify every point at the official sources. Not legal advice.`.slice(0, 1800);
+            location.href = "mailto:?subject=" + encodeURIComponent("FairPlay check: " + S.desc.split("\n")[0].slice(9, 70)) + "&body=" + encodeURIComponent(body);
         });
     </script>
 </body>
