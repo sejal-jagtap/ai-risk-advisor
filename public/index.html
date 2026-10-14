@@ -46,12 +46,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            /* 
             gap: 16px;
-            padding: 16px 40px;*/
-            padding: 10px 40px;
-            padding-top: max(10px, env(safe-area-inset-top))
+            padding: 16px 40px;
+            padding-top: max(16px, env(safe-area-inset-top))
         }
 
         .brandrow {
@@ -66,7 +63,7 @@
             border: 1.5px solid rgba(255, 255, 255, .85);
             display: grid;
             place-items: center;
-            font: 600 32px Newsreader, Georgia, serif;
+            font: 700 32px Newsreader, Georgia, serif;
             position: relative;
             flex: none
         }
@@ -83,7 +80,7 @@
         }
 
         .wm {
-            font: 600 32px/1 Newsreader, Georgia, serif;
+            font: 700 32px/1 Newsreader, Georgia, serif;
             letter-spacing: -.01em
         }
 
@@ -145,7 +142,7 @@
         }
 
         .hero h1 {
-            font: 600 clamp(46px, 7.2vw, 88px)/1 Newsreader, Georgia, serif;
+            font: 700 clamp(46px, 7.2vw, 88px)/1 Newsreader, Georgia, serif;
             letter-spacing: -.03em;
             color: var(--navy);
             margin: 20px 0 22px
@@ -204,7 +201,7 @@
         }
 
         .chead h2 {
-            font: 600 29px/1.15 Newsreader, Georgia, serif;
+            font: 700 29px/1.15 Newsreader, Georgia, serif;
             color: var(--navy);
             margin: 8px 0 0
         }
@@ -237,7 +234,7 @@
             color: var(--navy);
             display: grid;
             place-items: center;
-            font-weight: 600;
+            font-weight: 700;
             flex: none
         }
 
@@ -947,6 +944,391 @@
                 grid-template-columns: repeat(2, 1fr)
             }
         }
+
+        /* Compact hero + fit-to-screen */
+        .top {
+            padding: 10px 28px;
+            padding-top: max(10px, env(safe-area-inset-top))
+        }
+
+        .brandrow {
+            gap: 16px
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            font-size: 24px
+        }
+
+        .logo::after {
+            width: 9px;
+            height: 9px;
+            right: -5px;
+            bottom: -5px
+        }
+
+        .wm {
+            font-size: 24px
+        }
+
+        .tag2 {
+            margin-top: 5px;
+            font-size: 11px
+        }
+
+        .edition {
+            padding: 7px 16px;
+            font-size: 12px;
+            gap: 9px
+        }
+
+        .edition i {
+            width: 7px;
+            height: 7px
+        }
+
+        .hero {
+            padding: 16px 28px 18px
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            gap: 12px
+        }
+
+        .eyebrow::before {
+            width: 36px;
+            height: 2px
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 3.7vw, 48px);
+            margin: 8px 0 6px
+        }
+
+        .hero p {
+            font-size: clamp(14px, 1.2vw, 16px);
+            max-width: min(640px, 58%)
+        }
+
+        .art {
+            width: min(30%, 400px)
+        }
+
+        .art span {
+            font-size: 11px;
+            right: 20px;
+            bottom: 14px
+        }
+
+        .app {
+            padding: 0 28px 14px;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 18px
+        }
+
+        .chead {
+            padding: 16px 24px 12px
+        }
+
+        .chead h2 {
+            font-size: 23px;
+            margin-top: 4px
+        }
+
+        .ey {
+            font-size: 12px
+        }
+
+        .time {
+            padding: 5px 11px;
+            font-size: 13px
+        }
+
+        .step {
+            padding: 14px 24px
+        }
+
+        .sh {
+            gap: 12px;
+            align-items: center
+        }
+
+        .sh>div {
+            display: flex;
+            gap: 4px 12px;
+            align-items: baseline;
+            flex-wrap: wrap
+        }
+
+        .n {
+            width: 28px;
+            height: 28px;
+            font-size: 13px
+        }
+
+        .st {
+            font-size: 17px;
+            padding: 0
+        }
+
+        .ss {
+            font-size: 13px
+        }
+
+        .sb {
+            margin: 10px 0 0 0
+        }
+
+        .presets {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px
+        }
+
+        .presets button {
+            padding: 9px 11px;
+            border-radius: 12px
+        }
+
+        .presets button b {
+            font-size: 14.5px
+        }
+
+        .presets button span {
+            font-size: 12px;
+            line-height: 1.3;
+            display: block
+        }
+
+        .f {
+            font-size: 13px;
+            margin: 0 0 5px
+        }
+
+        .sb .f:not(:first-child) {
+            margin-top: 12px
+        }
+
+        .sb .f:first-child {
+            margin-top: 0
+        }
+
+        textarea,
+        select {
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 14.5px
+        }
+
+        .g3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px
+        }
+
+        .g3 .f {
+            margin-top: 0 !important
+        }
+
+        .chips {
+            gap: 6px
+        }
+
+        .chips button {
+            font-size: 13px;
+            padding: 5px 11px
+        }
+
+        .act {
+            padding: 12px 24px 14px
+        }
+
+        .primary {
+            padding: 13px;
+            font-size: 16px;
+            border-radius: 11px
+        }
+
+        .res {
+            padding: 20px 24px
+        }
+
+        .tabs {
+            top: -20px
+        }
+
+        .empty-state {
+            padding: 6px 4px 0
+        }
+
+        .orb {
+            width: 120px;
+            height: 120px;
+            margin: 10px auto 18px
+        }
+
+        .orb::before {
+            inset: 12px
+        }
+
+        .orb b {
+            width: 56px;
+            height: 56px;
+            font-size: 26px
+        }
+
+        .empty-state h2 {
+            font-size: clamp(26px, 2.8vw, 38px);
+            margin: 8px 0 12px
+        }
+
+        .empty-state p {
+            font-size: 16px
+        }
+
+        .four {
+            margin-top: 24px
+        }
+
+        .four div {
+            padding: 12px 12px
+        }
+
+        .foot {
+            padding: 2px 28px 10px;
+            font-size: 12px
+        }
+
+        .foot details ul {
+            right: 28px
+        }
+
+        @media(min-width:1000px) and (min-height:600px) {
+
+            html,
+            body {
+                height: 100%
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden
+            }
+
+            .hero,
+            .top,
+            .foot {
+                flex: none
+            }
+
+            .app {
+                flex: 1;
+                min-height: 0;
+                grid-template-rows: minmax(0, 1fr);
+                align-items: stretch
+            }
+
+            .card {
+                min-height: 0;
+                overflow: auto
+            }
+
+            .res {
+                position: static;
+                max-height: none
+            }
+        }
+
+        @media(max-width:1000px) {
+            .app {
+                grid-template-columns: 1fr;
+                padding: 0 16px 20px
+            }
+
+            .presets {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .g3 {
+                grid-template-columns: 1fr
+            }
+
+            .hero,
+            .top {
+                padding-left: 16px;
+                padding-right: 16px
+            }
+
+            .chead,
+            .step,
+            .act {
+                padding-left: 16px;
+                padding-right: 16px
+            }
+
+            .foot {
+                padding: 4px 16px 24px
+            }
+        }
+
+        /* tighter fit */
+        .sr {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap
+        }
+
+        .chead {
+            padding: 12px 24px 8px
+        }
+
+        .step {
+            padding: 10px 24px
+        }
+
+        .sb {
+            margin-top: 8px
+        }
+
+        .presets button {
+            padding: 7px 11px
+        }
+
+        .sb .f:not(:first-child) {
+            margin-top: 9px
+        }
+
+        textarea {
+            min-height: 56px;
+            line-height: 1.4
+        }
+
+        .hero {
+            padding: 12px 28px 14px
+        }
+
+        .hero h1 {
+            margin: 6px 0 4px
+        }
+
+        .act {
+            padding: 10px 24px 12px
+        }
+
+        @media(max-height:860px) {
+            .eyebrow {
+                display: none
+            }
+
+            .hero h1 {
+                font-size: clamp(28px, 3.2vw, 40px)
+            }
+        }
     </style>
 </head>
 
@@ -963,7 +1345,7 @@
     <section class="hero">
         <div class="eyebrow">Responsible AI assessment</div>
         <h1>Build AI responsibly.</h1>
-        <p>Surface ethical, privacy, security, and regulatory risks before launch, then turn them into clear, practical
+        <p>Surface ethical, privacy, security, and regulatory risks before launch—then turn them into clear, practical
             next steps.</p>
         <div class="art"><span>Research-informed guidance</span></div>
     </section>
@@ -994,19 +1376,20 @@
                         <div class="ss">A few clear sentences work best.</div>
                     </div>
                 </div>
-                <div class="sb"><label class="f" for="idea">AI product description</label><textarea id="idea" rows="4"
-                        placeholder="What does the product do, and what role does AI play?"></textarea></div>
+                <div class="sb"><label class="f sr" for="idea">AI product description</label><textarea id="idea"
+                        rows="2" placeholder="What does the product do, and what role does AI play?"></textarea></div>
             </div>
             <div class="step">
                 <div class="sh"><span class="n">3</span>
                     <div>
                         <div class="st">Who it affects</div>
-                        <div class="ss">Who uses it, and whether it decides things about people.</div>
+                        <div class="ss">Users, decisions about people, and the model.</div>
                     </div>
                 </div>
-                <div class="sb g2">
+                <div class="sb g3">
                     <div><label class="f" for="users">Users</label><select id="users"></select></div>
                     <div><label class="f" for="dec">Decides about people?</label><select id="dec"></select></div>
+                    <div><label class="f" for="model">Model</label><select id="model"></select></div>
                 </div>
             </div>
             <div class="step">
@@ -1021,15 +1404,6 @@
                     <div class="chips" id="geo"></div>
                 </div>
             </div>
-            <div class="step">
-                <div class="sh"><span class="n">5</span>
-                    <div>
-                        <div class="st">Technology</div>
-                        <div class="ss">How the AI model is sourced.</div>
-                    </div>
-                </div>
-                <div class="sb"><label class="f" for="model">Model</label><select id="model"></select></div>
-            </div>
             <div class="act"><button class="primary" id="run">Assess risks</button>
                 <p class="note" id="stat"></p>
             </div>
@@ -1043,18 +1417,17 @@
     </main>
     <footer class="foot">
         <p>This tool points you to what to check. It does not state what any law requires and can be incomplete or
-            wrong. Verify every point at the linked official source and review with counsel before relying on it. <span
-                id="kbtag"></span></p>
+            wrong. Verify every point at the linked official source and review with counsel before relying on it.</p>
         <details>
-            <summary>Sources</summary>
+            <summary id="kbtag">Sources</summary>
             <ul id="kbl"></ul>
         </details>
     </footer>
     <script>
         const CATS = ["privacy", "bias", "security", "regulatory"], $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-        let KB = [], K = {}; const initKB = kb => { KB = kb; K = Object.fromEntries(KB.map(k => [k[0], k])); $("#kbtag").textContent = KB.length + " sources: NC layer + federal, state, EU"; $("#kbl").innerHTML = KB.map(k => `<li><a href="${k[5]}" target="_blank" rel="noopener">${esc(k[1])}: ${esc(k[3])}</a></li>`).join("") };
+        let KB = [], K = {}; const initKB = kb => { KB = kb; K = Object.fromEntries(KB.map(k => [k[0], k])); $("#kbtag").textContent = "Sources (" + KB.length + ")"; $("#kbl").innerHTML = KB.map(k => `<li><a href="${k[5]}" target="_blank" rel="noopener">${esc(k[1])}: ${esc(k[3])}</a></li>`).join("") };
         const O = {
-            users: ["Consumers", "Businesses (B2B)", "Employees or job candidates", "Students or minors"], dec: ["No", "Informs a human", "Decides automatically"], model: ["Third-party API (OpenAI, Anthropic, etc.)", "Fine-tuned open model", "Own model trained from scratch"],
+            users: ["Consumers", "Businesses (B2B)", "Employees or job candidates", "Students or minors"], dec: ["No", "Informs a human", "Decides automatically"], model: ["Third-party API", "Fine-tuned open model", "Own trained model"],
             data: ["Personal contact info", "Health or wellbeing", "Financial", "Biometric (face, voice)", "Children's data", "Employee or candidate data", "User-generated content", "Scraped public data"], geo: ["North Carolina", "Other US states", "California", "EU/UK", "Elsewhere"]
         };
         ["users", "dec", "model"].forEach(k => $("#" + k).innerHTML = O[k].map(o => `<option>${esc(o)}</option>`).join(""));
