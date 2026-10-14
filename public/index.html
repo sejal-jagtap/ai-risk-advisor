@@ -8,30 +8,25 @@
     <link rel="icon"
         href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2716%27 fill=%27%23F5B83D%27/%3E%3Cpath d=%27M9 16.5l4.5 4.5L23 11%27 fill=%27none%27 stroke=%27%2300009C%27 stroke-width=%273.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E">
     <link
-        href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Public+Sans:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg: #F4F6FB;
-            --sf: #fff;
-            --ink: #0D1233;
-            --mu: #5A6384;
-            --ln: #E1E5F2;
-            --nv: #00009C;
-            --amb: #F5B83D;
-            --am: #8A5A00;
-            --hi: #D6453D;
-            --md: #F0B323;
-            --lo: #2E9A67;
-            --ti: #EEF1FC;
-            box-sizing: border-box;
-            padding-top: env(safe-area-inset-top, 0px);
-            padding-bottom: env(safe-area-inset-bottom, 0px)
+            --navy: #0A2065;
+            --bg: #F2F4F8;
+            --ink: #101A3D;
+            --mu: #5E6A88;
+            --ln: #DDE2EB;
+            --gold: #DFB865;
+            --ti: #EEF1F8;
+            --hi: #C8453D;
+            --md: #E0A21B;
+            --lo: #2E8F63;
+            box-sizing: border-box
         }
 
         html {
-            color-scheme: light;
-            scroll-padding-top: env(safe-area-inset-top, 0px)
+            color-scheme: light
         }
 
         * {
@@ -40,169 +35,271 @@
 
         body {
             margin: 0;
+            background: var(--bg);
             color: var(--ink);
-            font: 15px/1.6 "Public Sans", system-ui, sans-serif;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='900' fill='none' stroke='white' stroke-opacity='.09' stroke-width='2'%3E%3Ccircle cx='1180' cy='-20' r='300'/%3E%3Ccircle cx='1180' cy='-20' r='6' fill='white' fill-opacity='.09'/%3E%3Cpath d='M0 868H1400'/%3E%3C/svg%3E") no-repeat top right/1400px 900px, radial-gradient(900px 520px at 88% -8%, #2A2AD4 0%, transparent 60%) no-repeat, #00009C
+            font: 16px/1.55 "DM Sans", system-ui, sans-serif
         }
 
-        .wrap {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 28px 24px 40px
-        }
-
-        .bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 20px
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .top {
+            background: var(--navy);
             color: #fff;
-            font: 700 28px Newsreader, Georgia, serif;
-            letter-spacing: -.3px
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 40px;
+            padding-top: max(16px, env(safe-area-inset-top))
         }
 
-        .brand b {
-            color: var(--amb)
+        .brandrow {
+            display: flex;
+            align-items: center;
+            gap: 22px
         }
 
         .logo {
-            width: 32px;
-            height: 32px;
+            width: 54px;
+            height: 54px;
+            border: 1.5px solid rgba(255, 255, 255, .85);
+            display: grid;
+            place-items: center;
+            font: 700 32px Newsreader, Georgia, serif;
+            position: relative;
             flex: none
         }
 
-        .bar h1 {
-            margin: 0;
-            font: italic 500 clamp(18px, 2vw, 24px)/1.2 Newsreader, Georgia, serif;
-            color: #DCE1FF
+        .logo::after {
+            content: "";
+            position: absolute;
+            right: -6px;
+            bottom: -7px;
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            transform: rotate(45deg)
         }
 
-        .pills {
+        .wm {
+            font: 700 32px/1 Newsreader, Georgia, serif;
+            letter-spacing: -.01em
+        }
+
+        .tag2 {
+            margin-top: 8px;
+            font-size: 13px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: #C5CEEB
+        }
+
+        .edition {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, .45);
+            border-radius: 999px;
+            padding: 11px 22px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            white-space: nowrap
+        }
+
+        .edition i {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--gold)
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 54px 40px 52px
+        }
+
+        .eyebrow,
+        .ey {
+            font-size: 13.5px;
+            font-weight: 600;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: #4E5B7E
+        }
+
+        .eyebrow {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap
+            align-items: center;
+            gap: 16px
         }
 
-        .kbtag {
-            font-size: 12.5px;
+        .eyebrow::before {
+            content: "";
+            width: 50px;
+            height: 3px;
+            background: var(--gold)
+        }
+
+        .hero h1 {
+            font: 700 clamp(46px, 7.2vw, 88px)/1 Newsreader, Georgia, serif;
+            letter-spacing: -.03em;
+            color: var(--navy);
+            margin: 20px 0 22px
+        }
+
+        .hero p {
+            margin: 0;
+            font-size: clamp(17px, 1.6vw, 22px);
+            line-height: 1.55;
+            color: #4E5B7E;
+            max-width: min(820px, 62%)
+        }
+
+        .art {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: min(34%, 470px);
+            clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
+            background: linear-gradient(rgba(10, 32, 101, .22), rgba(10, 32, 101, .5)), url(hero.jpg) center/cover, url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 420'><g fill='none' stroke='white' stroke-opacity='.28' stroke-width='3'><path d='M50 420V210Q50 100 140 50Q230 100 230 210V420'/><path d='M100 420V230Q100 140 140 100Q180 140 180 230V420'/><path d='M270 420V240Q270 160 330 120Q390 160 390 240V420'/></g></svg>") center bottom/cover no-repeat, linear-gradient(160deg, #7C86A8, #2B3A74)
+        }
+
+        .art span {
+            position: absolute;
+            right: 28px;
+            bottom: 22px;
             color: #fff;
-            background: rgba(255, 255, 255, .12);
-            border: 1px solid rgba(255, 255, 255, .28);
-            border-radius: 20px;
-            padding: 4px 12px
+            font-size: 13px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            font-weight: 500
         }
 
-        main {
+        .app {
             display: grid;
-            grid-template-columns: 420px 1fr;
-            gap: 22px;
+            grid-template-columns: minmax(400px, .64fr) 1fr;
+            gap: 24px;
+            padding: 0 40px 28px;
             align-items: start
         }
 
-        .panel {
-            background: var(--sf);
+        .card {
+            background: #fff;
+            border: 1px solid var(--ln);
             border-radius: 18px;
-            padding: 24px;
-            box-shadow: 0 30px 60px -28px rgba(0, 0, 40, .75)
+            box-shadow: 0 1px 2px rgba(10, 32, 101, .04)
         }
 
-        .phead {
+        .chead {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 12px
+            align-items: flex-start;
+            gap: 12px;
+            padding: 28px 32px 24px
         }
 
-        .hint {
-            font-size: 12.5px;
-            color: var(--mu)
+        .chead h2 {
+            font: 700 29px/1.15 Newsreader, Georgia, serif;
+            color: var(--navy);
+            margin: 8px 0 0
         }
 
-        h2 {
-            font: 700 24px Newsreader, Georgia, serif;
-            margin: 0;
-            color: var(--nv)
+        .time {
+            background: var(--ti);
+            border-radius: 10px;
+            padding: 8px 14px;
+            color: #4E5B7E;
+            font-size: 15px;
+            white-space: nowrap
+        }
+
+        .step {
+            padding: 26px 32px;
+            border-top: 1px solid var(--ln)
+        }
+
+        .sh {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start
+        }
+
+        .n {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--ti);
+            color: var(--navy);
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            flex: none
+        }
+
+        .st {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 1.3;
+            padding-top: 2px
+        }
+
+        .ss {
+            color: var(--mu);
+            font-size: 15px
+        }
+
+        .sb {
+            margin: 18px 0 0 60px
         }
 
         .presets {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            font-size: 12.5px
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
         }
 
         .presets button {
-            padding: 5px 6px
-        }
-
-        .presets button,
-        .chips button {
             font: inherit;
-            font-size: 13px;
-            color: var(--ink);
-            background: var(--bg);
-            border: 1.5px solid transparent;
-            border-radius: 999px;
-            padding: 5px 12px;
+            text-align: left;
+            background: #fff;
+            border: 1.5px solid var(--ln);
+            border-radius: 14px;
+            padding: 14px 16px;
             cursor: pointer;
             transition: all .15s
         }
 
-        .presets button {
-            background: var(--ti);
-            color: var(--nv);
-            font-weight: 600
+        .presets button b {
+            display: block;
+            font-size: 16px;
+            color: var(--ink)
         }
 
-        .chips button:hover,
+        .presets button span {
+            font-size: 13.5px;
+            color: var(--mu)
+        }
+
         .presets button:hover {
-            border-color: var(--nv)
+            border-color: #9AA7CC
         }
 
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px
+        .presets button.on {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10, 32, 101, .1)
         }
 
-        .chips button[aria-pressed=true] {
-            background: var(--nv);
-            color: #fff;
-            border-color: var(--nv)
-        }
-
-        label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .f {
+            display: block;
             font-weight: 600;
-            font-size: 13px;
-            margin: 16px 0 6px
+            font-size: 15px;
+            margin: 0 0 8px
         }
 
-        label:first-of-type {
-            margin-top: 14px
-        }
-
-        label i {
-            font: 700 12px Newsreader, serif;
-            font-style: normal;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--nv);
-            color: #fff;
-            display: grid;
-            place-items: center;
-            flex: none
+        .sb .f:not(:first-child) {
+            margin-top: 20px
         }
 
         textarea,
@@ -210,11 +307,11 @@
             width: 100%;
             font: inherit;
             color: var(--ink);
-            background: var(--bg);
-            border: 1.5px solid transparent;
-            border-radius: 10px;
-            padding: 10px 12px;
-            transition: border-color .15s, background .15s
+            background: #fff;
+            border: 1.5px solid var(--ln);
+            border-radius: 12px;
+            padding: 13px 16px;
+            transition: border-color .15s
         }
 
         textarea {
@@ -224,40 +321,77 @@
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: var(--nv);
-            background: #fff
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10, 32, 101, .1)
         }
 
-        :focus-visible {
-            outline: 2px solid var(--amb);
-            outline-offset: 2px
+        textarea::placeholder {
+            color: #8A94AE
         }
 
         .g2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px
+            gap: 14px
         }
 
-        .g2 label {
-            margin-top: 14px
+        .g2 .f {
+            margin-top: 0 !important
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .chips button {
+            font: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            background: #fff;
+            border: 1.5px solid var(--ln);
+            border-radius: 999px;
+            padding: 7px 14px;
+            cursor: pointer;
+            transition: all .15s
+        }
+
+        .chips button:hover {
+            border-color: #9AA7CC
+        }
+
+        .chips button[aria-pressed=true] {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: #fff
+        }
+
+        .act {
+            position: sticky;
+            bottom: 0;
+            background: rgba(255, 255, 255, .95);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid var(--ln);
+            padding: 16px 32px 18px;
+            border-radius: 0 0 18px 18px
         }
 
         .primary {
             width: 100%;
-            margin-top: 20px;
-            font: 600 16px "Public Sans", sans-serif;
-            background: linear-gradient(180deg, #1A1AD0, #00009C);
+            font: 600 17px "DM Sans", sans-serif;
+            background: var(--navy);
             color: #fff;
             border: 0;
-            border-radius: 11px;
-            padding: 13px;
+            border-radius: 12px;
+            padding: 16px;
             cursor: pointer;
-            transition: transform .12s;
-            box-shadow: 0 10px 22px -10px rgba(0, 0, 156, .8)
+            transition: transform .12s, background .15s;
+            box-shadow: 0 10px 22px -12px rgba(10, 32, 101, .8)
         }
 
         .primary:hover {
+            background: #13307F;
             transform: translateY(-1px)
         }
 
@@ -268,24 +402,124 @@
         }
 
         .note {
-            font-size: 13px;
+            font-size: 13.5px;
             color: var(--mu);
             margin: 10px 0 0
         }
 
+        .note:empty {
+            display: none
+        }
+
+        .res {
+            position: sticky;
+            top: 16px;
+            max-height: calc(100vh - 32px);
+            overflow: auto;
+            padding: 28px 32px;
+            background: #FCFDFF
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 8px 0
+        }
+
+        .orb {
+            width: 164px;
+            height: 164px;
+            border-radius: 50%;
+            border: 1.5px solid #D5DBEA;
+            display: grid;
+            place-items: center;
+            margin: 20px auto 28px;
+            position: relative
+        }
+
+        .orb::before {
+            content: "";
+            position: absolute;
+            inset: 16px;
+            border-radius: 50%;
+            border: 1.5px solid #E2E7F2
+        }
+
+        .orb b {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--ti);
+            display: grid;
+            place-items: center;
+            font: 500 34px Newsreader, Georgia, serif;
+            color: var(--navy)
+        }
+
+        .empty-state h2 {
+            font: 700 clamp(30px, 3.6vw, 50px)/1.1 Newsreader, Georgia, serif;
+            color: var(--navy);
+            margin: 14px 0 18px;
+            letter-spacing: -.02em
+        }
+
+        .empty-state p {
+            color: var(--mu);
+            font-size: 19px;
+            max-width: 560px;
+            margin: 0 auto
+        }
+
+        .four {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--ln);
+            margin-top: 40px;
+            text-align: left
+        }
+
+        .four div {
+            padding: 18px 16px;
+            border-right: 1px solid var(--ln)
+        }
+
+        .four div:last-child {
+            border: 0
+        }
+
+        .four small {
+            display: block;
+            color: #8A94AE;
+            letter-spacing: .15em
+        }
+
+        .four b {
+            display: block;
+            color: var(--navy);
+            font-size: 17px
+        }
+
+        .four span {
+            color: var(--mu);
+            font-size: 14px
+        }
+
         .tabs {
             position: sticky;
-            top: 0;
+            top: -28px;
             z-index: 2;
             display: flex;
             gap: 4px;
-            background: var(--bg);
-            border-radius: 11px;
+            background: var(--ti);
+            border-radius: 12px;
             padding: 4px;
-            margin: 0 0 18px;
+            margin: 0 0 20px;
             width: fit-content;
             max-width: 100%;
             flex-wrap: wrap
+        }
+
+        .tabs[hidden] {
+            display: none
         }
 
         .tabs button {
@@ -295,19 +529,19 @@
             color: var(--mu);
             background: none;
             border: 0;
-            border-radius: 8px;
-            padding: 8px 16px;
+            border-radius: 9px;
+            padding: 9px 16px;
             cursor: pointer
         }
 
         .tabs button[aria-selected=true] {
             background: #fff;
-            color: var(--nv);
-            box-shadow: 0 1px 4px rgba(0, 0, 60, .18)
+            color: var(--navy);
+            box-shadow: 0 1px 4px rgba(10, 32, 101, .18)
         }
 
         .lead {
-            font: 500 19px/1.45 Newsreader, Georgia, serif;
+            font: 500 20px/1.45 Newsreader, Georgia, serif;
             margin: 0 0 4px
         }
 
@@ -321,11 +555,10 @@
         .cell {
             border-radius: 13px;
             padding: 12px 14px;
-            background: var(--nv);
-            color: #D6DCFF;
+            background: var(--navy);
+            color: #CBD3EE;
             font-size: 13px;
-            animation: up .4s ease both;
-            box-shadow: 0 10px 20px -14px rgba(0, 0, 100, .8)
+            animation: up .4s ease both
         }
 
         .cell b {
@@ -337,28 +570,21 @@
 
         .cell.z {
             background: var(--ti);
-            color: var(--mu);
-            box-shadow: none
+            color: var(--mu)
         }
 
         .cell.z b {
             color: #9AA2C8
         }
 
-        @media(max-width:560px) {
-            .ledger {
-                grid-template-columns: repeat(2, 1fr)
-            }
-        }
-
         .banner {
             border-radius: 12px;
             background: #FFF6DE;
             border: 1px solid #F2D58A;
-            border-left: 5px solid var(--amb);
+            border-left: 5px solid var(--gold);
             padding: 11px 14px;
             margin: 0 0 14px;
-            font-size: 14px;
+            font-size: 14.5px;
             color: #5A3D00
         }
 
@@ -369,7 +595,7 @@
             padding: 16px 18px 14px 60px;
             margin-bottom: 12px;
             background: #fff;
-            transition: box-shadow .2s, transform .2s;
+            transition: box-shadow .2s;
             animation: up .4s ease both
         }
 
@@ -394,11 +620,6 @@
             background: var(--lo)
         }
 
-        .risk:hover {
-            box-shadow: 0 12px 26px -16px rgba(0, 0, 80, .5);
-            transform: translateY(-1px)
-        }
-
         .risk.ok {
             opacity: .6
         }
@@ -407,29 +628,14 @@
             background: #B9C0DA
         }
 
-        .risk:nth-of-type(2) {
-            animation-delay: .05s
-        }
-
-        .risk:nth-of-type(3) {
-            animation-delay: .1s
-        }
-
-        .risk:nth-of-type(4) {
-            animation-delay: .15s
-        }
-
-        .risk:nth-of-type(5) {
-            animation-delay: .2s
-        }
-
-        .risk:nth-of-type(6) {
-            animation-delay: .25s
+        .risk:hover {
+            box-shadow: 0 12px 26px -16px rgba(10, 32, 101, .5)
         }
 
         .risk h3 {
             font: 700 21px/1.25 Newsreader, Georgia, serif;
-            margin: 6px 0 4px
+            margin: 6px 0 4px;
+            color: var(--navy)
         }
 
         .risk p {
@@ -479,12 +685,12 @@
         }
 
         .fix b {
-            color: var(--nv)
+            color: var(--navy)
         }
 
         .src a {
             display: inline-block;
-            color: var(--nv);
+            color: var(--navy);
             border: 1px solid var(--ln);
             border-radius: 999px;
             padding: 2px 11px;
@@ -498,10 +704,13 @@
         }
 
         .src a:hover {
-            border-color: var(--nv)
+            border-color: var(--navy)
         }
 
         .rvl {
+            display: flex;
+            gap: 6px;
+            align-items: center;
             margin: 10px 0 0;
             font-weight: 500;
             color: var(--mu);
@@ -509,7 +718,14 @@
         }
 
         .rvl input {
-            accent-color: var(--nv)
+            accent-color: var(--navy)
+        }
+
+        .res label[for=nt] {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 16px 0 6px
         }
 
         .acts {
@@ -520,66 +736,18 @@
         }
 
         .sec {
-            font: 600 14px "Public Sans", sans-serif;
+            font: 600 14px "DM Sans", sans-serif;
             background: #fff;
-            color: var(--nv);
-            border: 1.5px solid var(--nv);
+            color: var(--navy);
+            border: 1.5px solid var(--navy);
             border-radius: 10px;
             padding: 10px 16px;
             cursor: pointer
         }
 
         .sec.pri {
-            background: var(--nv);
+            background: var(--navy);
             color: #fff
-        }
-
-        .exh {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin: 0 0 12px
-        }
-
-        .exh span {
-            font-size: 12px;
-            font-weight: 600;
-            color: #7A4B00;
-            background: #FFF1D6;
-            border-radius: 999px;
-            padding: 2px 10px;
-            white-space: nowrap
-        }
-
-        .risk.exm {
-            border-style: dashed
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 16px
-        }
-
-        .steps div {
-            background: var(--bg);
-            border-radius: 12px;
-            padding: 12px 14px;
-            font-size: 13px;
-            color: var(--mu)
-        }
-
-        .steps b {
-            display: block;
-            color: var(--ink)
-        }
-
-        @media(max-width:700px) {
-            .steps {
-                grid-template-columns: 1fr
-            }
         }
 
         .cmp {
@@ -588,21 +756,16 @@
             gap: 14px
         }
 
-        @media(max-width:700px) {
-            .cmp {
-                grid-template-columns: 1fr
-            }
-        }
-
         .col {
             border: 1px solid var(--ln);
             border-radius: 12px;
             padding: 12px 14px;
             font-size: 13.5px;
             white-space: pre-wrap;
-            max-height: 460px;
+            max-height: 420px;
             overflow: auto;
-            margin-top: 6px
+            margin-top: 6px;
+            background: #fff
         }
 
         table {
@@ -628,11 +791,15 @@
             color: var(--mu)
         }
 
+        .note.n2 {
+            margin-top: 8px
+        }
+
         .sk {
             height: 92px;
             border-radius: 12px;
             margin-bottom: 12px;
-            background: linear-gradient(90deg, var(--bg) 25%, #fff 50%, var(--bg) 75%);
+            background: linear-gradient(90deg, var(--ti) 25%, #fff 50%, var(--ti) 75%);
             background-size: 200% 100%;
             animation: sh 1.2s infinite
         }
@@ -662,14 +829,7 @@
         }
 
         a {
-            color: var(--nv)
-        }
-
-        .disc {
-            font-size: 12.5px;
-            color: #D6DCFF;
-            margin: 0;
-            flex: 1
+            color: var(--navy)
         }
 
         .foot {
@@ -678,33 +838,39 @@
             align-items: center;
             justify-content: space-between;
             position: relative;
-            margin-top: 14px
+            padding: 4px 40px 32px;
+            font-size: 13px;
+            color: var(--mu)
+        }
+
+        .foot p {
+            margin: 0;
+            flex: 1
         }
 
         .foot details {
-            margin: 0;
-            font-size: 13px;
-            color: #D6DCFF
+            margin: 0
         }
 
         .foot summary {
             cursor: pointer;
-            color: #fff;
+            color: var(--navy);
+            font-weight: 600;
             white-space: nowrap
         }
 
         .foot details ul {
             position: absolute;
-            right: 0;
-            bottom: calc(100% + 8px);
+            right: 40px;
+            bottom: calc(100% - 4px);
             width: min(520px, 92vw);
             background: #fff;
-            color: var(--ink);
+            border: 1px solid var(--ln);
             border-radius: 12px;
             padding: 14px 18px 14px 34px;
             max-height: 50vh;
             overflow: auto;
-            box-shadow: 0 18px 40px -12px rgba(0, 0, 40, .6);
+            box-shadow: 0 18px 40px -12px rgba(10, 32, 101, .35);
             z-index: 5;
             margin: 0
         }
@@ -713,168 +879,174 @@
             margin: 3px 0
         }
 
-        .foot details a {
-            color: var(--nv)
-        }
+        @media(max-width:1000px) {
+            .app {
+                grid-template-columns: 1fr;
+                padding: 0 20px 24px
+            }
 
-        @media(max-width:860px) {
-            main {
+            .res {
+                position: static;
+                max-height: none
+            }
+
+            .top {
+                padding: 14px 20px
+            }
+
+            .hero {
+                padding: 36px 20px
+            }
+
+            .hero p {
+                max-width: 100%
+            }
+
+            .art {
+                display: none
+            }
+
+            .edition {
+                display: none
+            }
+
+            .foot {
+                padding: 4px 20px 28px;
+                flex-wrap: wrap
+            }
+
+            .sb {
+                margin-left: 0
+            }
+
+            .chead,
+            .step,
+            .act {
+                padding-left: 20px;
+                padding-right: 20px
+            }
+
+            .act {
+                position: static;
+                background: none;
+                border: 0
+            }
+
+            .cmp {
                 grid-template-columns: 1fr
             }
-        }
 
-        @media(min-width:900px) and (min-height:620px) {
-
-            html,
-            body {
-                height: 100%
+            .four {
+                grid-template-columns: 1fr 1fr
             }
 
-            body {
-                overflow: hidden
-            }
-
-            .wrap {
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                padding: 16px 24px 12px
-            }
-
-            main {
-                flex: 1;
-                min-height: 0;
-                grid-template-rows: minmax(0, 1fr);
-                align-items: stretch
-            }
-
-            .panel {
-                min-height: 0;
-                overflow: auto;
-                padding: 20px 24px
-            }
-        }
-
-        .actbar {
-            position: sticky;
-            bottom: -20px;
-            margin: 8px -4px -20px;
-            padding: 14px 4px 20px;
-            background: linear-gradient(rgba(255, 255, 255, 0), #fff 28%)
-        }
-
-        .actbar .primary {
-            margin-top: 0
-        }
-
-        .actbar .note {
-            margin: 8px 0 0;
-            min-height: 0
-        }
-
-        @media(max-width:899px) {
-            .actbar {
-                position: static;
-                margin: 0;
-                padding: 0;
-                background: none
-            }
-
-            .actbar .primary {
-                margin-top: 20px
-            }
-        }
-
-        @media(min-width:900px) and (min-height:620px) {
-            .panel {
-                padding: 18px 22px
-            }
-
-            label {
-                margin: 11px 0 5px
-            }
-
-            .g2 label {
-                margin-top: 11px
-            }
-
-            .chips {
-                gap: 5px
-            }
-
-            .chips button {
-                font-size: 12.5px;
-                padding: 3px 10px
-            }
-
-            textarea,
-            select {
-                padding: 8px 11px
-            }
-
-            .phead {
-                margin-bottom: 10px
-            }
-
-            .primary {
-                padding: 12px
+            .ledger {
+                grid-template-columns: repeat(2, 1fr)
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="bar">
-            <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
-                    <circle cx="16" cy="16" r="16" fill="#F5B83D" />
-                    <path d="M9 16.5l4.5 4.5L23 11" fill="none" stroke="#00009C" stroke-width="3.2"
-                        stroke-linecap="round" stroke-linejoin="round" />
-                </svg><span>Fair<b>Play</b></span></div>
-            <h1>Know what to check before you build.</h1>
-            <div class="pills"><span class="kbtag">Built for Duke and NC founders</span><span class="kbtag"
-                    id="kbtag"></span></div>
-        </div>
-        <main>
-            <section class="panel f">
-                <div class="phead">
-                    <h2>Describe your AI</h2><span class="hint">Takes about a minute</span>
+    <header class="top">
+        <div class="brandrow">
+            <div class="logo">F</div>
+            <div>
+                <div class="wm">FairPlay</div>
+                <div class="tag2">Know what to check before you build</div>
+            </div>
+        </div><span class="edition"><i></i>Duke Builder Edition</span>
+    </header>
+    <section class="hero">
+        <div class="eyebrow">Responsible AI assessment</div>
+        <h1>Build AI responsibly.</h1>
+        <p>Surface ethical, privacy, security, and regulatory risks before launch—then turn them into clear, practical
+            next steps.</p>
+        <div class="art"><span>Research-informed guidance</span></div>
+    </section>
+    <main class="app">
+        <section class="card setup">
+            <div class="chead">
+                <div>
+                    <div class="ey">Assessment setup</div>
+                    <h2>Tell us what you’re building</h2>
+                </div><span class="time">~3 min</span>
+            </div>
+            <div class="step">
+                <div class="sh"><span class="n">1</span>
+                    <div>
+                        <div class="st">Choose a starting point</div>
+                        <div class="ss">Use a scenario or describe your own.</div>
+                    </div>
                 </div>
-                <div class="presets"><button data-p="0" title="Resume screener">Hiring</button><button data-p="1"
-                        title="Wellness chatbot">Wellness</button><button data-p="2"
-                        title="Loan pre-check">Lending</button><button data-p="3" title="AI tutor">Tutor</button></div>
-                <label for="idea"><i>1</i>What does it do?</label><textarea id="idea" rows="3"
-                    placeholder="e.g. An assistant that reads customer emails and drafts replies..."></textarea>
-                <div class="g2">
-                    <div><label for="users"><i>2</i>Who uses it?</label><select id="users"></select></div>
-                    <div><label for="dec"><i>3</i>Decides about people?</label><select id="dec"></select></div>
+                <div class="sb presets"><button data-p="0"><b>Hiring</b><span>Candidate screening</span></button><button
+                        data-p="1"><b>Wellness</b><span>Health support</span></button><button
+                        data-p="2"><b>Lending</b><span>Credit decisions</span></button><button
+                        data-p="3"><b>Tutor</b><span>Learning assistant</span></button></div>
+            </div>
+            <div class="step">
+                <div class="sh"><span class="n">2</span>
+                    <div>
+                        <div class="st">Describe the product</div>
+                        <div class="ss">A few clear sentences work best.</div>
+                    </div>
                 </div>
-                <label><i>4</i>Data it uses</label>
-                <div class="chips" id="data"></div>
-                <label><i>5</i>Where are your users?</label>
-                <div class="chips" id="geo"></div>
-                <label for="model"><i>6</i>Model</label><select id="model"></select>
-                <div class="actbar"><button class="primary" id="run">Assess risks</button>
-                    <p class="note" id="stat"></p>
+                <div class="sb"><label class="f" for="idea">AI product description</label><textarea id="idea" rows="4"
+                        placeholder="What does the product do, and what role does AI play?"></textarea></div>
+            </div>
+            <div class="step">
+                <div class="sh"><span class="n">3</span>
+                    <div>
+                        <div class="st">Who it affects</div>
+                        <div class="ss">Who uses it, and whether it decides things about people.</div>
+                    </div>
                 </div>
-            </section>
-            <section class="panel">
-                <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="rep">Advisor
-                        report</button><button role="tab" aria-selected="false" data-t="cmp">Side by side with a plain
-                        prompt</button></div>
-                <div id="body"></div>
-            </section>
-        </main>
-        <div class="foot">
-            <p class="disc">Not legal advice. This tool points you to what to check. It does not state what any law
-                requires and can be incomplete or wrong. Verify every point at the linked official source and review
-                with counsel before relying on it.</p>
-            <details>
-                <summary>Sources</summary>
-                <ul id="kbl"></ul>
-            </details>
-        </div>
-    </div>
+                <div class="sb g2">
+                    <div><label class="f" for="users">Users</label><select id="users"></select></div>
+                    <div><label class="f" for="dec">Decides about people?</label><select id="dec"></select></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="sh"><span class="n">4</span>
+                    <div>
+                        <div class="st">Data and reach</div>
+                        <div class="ss">What it uses, and where your users are.</div>
+                    </div>
+                </div>
+                <div class="sb"><span class="f">Data it uses</span>
+                    <div class="chips" id="data"></div><span class="f">Where your users are</span>
+                    <div class="chips" id="geo"></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="sh"><span class="n">5</span>
+                    <div>
+                        <div class="st">Technology</div>
+                        <div class="ss">How the AI model is sourced.</div>
+                    </div>
+                </div>
+                <div class="sb"><label class="f" for="model">Model</label><select id="model"></select></div>
+            </div>
+            <div class="act"><button class="primary" id="run">Assess risks</button>
+                <p class="note" id="stat"></p>
+            </div>
+        </section>
+        <section class="card res">
+            <div class="tabs" role="tablist" hidden><button role="tab" aria-selected="true" data-t="rep">Advisor
+                    report</button><button role="tab" aria-selected="false" data-t="cmp">Side by side with a plain
+                    prompt</button></div>
+            <div id="body"></div>
+        </section>
+    </main>
+    <footer class="foot">
+        <p>This tool points you to what to check. It does not state what any law requires and can be incomplete or
+            wrong. Verify every point at the linked official source and review with counsel before relying on it. <span
+                id="kbtag"></span></p>
+        <details>
+            <summary>Sources</summary>
+            <ul id="kbl"></ul>
+        </details>
+    </footer>
     <script>
         const CATS = ["privacy", "bias", "security", "regulatory"], $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
         let KB = [], K = {}; const initKB = kb => { KB = kb; K = Object.fromEntries(KB.map(k => [k[0], k])); $("#kbtag").textContent = KB.length + " sources: NC layer + federal, state, EU"; $("#kbl").innerHTML = KB.map(k => `<li><a href="${k[5]}" target="_blank" rel="noopener">${esc(k[1])}: ${esc(k[3])}</a></li>`).join("") };
@@ -887,7 +1059,7 @@
         document.addEventListener("click", e => { const b = e.target.closest(".chips button"); if (b) b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true") });
         const P = [["A resume-screening tool that ranks job applicants with an LLM and gives recruiters a 0-100 fit score.", 2, 2, [5], [0, 1, 2], 0], ["A mental-wellness chatbot for college students that remembers past chats and suggests coping exercises.", 3, 1, [1, 6, 0], [0, 3], 0], ["A loan pre-qualification tool that estimates eligibility from bank-linked transaction data.", 0, 2, [2, 0], [0, 2, 1], 2], ["An AI tutor app for high school students in North Carolina. It remembers each student's grades and weak topics, adapts lessons, and emails a weekly progress summary to parents.", 3, 1, [4, 0, 6], [0, 1], 0]];
         const pick = k => [...document.querySelectorAll("#" + k + " button")].filter(b => b.getAttribute("aria-pressed") === "true").map(b => b.textContent);
-        document.querySelectorAll(".presets button").forEach(b => b.onclick = () => { const p = P[+b.dataset.p]; $("#idea").value = p[0]; $("#users").selectedIndex = p[1]; $("#dec").selectedIndex = p[2]; $("#model").selectedIndex = p[5];["data", "geo"].forEach((k, j) => document.querySelectorAll("#" + k + " button").forEach((c, i) => c.setAttribute("aria-pressed", p[3 + j].includes(i)))) });
+        document.querySelectorAll(".presets button").forEach(b => b.onclick = () => { document.querySelectorAll(".presets button").forEach(x => x.classList.toggle("on", x === b)); const p = P[+b.dataset.p]; $("#idea").value = p[0]; $("#users").selectedIndex = p[1]; $("#dec").selectedIndex = p[2]; $("#model").selectedIndex = p[5];["data", "geo"].forEach((k, j) => document.querySelectorAll("#" + k + " button").forEach((c, i) => c.setAttribute("aria-pressed", p[3 + j].includes(i)))) });
         let S = { tab: "rep", adv: null, plain: null, tally: null, err: "", rv: {}, notes: "", busy: false, desc: "" }, dl = { save: async ({ filename, data }) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/markdown" })); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000) } };
         const api = async (p, b) => { const r = await fetch("/api/" + p, { method: "POST", headers: { "content-type": "application/json", "x-access-code": $("#code") ? $("#code").value : "" }, body: JSON.stringify(b) }); const j = await r.json().catch(() => ({})); if (!r.ok) throw { code: j.code || "upstream_error", message: j.error }; return j.data };
         (async () => { try { const j = await (await fetch("/api/kb")).json(); initKB(j.kb); if (j.needsCode) $("#codewrap").hidden = false } catch (e) { $("#stat").textContent = "Could not load the knowledge base. Reload the page." } render() })();
@@ -906,7 +1078,7 @@
         const sevR = { high: 0, medium: 1, low: 2 };
         function stats() { const r = S.adv.risks; return { cats: new Set(r.map(x => x.category)).size, cites: new Set(r.flatMap(x => x.sources)).size, fixes: r.filter(x => x.fix).length, flags: r.filter(x => x.needsReview).length } }
         function rep() {
-            if (S.err) return `<p class="empty">${esc(S.err)}</p>`; if (!S.adv) return S.busy ? `<div class="sk w"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>` : `<div class="exh"><h2>What a FairPlay report looks like</h2><span>Example output</span></div><div class="risk high exm"><div class="meta"><span class="tag">bias</span><span class="tag s-high">high severity</span><span class="tag rv">Needs human review</span></div><h3>Scores may disadvantage some candidate groups</h3><p>Hiring models can repeat past patterns, and nobody is checking outcomes by group.</p><p class="fix"><b>Fix:</b> Compare score gaps across groups before launch, and keep a person on every rejection.</p><div class="src"><a href="https://www.nyc.gov/site/dca/about/automated-employment-decision-tools.page" target="_blank" rel="noopener">NYC Local Law 144: Hiring tools</a></div></div><div class="steps"><div><b>1. Describe</b>Your idea, users, and data.</div><div><b>2. Check</b>Risks, plus where to verify them.</div><div><b>3. Review</b>Flag what a human must confirm.</div></div>`;
+            if (S.err) return `<p class="empty">${esc(S.err)}</p>`; if (!S.adv) return S.busy ? `<div class="sk w"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>` : `<div class="empty-state"><div class="orb"><b>4</b></div><div class="ey">Your report will appear here</div><h2>Clarity before complexity</h2><p>Complete the assessment to receive a practical review across four essential risk areas.</p><div class="four"><div><small>01</small><b>Privacy</b><span>Data and consent</span></div><div><small>02</small><b>Bias</b><span>Fair outcomes</span></div><div><small>03</small><b>Security</b><span>Protecting data</span></div><div><small>04</small><b>Regulatory</b><span>Laws to check</span></div></div></div>`;
             const a = S.adv, rs = a.risks.map((r, i) => ({ r, i })).sort((x, y) => sevR[x.r.severity] - sevR[y.r.severity]), open = a.risks.filter((r, i) => r.needsReview && !S.rv[i]).length;
             const led = CATS.map(c => { const n = a.risks.filter(r => r.category === c).length; return `<div class="cell ${n ? "" : "z"}"><b>${n}</b>${c[0].toUpperCase() + c.slice(1)}${n ? "" : " (none flagged)"}</div>` }).join("");
             return `<p class="lead">${esc(a.summary)}</p><div class="ledger">${led}</div><div class="banner"><span>${open ? `<b>${open} of ${a.risks.length} risks need human review</b> before you rely on them. Tick each one once someone qualified has checked it.` : "All flagged items have been marked reviewed."}</span></div>` +
@@ -919,7 +1091,7 @@
             return `<table><tr><th></th><th>Plain prompt</th><th>Advisor</th></tr><tr><td>Risk areas covered (of 4)</td><td>${c ?? "..."}</td><td>${s ? s.cats : "..."}</td></tr><tr><td>Specific provisions cited</td><td>${t ? +t.cites || 0 : "..."}</td><td>${s ? s.cites + " (checked against the knowledge base)" : "..."}</td></tr><tr><td>Concrete fixes</td><td>${t ? +t.fixes || 0 : "..."}</td><td>${s ? s.fixes : "..."}</td></tr><tr><td>Flagged for human review</td><td>None</td><td>${s ? s.flags : "..."}</td></tr></table>
 <div class="cmp"><div><b>Plain prompt</b><div class="col">${S.plain ? esc(S.plain) : "Running..."}</div></div><div><b>Advisor</b><div class="col">${S.adv ? esc(S.adv.risks.map(r => `${r.title} [${r.category}, ${r.severity}]\n${r.fix}`).join("\n\n")) : "Running..."}</div></div></div><p class="note">Plain figures are tallied by an AI reader, so treat them as indicative. Repeat across 10 of your own cases before quoting a result.</p>`
         }
-        function render() { $("#body").innerHTML = S.tab === "rep" ? rep() : cmp() }
+        function render() { document.querySelector(".tabs").hidden = !(S.adv || S.plain || S.busy || S.err); $("#body").innerHTML = S.tab === "rep" ? rep() : cmp() }
         $("#body").addEventListener("change", e => { if (e.target.dataset.i !== undefined) { S.rv[e.target.dataset.i] = e.target.checked; render() } });
         $("#body").addEventListener("input", e => { if (e.target.id === "nt") S.notes = e.target.value });
         $("#body").addEventListener("click", async e => {
