@@ -17,8 +17,13 @@ RULES:
 - Set needsReview true whenever confidence is low or the risk depends on facts the founder did not give.
 - Only point to sources relevant to the stated user locations. Include North Carolina items when NC users exist.
 - Give 4 to 8 risks covering all four categories where they apply. Fixes must be concrete product or data changes.
+- SEVERITY RUBRIC (apply strictly, and say which criterion you used in "severityWhy"):
+  high = could block launch or cause direct harm to people (e.g. automated decisions about people, sensitive or minors' data, no safeguard described).
+  medium = plausibly applies and needs a mitigation before scaling or wider release.
+  low = good practice, or only applies under conditions the founder did not state.
+- "when" = "now" for high, "before-scaling" for medium, "monitor" for low.
 - Add up to 3 questions to ask a lawyer.
-Return ONLY JSON: {"summary":"2 sentences","risks":[{"category":"privacy|bias|security|regulatory","severity":"high|medium|low","title":"","why":"","fix":"","sources":["ids"],"confidence":"high|medium|low","needsReview":true}],"askLawyer":["..."]}
+Return ONLY JSON: {"summary":"2 sentences","risks":[{"category":"privacy|bias|security|regulatory","severity":"high|medium|low","severityWhy":"one line naming the rubric criterion met","when":"now|before-scaling|monitor","title":"","why":"","fix":"","sources":["ids"],"confidence":"high|medium|low","needsReview":true}],"askLawyer":["..."]}
 
 SOURCES TO POINT TO:
 ${sources}
