@@ -1,0 +1,129 @@
+{
+ "scenario": {
+  "id": "S5",
+  "name": "Dental assistant",
+  "idea": "A tool that listens to dentist-patient visits, writes clinical notes and suggests diagnoses.",
+  "users": "Businesses (B2B)",
+  "dec": "Informs a human",
+  "data": [
+   "Health records",
+   "Audio"
+  ],
+  "geo": [
+   "Other US states"
+  ],
+  "model": "Third-party API",
+  "expected": [
+   "Health data privacy (HIPAA-type; KB gap)",
+   "Recording consent (NC-WATCH / state wiretap)",
+   "Clinical hallucination / medical device oversight (FDA; KB gap)",
+   "Vendor/data sharing with model API"
+  ]
+ },
+ "advisor": {
+  "summary": "This tool records dentist-patient conversations, processes health records through a third-party AI API, and suggests diagnoses. The main risks are patient consent for audio, sensitive-data handling by the vendor, and diagnostic errors. No listed source covers several of these, so they need legal review. Your stated locations (other US states) rule out the EU/UK, California and North Carolina entries.",
+  "risks": [
+   {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "Sensitive health data and audio of patients are involved, and no safeguard was described (direct-harm / sensitive-data criterion).",
+    "when": "now",
+    "title": "Patient consent to audio recording",
+    "why": "The tool records private conversations. Recording and consent rules may differ by state, and some states may require every party's consent. Patients may not know a recording or AI is involved.",
+    "fix": "Build a consent step into the product: a patient-facing notice or script, a consent record per visit, and a pause or opt-out that works without breaking the visit. Let clinics set state-specific consent flows. Keep audio only as long as needed, then auto-delete it.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "Health records are sensitive data and are shared with a third-party vendor, with no safeguards described.",
+    "when": "now",
+    "title": "Health-privacy rules for clinic data (e.g., HIPAA) and vendor agreements",
+    "why": "Your business customers are likely dental practices, so US health-privacy rules may apply to you as a vendor, and to your AI API provider as a subcontractor. Whether they apply depends on facts you haven't given. No listed source covers this.",
+    "fix": "Confirm with counsel whether you act as a business associate or similar. Get the required contracts with every customer and with your model API vendor. Choose vendor terms that bar training on your data and set retention limits. Minimize the fields sent to the API and strip identifiers where possible.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "high",
+    "severityWhy": "Audio and health records leave your system for a third-party API, and no safeguard was described, so a leak could directly harm patients.",
+    "when": "now",
+    "title": "Data leakage and prompt injection via the third-party model",
+    "why": "Sensitive transcripts flow to an external model. Risks include leakage, vendor retention, and instructions hidden in speech or records that manipulate the output. State breach-notice duties may also apply, so check the states where your customers operate.",
+    "fix": "Encrypt audio and records in transit and at rest. Isolate each tenant's data. Use zero-retention API settings. Treat transcript text as untrusted input and filter model outputs. Log access, and write an incident response plan covering state breach notification.",
+    "sources": [
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "Diagnostic suggestions could directly harm patients if wrong, and regulatory status could block launch.",
+    "when": "now",
+    "title": "Diagnosis suggestions may be regulated clinical software",
+    "why": "Software that suggests diagnoses may face medical-device or clinical-decision-support rules, depending on features and claims. No listed source covers this, and the answer turns on facts you haven't provided.",
+    "fix": "Separate the note-writing feature from the diagnosis feature. Ship notes first if needed. Have a regulatory specialist assess the diagnosis feature before release. Present suggestions as options for the dentist to review, with the evidence shown, never as conclusions.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "high",
+    "severityWhy": "Made-up or wrong clinical content could directly harm patients, and no safeguard was described.",
+    "when": "now",
+    "title": "Hallucinated notes and over-reliance on suggestions",
+    "why": "Generative models can invent findings or omit details. Busy clinicians may sign off without checking, and errors would enter the patient record.",
+    "fix": "Require explicit clinician review and sign-off before notes are saved. Link each note statement to its transcript segment. Highlight low-confidence items. Show a visible 'AI-generated draft' label. Keep an audit trail of edits, and collect clinician error reports.",
+    "sources": [
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": false
+   },
+   {
+    "category": "bias",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs mitigation before wider release. A human reviews output, which lowers immediate harm.",
+    "when": "before-scaling",
+    "title": "Uneven transcription and suggestion quality across patients",
+    "why": "Speech recognition and summarization can be less accurate for accented speech, other languages, children, or speech impairments. Diagnosis suggestions may also reflect gaps in the training data across demographic groups.",
+    "fix": "Test accuracy by accent, language, age, and noise level on realistic dental audio. Set minimum performance targets per group. Add a fallback for low-confidence transcription. Monitor error rates by group after launch and keep a process to act on findings.",
+    "sources": [
+     "NIST-MEAS"
+    ],
+    "confidence": "medium",
+    "needsReview": false
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs mitigation before scaling; misleading claims could create enforcement exposure.",
+    "when": "before-scaling",
+    "title": "Accuracy claims and data-use statements",
+    "why": "Marketing that overstates accuracy or 'diagnostic' ability, or privacy statements that don't match real data handling, could be seen as deceptive. You also lack documented accountability for who owns safety decisions.",
+    "fix": "Back each accuracy claim with your own test results. Make sure your privacy statements and customer contracts match what actually happens with audio, retention, and vendor sharing. Document intended use, affected people, known harms, and a named owner for AI safety.",
+    "sources": [
+     "FTC-5",
+     "NIST-MAP"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   }
+  ],
+  "askLawyer": [
+   "Do health-privacy rules such as HIPAA apply to us and to our AI API vendor, and what contracts do we need?",
+   "Which states' recording-consent rules apply to our customers' visits, and how should patient consent be captured?",
+   "Could the diagnosis-suggestion feature be treated as regulated medical software, and how should we scope or label it?"
+  ]
+ },
+ "plain": {
+  "text": "# Risks of an AI dental scribe and diagnosis-suggestion tool\n\n## 1. Regulatory and legal (highest priority)\n\n- **HIPAA:** You'd likely be a business associate of each dental practice. That requires BAAs with customers, a BAA (or equivalent) with your model API vendor, security risk assessments, breach notification procedures, and minimum-necessary controls.\n- **Recording consent laws:** Many states require all-party consent to record conversations (e.g., CA, FL, IL, PA, WA). Since you operate across states, you need a consent workflow that satisfies the strictest rules, including for patients who are minors or who come with family members.\n- **State health and biometric privacy laws:** Examples include Washington's My Health My Data Act, California's CMIA/CCPA, Texas HB 300, and Illinois BIPA if voiceprints or speaker identification are involved. Requirements differ by state.\n- **FDA:** Note-taking is generally low-risk, but **diagnosis suggestions** may make the product a medical device (SaMD). The clinical decision support exemption is narrow. It generally requires that the clinician can independently review the basis for the recommendation and doesn't rely primarily on it. Audio-derived and opaque suggestions make this harder to claim.\n- **Emerging state AI laws:** Colorado's AI Act, California's health-AI disclosure rules, and Utah's disclosure requirements are evolving quickly. Track them state by state.\n- **Billing and fraud exposure:** If notes or suggestions influence CDT codes, there is risk of upcoding, which can implicate the False Claims Act and payer audits.\n\n## 2. Clinical accuracy and patient safety\n\n- **Hallucinations and omissions:** The model may invent findings, drop allergies or medications, or misstate what was discussed or consented to.\n- **Dental-specific errors:** Wrong tooth numbers, quadrants, surfaces, or laterality (e.g., extracting #18 vs. #19) can cause serious harm if they propagate.\n- **Speaker attribution:** Confusing what the dentist said with what the patient said, or mixing up people in the room.\n- **Diagnosis suggestions:** These carry much higher risk than transcription. Audio alone lacks radiographs, probing depths, and visual exam findings, so suggestions may be poorly grounded.\n- **Automation bias:** Busy clinicians may rubber-stamp notes or anchor on the AI's suggestions, which undermines the \"human in the loop\" safeguard.\n\n## 3. Bias and equity\n\n- Lower accuracy for accents, dialects, non-English speakers, interpreter-mediated visits, children, and patients with speech differences or hearing loss.\n- Diagnosis suggestions may reflect biases in training data, such as under-recognizing conditions in certain populations.\n- Errors that fall unevenly across groups can become both a legal and a reputational problem.\n\n## 4. Privacy and security\n\n- Audio is highly sensitive. It can contain identifiers, family details, and off-topic disclosures, and it is hard to de-identify.\n- Risks include breaches, ransomware, insider access, and insecure transmission or storage.\n- Retention is a problem: how long do you keep audio, transcripts, and drafts? State records laws, litigation holds, and data minimization pull in different directions.\n- Patients may not understand or trust that a third party is listening, which creates complaint and trust risk.\n\n## 5. Third-party API dependency\n\n- **Data use:** Confirm the vendor won't retain or train on your data, and check subprocessors and data residency.\n- **Model changes:** Silent version updates can change output quality or behavior, so you need regression testing and version pinning.\n- **Availability and cost:** Outages, rate limits, and price changes hit your core product directly.\n- **Compliance flow-down:** You inherit the vendor's gaps, and your customers will ask for evidence of compliance.\n- **Lock-in:** Switching models may require revalidation.\n\n## 6. Liability and accountability\n\n- It is unclear who is responsible when an AI-generated note or suggestion contributes to harm: the dentist, you, or the model vendor.\n- Customer contracts need clear indemnification, limits of liability, and statements of intended use.\n- Notes (and possibly audio) may be discoverable in malpractice or board proceedings.\n- Dental boards and malpractice insurers may have their own positions on AI use.\n\n## 7. Adoption and business risks\n\n- Workflow friction: poor EHR/practice management integration (Dentrix, Eaglesoft, Open Dental) kills adoption.\n- Noisy operatories (drills, suction, masks) degrade audio quality.\n- Small practices have limited compliance capacity, so you carry more of the burden.\n- Competition from established ambient scribe vendors and the practice management platforms themselves.\n- Overclaiming accuracy in marketing invites FTC scrutiny.\n\n## Key mitigations to consider\n\n1. **Separate the two features.** Launch with documentation first. Treat diagnosis suggestions as a distinct, higher-risk feature with its own regulatory review, or limit it to flagging items for the dentist to consider, with cited evidence from the transcript.\n2. **Require clinician review and sign-off**, with edit tracking and visible uncertainty flags, especially for tooth numbers, medications, allergies, and procedures.\n3. **Build state-aware consent** with patient notice, opt-out, and a default to the strictest standard.\n4. **Lock down the vendor chain:** BAAs, zero-retention terms, no training on your data, version pinning, and a fallback provider.\n5. **Evaluate on dental-specific data**, including accent and language subgroups, and monitor error rates in production.\n6. **Minimize and limit data:** short audio retention, encryption, role-based access, and audit logs.\n7. **Get legal review** on FDA status, state laws, and billing-related features before launch.\n\nIf you tell me which state you're based in and whether diagnosis suggestions are core or optional to the product, I can go deeper on the regulatory path."
+ }
+}

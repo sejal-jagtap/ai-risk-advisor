@@ -23,18 +23,18 @@
   ]
  },
  "advisor": {
-  "summary": "This marketplace handles minors' location, payment, and message data and sends some of it to a third-party AI, so the biggest risks are child safety, data protection, and security of payments and chats. The AI only informs humans, which lowers automated-decision risk, but matching fairness and honest claims still need attention before launch.",
+  "summary": "This marketplace handles location, messages and payment data for students who may be minors, so child privacy, user safety and payment handling are the most urgent areas to check before launch. Bias in AI matching, third-party API data flows and misleading-claims exposure also need mitigation as you grow.",
   "risks": [
    {
     "category": "privacy",
     "severity": "high",
-    "severityWhy": "High: minors' location and message data are collected, and no safeguards are described.",
+    "severityWhy": "Minors' data (location, messages, payment info) is collected and no safeguard is described.",
     "when": "now",
-    "title": "Minors' location and message data collected and shared with matches",
-    "why": "Precise location and private messages from users who may be minors could be exposed to other users, to the AI vendor, or kept longer than needed. Unfair or deceptive data practices can draw regulator attention, and children's privacy rules may also apply. Which rules apply depends on user ages, which you did not give.",
-    "fix": "Collect only coarse location (campus or zone, not GPS) and only when needed. Never show a user's location to other users. Set short retention periods for messages and location history. Add a clear, plain-language privacy notice and parental consent flows if under-18 users are allowed. Add an in-app delete-my-data option.",
+    "title": "Children's and minors' data collection",
+    "why": "Users may include children under 13 and other minors. You collect precise location, private messages and payment info. Children's privacy rules MAY apply, including parental consent expectations. Whether they apply depends on your actual age range, which you did not state.",
+    "fix": "Set and enforce a minimum age with an age gate. Collect location only at coarse level (campus or area) and only when needed. Set short retention periods for messages and location history. Add a parental consent flow if under-13 users are possible. Block under-13 sign-up if you can't support that.",
     "sources": [
-     "FTC-5"
+     "COPPA"
     ],
     "confidence": "medium",
     "needsReview": true
@@ -42,11 +42,37 @@
    {
     "category": "security",
     "severity": "high",
-    "severityWhy": "High: payment data and minors' messages are handled and no safeguards are described.",
+    "severityWhy": "Direct harm to people is possible: minors may be connected with strangers, with no safeguard described.",
     "when": "now",
-    "title": "Payment and personal data breach exposure",
-    "why": "Storing payment info and chat logs makes the app a target. If personal information of NC residents is exposed, NC breach notification duties may apply. Minors' accounts raise the stakes.",
-    "fix": "Use a hosted payment processor so card numbers never touch your servers (tokenization only). Encrypt messages and personal data at rest and in transit. Enforce role-based access and MFA for staff. Keep access logs. Write a breach response plan naming who decides, who notifies, and how.",
+    "title": "Minor safety in matching, messaging and meetups",
+    "why": "The AI matches students with helpers, and messages and location are shared. That could expose minors to adult impersonators, grooming, harassment or in-person risk. No listed source directly addresses this risk, so it needs review by a professional.",
+    "fix": "Verify users (for example school email) and separate minors from adults. Keep communication in-app only, with no sharing of exact location or contact details. Add report and block buttons, message screening for risky content, and a human moderation queue. Default to public, supervised meeting spots or remote help.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "Could block launch: money flows between users through the app, and minors may be involved.",
+    "when": "now",
+    "title": "Holding or moving user money",
+    "why": "If your app receives, holds or transfers funds between students, money transmission rules MAY apply to you at federal and state level. Whether they do depends on how the payment flow is structured, which you did not describe. Minors' ability to contract and pay adds more questions.",
+    "fix": "Use a licensed payment processor or marketplace payments product so that funds are never held in your own account. Document the flow of funds. Require a parent or guardian account for minors. Add refund and dispute handling.",
+    "sources": [
+     "FINCEN-MSB"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "high",
+    "severityWhy": "Sensitive data (payment info, minors' location and messages) is held and no safeguards are described.",
+    "when": "now",
+    "title": "Data security and breach readiness",
+    "why": "A breach could expose minors' locations, private messages and payment details. NC's breach notification law MAY apply when you hold residents' personal information.",
+    "fix": "Never store raw card data; use tokenized payments. Encrypt data in transit and at rest. Apply role-based access controls and audit logs, and delete data on a schedule. Write an incident response plan that names who decides on and sends notifications.",
     "sources": [
      "NC-BRCH"
     ],
@@ -54,25 +80,13 @@
     "needsReview": true
    },
    {
-    "category": "regulatory",
-    "severity": "high",
-    "severityWhy": "High: could cause direct harm to people, since minors may be matched with and meet strangers.",
-    "when": "now",
-    "title": "Child safety in helper-to-requester matching",
-    "why": "If minors can be matched with other users, including adults, there is a risk of grooming, harassment, or unsafe meetups. Because the AI picks the pairings, you may be held responsible for the safety consequences. None of the listed sources directly address this.",
-    "fix": "Limit accounts to verified school email domains. Match minors only with minors from the same school, or require verification for adult helpers. Keep all communication in-app with no sharing of contact details. Add report and block buttons, moderation of messages, and a human review path for flagged accounts. Default to public, on-campus meeting suggestions.",
-    "sources": [],
-    "confidence": "low",
-    "needsReview": true
-   },
-   {
     "category": "security",
     "severity": "medium",
-    "severityWhy": "Medium: plausibly applies, and a mitigation is needed before scaling since a third-party model receives user data.",
+    "severityWhy": "Plausibly applies: user messages and data may be sent to a third-party API, and mitigation is needed before scaling.",
     "when": "before-scaling",
-    "title": "Data leakage and prompt injection via third-party AI API",
-    "why": "Messages and requests sent to a third-party model may leak personal data or be reused by the vendor. Malicious users could embed instructions in requests to manipulate matching or extract other users' data. The AI may also produce made-up or unsafe output.",
-    "fix": "Send the model only the minimum fields needed, with names, locations, and payment details stripped or pseudonymized. Confirm in the vendor contract that your data isn't used for training and that retention is limited. Treat user text as untrusted: validate model output against a fixed schema and never let it trigger payments or account actions. Log and review odd outputs.",
+    "title": "Student data sent to a third-party AI API",
+    "why": "Sending messages, location or profile data to an outside model provider can leak minors' data. It may also be retained or used for training. Models can also produce made-up output, or be manipulated through prompt injection in messages. What you send to the API was not specified.",
+    "fix": "Send only the minimum fields needed for matching (such as subject, skill and availability tags) and never raw messages, exact location or payment data. Strip identifiers before API calls. Get a no-training, minimal-retention contract with the provider. Treat user text as untrusted input and validate model outputs.",
     "sources": [
      "NIST-GAI"
     ],
@@ -82,68 +96,40 @@
    {
     "category": "bias",
     "severity": "medium",
-    "severityWhy": "Medium: plausibly applies, since the AI ranks people, and testing is needed before wider release.",
+    "severityWhy": "Plausibly applies: matching steers earning opportunities among people, though a human remains in the loop; this needs mitigation before scaling.",
     "when": "before-scaling",
-    "title": "Unfair matching or ranking of helpers",
-    "why": "Matching could favor some students over others (for example by school, writing style, ratings, or location), which affects who earns money. A human is informed rather than deciding, but people may follow the AI's suggestion without questioning it.",
-    "fix": "Test match and earning outcomes across groups you can lawfully measure, such as campus or new vs. established helpers. Give new helpers fair exposure. Let requesters browse beyond the AI's top picks. Offer a way to contest or report a match. Re-test after every model or prompt change.",
+    "title": "Unequal matching of helpers and requests",
+    "why": "AI matching could favor some helpers or requesters based on proxies such as school, location, name, writing style or ratings history. That could disadvantage groups of students in who gets paid work or help. Because a human only gets informed, they may rubber-stamp AI suggestions.",
+    "fix": "Exclude sensitive attributes and obvious proxies from matching inputs. Regularly compare match and earnings rates across user groups and locations. Give new helpers a fair-exposure rule. Let users choose or override matches, and keep a way to appeal or report unfair treatment.",
     "sources": [
      "NIST-MEAS"
     ],
     "confidence": "medium",
-    "needsReview": true
+    "needsReview": false
    },
    {
     "category": "regulatory",
     "severity": "medium",
-    "severityWhy": "Medium: plausibly applies, and marketing and disclosure claims need a mitigation before scaling.",
+    "severityWhy": "Plausibly applies: safety, AI and fee claims could be misleading, and this needs mitigation before wider release.",
     "when": "before-scaling",
-    "title": "Misleading claims about AI, safety, or helper quality",
-    "why": "Statements like 'verified helpers', 'safe', or 'AI-vetted' that you can't back up, or undisclosed AI involvement in matching or messaging, could be treated as deceptive. Both federal and NC deceptive-practice rules may be relevant.",
-    "fix": "State plainly in onboarding that AI suggests matches. Only claim 'verified' for checks you actually perform, and describe what those checks are. Disclose fees and refund terms before payment. Have someone review all marketing copy against what the product really does.",
+    "title": "Misleading claims about safety, AI or fees",
+    "why": "Unfair and deceptive practice rules MAY apply if you overstate how safe, vetted or accurate the matching is, hide fees, or don't make clear that AI is involved. Claims aimed at minors and parents may get closer scrutiny.",
+    "fix": "Review all marketing, in-app copy and safety claims against what you actually do. Disclose that AI does the matching and what data it uses. Show fees and refund terms before payment. Keep evidence for every safety or quality claim.",
     "sources": [
      "NC-UDTPA",
      "FTC-5"
-    ],
-    "confidence": "medium",
-    "needsReview": false
-   },
-   {
-    "category": "regulatory",
-    "severity": "low",
-    "severityWhy": "Low: good practice, since accountability documentation is not yet described.",
-    "when": "monitor",
-    "title": "No documented intended use, harms, or accountability",
-    "why": "With minors, payments, and a third-party model, you will likely be asked to show what the AI does, who it affects, and who is responsible when something goes wrong.",
-    "fix": "Write a one-page record covering intended use, affected users (including minors), known harms, the data sent to the vendor, and a named owner. Review it whenever you add a feature, such as image sharing or an AI chatbot.",
-    "sources": [
-     "NIST-MAP"
-    ],
-    "confidence": "medium",
-    "needsReview": false
-   },
-   {
-    "category": "privacy",
-    "severity": "low",
-    "severityWhy": "Low: good practice, since pending bills may apply to you but you did not state facts that make them clearly relevant.",
-    "when": "monitor",
-    "title": "Pending NC privacy and chatbot legislation",
-    "why": "NC may consider bills on privacy or AI chatbots that could affect an app serving NC students and minors.",
-    "fix": "Assign someone to check the NC General Assembly site on a regular schedule. Design the data model so consent, deletion, and retention settings can be changed without a rebuild.",
-    "sources": [
-     "NC-WATCH"
     ],
     "confidence": "medium",
     "needsReview": true
    }
   ],
   "askLawyer": [
-   "Which children's privacy and parental consent rules apply if users under 18 can sign up and share location and messages?",
-   "What are our responsibilities and liability if a minor is harmed after an AI-suggested match, and what terms of service or verification steps reduce that risk?",
-   "Does running payments for or between minors raise contract, money-transmission, or payment-processor issues, and how should our vendor agreement with the AI provider handle data use and breach duties?"
+   "Given that our users may include minors, what age-gating, parental consent and contract rules should we plan for, and does COPPA or any NC student privacy law apply to us if schools get involved?",
+   "Does our payment flow make us a money transmitter, or can a licensed processor keep us out of that category, and how should payments by minors be handled?",
+   "What breach notification, retention and vendor-contract terms should we put in place for minors' location, messages and payment data shared with a third-party AI provider?"
   ]
  },
  "plain": {
-  "text": "# Risk Assessment: Student-to-Student AI Marketplace\n\n## Highest-severity risks\n\n**1. Child safety (top risk)**\n- Matching minors with other users, possibly older students or adults posing as students, creates grooming, exploitation, and in-person meeting risks.\n- Location data plus messaging raises the stakes. An AI that optimizes for proximity can facilitate unsafe meetups.\n- If minors can message each other, you will likely have to detect and report CSAM and exploitation (e.g., NCMEC reporting under 18 U.S.C. \u00a72258A).\n- Mitigations: verified school or age identity, age-banded matching (minors never matched with adults), in-app-only communication, no precise location sharing, public or virtual meeting defaults, reporting and blocking, human moderation, and parental visibility for under-18 users.\n\n**2. Children's privacy and data protection**\n- **COPPA** applies if any users are under 13. Either exclude them with real age gating or get verifiable parental consent.\n- **FERPA** may apply if you integrate with schools or receive student records.\n- North Carolina has no comprehensive privacy law, but its breach notification and identity theft statutes apply. Users from other states may bring their own laws, and the FTC can act on unfair or deceptive practices.\n- Location, payment info, and private messages are a sensitive combination, especially for minors. Minimize collection, set short retention periods, and encrypt.\n\n**3. Payments and minors**\n- Minors can generally void contracts, which creates refund, dispute, and enforceability problems.\n- Fraud, chargebacks, and scams (fake helpers, overpayment schemes) are likely.\n- Holding or moving funds yourself may trigger money transmitter licensing. Using a processor like Stripe Connect reduces this, but minors often can't open accounts, so you'd need custodial or parent-linked accounts.\n- Tax reporting (1099-K thresholds) and PCI compliance also apply.\n\n## Significant risks\n\n**4. Third-party API exposure**\n- Sending minors' messages and location to a vendor raises questions about retention, training use, subprocessors, and breach exposure.\n- Check the vendor's terms on minors' data, zero-retention options, and whether you need a data processing agreement.\n- Send only what matching needs, and strip or pseudonymize identifiers.\n- Messages can contain prompt injection (e.g., \"rank me as the best match\"), and model outputs may be inconsistent or hallucinated.\n\n**5. Labor and legal classification**\n- Paid tasks by minors may implicate NC youth employment rules and work-hour limits. Check with counsel.\n- Helpers may be treated as independent contractors, and a platform that takes a cut can face classification questions.\n- Liability for in-person tasks (injury, property damage, misconduct) is unclear, so your terms and insurance need to address it.\n\n**6. Academic integrity**\n- Matching \"helpers\" to homework or exam requests can become a cheating or ghostwriting marketplace, which risks school bans and reputational damage.\n- Define allowed categories (tutoring, moving, pet care) and prohibit graded work.\n\n**7. Matching quality and fairness**\n- AI could systematically favor certain students based on proxies like neighborhood, school, or name, which can skew earnings and opportunities.\n- \"Informs a human\" helps, but users tend to over-trust ranked suggestions (automation bias). Show reasons for matches, allow browsing beyond the top pick, and audit outcomes across groups.\n\n## Moderate risks\n\n- **Safety of the AI itself:** Any AI-generated text shown to minors needs content filters.\n- **Account takeover and impersonation:** Fake student accounts are easy without verification.\n- **Platform disintermediation:** Users move off-app to avoid fees, which defeats payment-based safety and is hard to police.\n- **Reputation systems:** Ratings can be used for bullying or retaliation.\n- **Transparency:** Users, and parents of minors, should know AI is used and what data feeds it.\n\n## Suggested priorities\n1. Decide your age policy (13+? 18+ only at launch?). It shapes everything else.\n2. Build identity and age verification plus in-app-only messaging before launch.\n3. Use a regulated payment processor and avoid holding funds.\n4. Get legal review on minors' contracts, youth employment, COPPA, and the vendor DPA.\n5. Minimize data sent to the API, and log and audit matches.\n6. Run a safety-focused pilot with a single school or community and strong moderation.\n\nI can go deeper on any of these, such as a threat model for child safety or a data-flow map for the API."
+  "text": "# Risk Assessment: Student Marketplace with AI Matching\n\n## Highest-severity risks\n\n### 1. Child safety\n- **Adult impersonation and grooming.** Without strong verification, adults can pose as students and target minors. Matching people by proximity, plus private messaging, is the classic risk pattern.\n- **In-person meetings.** Tutoring, errands, or other help can put minors alone with strangers, including older students or adults.\n- **Location exposure.** Precise location data on minors is both a safety hazard and a regulatory flashpoint.\n- **Harassment, bullying, and coercion** in messages, including pressure around payment.\n\n**Mitigations:**\n- Verify students (school email, or school-partnered onboarding) and check age.\n- Separate minors from adults, or restrict to same-school or same-age bands.\n- Use coarse location only (school or zone, not GPS).\n- Keep messaging in-app with moderation, reporting, and blocking.\n- Default to public meeting places or virtual sessions.\n- Set up an escalation path for safety incidents.\n\n### 2. Children's privacy and data law\n- **COPPA** applies if any users are under 13, and it requires verifiable parental consent. The FTC has also tightened its rule on third-party data sharing and retention. Even if you target 13+, you need an age gate that works.\n- **FTC Act Section 5** covers unfair or deceptive practices, including sloppy handling of teen data.\n- **FERPA** may apply if you integrate with schools or receive school records.\n- **North Carolina law** includes breach notification and identity theft statutes. Check current NC developments, and note that if you have users in other states, those states' privacy and minor-protection laws (such as age-appropriate design and social media laws) may apply.\n- Messages, location, and payment data together form a high-sensitivity profile of a minor.\n\n**Mitigations:** Data minimization, short retention periods, clear parental consent flows where needed, a privacy policy written for teens, and a legal review before launch.\n\n### 3. Payments involving minors\n- **Contract capacity.** Minors can generally void contracts, which creates refund and dispute exposure.\n- **Money transmission rules.** Holding and moving funds between users may trigger licensing requirements unless you use a licensed processor's marketplace product (e.g., Stripe Connect) and structure it carefully.\n- **KYC and AML.** Payout accounts generally require adult or verified identities, so minors may need custodial accounts.\n- **Fraud.** Scams, stolen cards, chargebacks, and off-platform payment steering.\n- **Tax reporting** for earners (1099-K thresholds).\n- **PCI scope.** Never store card data yourself.\n\n### 4. Child labor and work classification\n- Paid help from minors can implicate the **NC Youth Employment Act** and federal FLSA rules, including age limits, hours, and prohibited tasks. Depending on the services, it may also raise independent contractor classification questions.\n- Restrict the allowed service categories (e.g., no driving, childcare, heavy labor, or anything hazardous).\n\n## Medium-severity risks\n\n### 5. Third-party AI API\n- **Data flow to the vendor.** Sending minors' messages or location to an external model raises consent, retention, and COPPA/FTC concerns. Confirm zero-retention terms, no training on your data, and a data processing agreement.\n- **Prompt injection and manipulation.** Users could craft profiles or messages that game matching or extract other users' data.\n- **Vendor dependency.** Outages, pricing changes, model updates that silently change matching behavior, and policy changes.\n- **Minimize inputs.** Send pseudonymized, minimal features rather than raw messages or exact locations wherever possible.\n\n### 6. AI matching quality and fairness\n- **Bias.** Matching or ranking can disadvantage people by race, gender, disability, income, school, or language. This can mean unequal access to earning opportunities.\n- **Unsafe matches.** The AI might pair a minor with a mismatched helper, such as a much older one or someone with prior reports, if safety signals aren't hard constraints.\n- **Automation bias.** \"Informs a human\" only helps if the human can actually evaluate and override the match. Students may just accept the top suggestion.\n- **Opacity.** Users should be able to see why they were matched and to opt out.\n\n**Mitigations:** Hard-coded safety rules that sit outside the model, bias audits, explanations for matches, and feedback loops.\n\n### 7. Content moderation\n- Messages may include harassment, sexual content, self-harm disclosures, drug sales, or off-platform contact solicitation.\n- LLM-based moderation has false negatives and false positives, so combine it with rules, human review, and clear reporting channels.\n- Consider mandatory reporting obligations and NCMEC reporting duties if you encounter CSAM.\n\n### 8. Academic integrity\n- If helpers can sell essays, homework, or exam help, you risk schools banning the app, reputational damage, and possible legal exposure under contract cheating laws. Define permitted services (tutoring and feedback versus completing assignments).\n\n## Other risks\n\n- **Platform liability.** Section 230 offers limited protection against claims about your own design choices, such as negligent matching or inadequate safety features. Expect scrutiny from parents, schools, and regulators.\n- **Security.** A breach exposing minors' locations, messages, and payment info would be severe. Use encryption, access controls, and logging.\n- **App store policies.** Apple and Google have strict rules for apps aimed at minors, user-generated content, and payments.\n- **Trust and adoption.** Schools and parents may resist unless safety is visible and credible.\n- **Disputes.** You need processes for no-shows, poor service, refunds, and false accusations.\n\n## Suggested first steps\n1. Decide on the age range. Restricting to 13+ or 16+, or to verified college students, dramatically reduces legal complexity.\n2. Choose a licensed payments platform and define allowed service types.\n3. Design safety-by-default: verified identities, coarse location, in-app messaging, and public or virtual sessions.\n4. Draft a data map covering what goes to the AI vendor, along with a vendor agreement.\n5. Run a privacy and safety review with counsel experienced in children's privacy and fintech.\n6. Pilot with a single school or campus partner before opening it up.\n\n*This is a general risk overview, not legal advice. Because of the minors and payments combination, consult an attorney before launch.*\n\nIf you tell me the age range and the types of help offered (tutoring, errands, etc.), I can narrow this down to the top few risks and concrete controls."
  }
 }
