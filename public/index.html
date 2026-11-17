@@ -947,6 +947,7 @@
                 grid-template-columns: repeat(2, 1fr)
             }
         }
+            .fb { display:inline-block; margin-top:8px; font-size:12px; color:#00009C; text-decoration:underline; }
     </style>
 </head>
 
@@ -1052,6 +1053,7 @@
         </details>
     </footer>
     <script>
+        const fbURL = r => "https://github.com/sejal-jagtap/ai-risk-advisor/issues/new?labels=kb-feedback&title=" + encodeURIComponent("KB feedback: " + r.title) + "&body=" + encodeURIComponent("Category: " + r.category + "\nSources cited: " + ((r.sources || []).join(", ") || "none") + "\n\nWhat is wrong or missing (wrong source / missing source / outdated link / other):\n\n");
         const CATS = ["privacy", "bias", "security", "regulatory"], $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
         let KB = [], K = {}; const initKB = kb => { KB = kb; K = Object.fromEntries(KB.map(k => [k[0], k])); $("#kbtag").textContent = KB.length + " sources: NC layer + federal, state, EU"; $("#kbl").innerHTML = KB.map(k => `<li><a href="${k[5]}" target="_blank" rel="noopener">${esc(k[1])}: ${esc(k[3])}</a></li>`).join("") };
         const O = {
@@ -1086,7 +1088,7 @@
             const a = S.adv, rs = a.risks.map((r, i) => ({ r, i })).sort((x, y) => sevR[x.r.severity] - sevR[y.r.severity]), open = a.risks.filter((r, i) => r.needsReview && !S.rv[i]).length;
             const led = CATS.map(c => { const n = a.risks.filter(r => r.category === c).length; return `<div class="cell ${n ? "" : "z"}"><b>${n}</b>${c[0].toUpperCase() + c.slice(1)}${n ? "" : " (none flagged)"}</div>` }).join("");
             return `<p class="lead">${esc(a.summary)}</p><div class="ledger">${led}</div><div class="banner"><span>${open ? `<b>${open} of ${a.risks.length} risks need human review</b> before you rely on them. Tick each one once someone qualified has checked it.` : "All flagged items have been marked reviewed."}</span></div>` +
-                rs.map(({ r, i }) => `<div class="risk ${r.severity} ${S.rv[i] ? "ok" : ""}"><div class="meta"><span class="tag">${esc(r.category)}</span><span class="tag s-${r.severity}">${esc(r.severity)} severity</span>${r.when ? `<span class="tag">${({now:"Fix now","before-scaling":"Fix before scaling",monitor:"Monitor"})[r.when] || ""}</span>` : ""}<span class="tag">${esc(r.confidence)} confidence</span>${r.needsReview ? '<span class="tag rv">Needs human review</span>' : ""}</div><h3>${esc(r.title)}</h3>${r.severityWhy ? `<p class="note"><b>Why ${esc(r.severity)}:</b> ${esc(r.severityWhy)}</p>` : ""}<p>${esc(r.why)}</p><p class="fix"><b>Fix:</b> ${esc(r.fix)}</p><div class="src">${r.sources.length ? r.sources.map(s => `<a href="${K[s][5]}" target="_blank" rel="noopener">${esc(K[s][1])}: ${esc(K[s][3])}</a>`).join("") : '<span class="empty">No source in the knowledge base. Verify independently.</span>'}</div>${r.needsReview ? `<label class="rvl"><input type="checkbox" data-i="${i}" ${S.rv[i] ? "checked" : ""}> Reviewed by a human</label>` : ""}</div>`).join("") +
+                rs.map(({ r, i }) => `<div class="risk ${r.severity} ${S.rv[i] ? "ok" : ""}"><div class="meta"><span class="tag">${esc(r.category)}</span><span class="tag s-${r.severity}">${esc(r.severity)} severity</span>${r.when ? `<span class="tag">${({now:"Fix now","before-scaling":"Fix before scaling",monitor:"Monitor"})[r.when] || ""}</span>` : ""}<span class="tag">${esc(r.confidence)} confidence</span>${r.needsReview ? '<span class="tag rv">Needs human review</span>' : ""}</div><h3>${esc(r.title)}</h3>${r.severityWhy ? `<p class="note"><b>Why ${esc(r.severity)}:</b> ${esc(r.severityWhy)}</p>` : ""}<p>${esc(r.why)}</p><p class="fix"><b>Fix:</b> ${esc(r.fix)}</p><div class="src">${r.sources.length ? r.sources.map(s => `<a href="${K[s][5]}" target="_blank" rel="noopener">${esc(K[s][1])}: ${esc(K[s][3])}</a>`).join("") : '<span class="empty">No source in the knowledge base. Verify independently.</span>'}</div>${r.needsReview ? `<label class="rvl"><input type="checkbox" data-i="${i}" ${S.rv[i] ? "checked" : ""}> Reviewed by a human</label>` : ""}<a class="fb" href="${fbURL(r)}" target="_blank" rel="noopener">Wrong or missing source? Report it</a></div>`).join("") +
                 (a.askLawyer && a.askLawyer.length ? `<p><b>Ask a lawyer</b></p><ul>${a.askLawyer.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : "") + `<label for="nt">Reviewer notes</label><textarea id="nt" rows="3">${esc(S.notes)}</textarea><div class="acts"><button class="sec pri" data-x="1">Download report</button><button class="sec" data-x="2">Email this report</button><button class="sec" data-x="3">Copy summary</button></div>`
         }
         function cmp() {
