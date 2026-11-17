@@ -1,0 +1,143 @@
+{
+ "scenario": {
+  "id": "S9",
+  "name": "Employee monitoring",
+  "idea": "Software that scores remote employees' productivity from keystrokes and screenshots and flags low performers.",
+  "users": "Employees or job candidates",
+  "dec": "Informs a human",
+  "data": [
+   "Keystrokes",
+   "Screenshots"
+  ],
+  "geo": [
+   "California",
+   "EU/UK"
+  ],
+  "model": "Fine-tuned open model",
+  "expected": [
+   "Workplace surveillance and notice (GDPR-5, CCPA)",
+   "Unfair or biased scoring",
+   "Automated decision-making (GDPR-22)",
+   "Security of captured screens (GDPR-32)"
+  ]
+ },
+ "advisor": {
+  "summary": "This tool continuously monitors remote employees (and possibly candidates) with keystroke and screenshot capture, then scores them and flags low performers. That is a high-risk pattern for privacy, bias, and employment-related AI rules in both California and the EU/UK. Several risks below could block launch until safeguards are in place, and this is a pointer to what to check, not legal advice.",
+  "risks": [
+   {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "High: sensitive behavioral data about people is collected continuously and no safeguard was described.",
+    "when": "now",
+    "title": "Continuous keystroke and screenshot monitoring may lack a justified basis, purpose limits, and notice",
+    "why": "Capturing every keystroke and screenshot is intrusive. EU/UK data protection rules may require you to identify a lawful basis, limit purpose, minimise data, and set retention, and employee consent may be hard to show as freely given. California privacy rules may also apply to employee or candidate data, including notice and rights. It is unclear whether job candidates are monitored too, which changes the analysis.",
+    "fix": "Collect less: sample or aggregate activity metrics instead of full keystroke logs, and capture screenshots only of work apps, not the whole screen. Let employers set short retention with auto-delete. Show employees a clear in-product notice of what is collected and why. Provide access and deletion workflows, and exclude candidates unless you have a separate, documented design for them.",
+    "sources": [
+     "GDPR-5",
+     "CCPA"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "High: screenshots can capture sensitive data of employees and third parties, with no safeguard described.",
+    "when": "now",
+    "title": "Screenshots will incidentally capture sensitive and third-party data",
+    "why": "Screenshots can show health information, private messages, passwords, financial accounts, union or political activity, and customers' data. Sensitive categories may trigger extra conditions under EU/UK rules. Large-scale systematic monitoring of employees may also call for a data protection impact assessment.",
+    "fix": "Add on-device redaction/blurring and automatic exclusion of banking, email, messaging, password manager, and health sites. Add a pause control for personal use, and never capture outside work hours or on personal devices. Run and document an impact assessment before EU/UK launch.",
+    "sources": [
+     "GDPR-9",
+     "GDPR-35"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "High: the score drives flags about people's employment, which can cause direct harm if it is unfair.",
+    "when": "now",
+    "title": "Keystroke-based productivity scores may systematically disadvantage some groups",
+    "why": "Typing volume and screen activity are weak proxies for real output. They may penalize people with disabilities, neurodivergent workers, those using assistive tech, non-native typists, caregivers with fragmented schedules, and roles that involve thinking, meetings, or calls. A fine-tuned model can also inherit bias from its base model or training data.",
+    "fix": "Test score distributions across role types and proxies for protected groups where lawful. Normalize scores by role, and avoid raw keystroke counts as a performance signal. Add an accommodation/exemption setting, and publish known limitations. Re-test after every model update and monitor flag rates over time.",
+    "sources": [
+     "NIST-MEAS",
+     "NIST-MAP"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "High: the output feeds employment decisions about people and a human 'in the loop' is not shown to be meaningful.",
+    "when": "now",
+    "title": "'Informs a human' may still amount to a de facto automated decision",
+    "why": "If managers mostly accept the low-performer flag, regulators may treat the human review as nominal. EU/UK rules on automated decisions with significant effects may be relevant, and California rules on automated decision-making technology may apply. Employees may also need an explanation and a way to contest a flag.",
+    "fix": "Show managers the underlying evidence and the score's uncertainty, and require a written reviewer rationale before any adverse action. Add an employee-facing view of their own score, a dispute button, and an audit log of flags and human overrides. Block flags from automatically triggering any HR action.",
+    "sources": [
+     "GDPR-22",
+     "CCPA"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "High: employment-related AI for EU users could block launch if classed as high-risk or touching banned practices.",
+    "when": "now",
+    "title": "EU AI Act: workplace monitoring and evaluation may be a high-risk or restricted use",
+    "why": "AI used to monitor or evaluate workers may be listed as high-risk under the EU AI Act, with extra obligations. Any feature that infers emotions or similar traits in the workplace should be checked against the banned practices.",
+    "fix": "Map every feature and output against the high-risk and prohibited lists. Remove any emotion, engagement, or 'attitude' inference. If the use is high-risk, plan for documentation, human oversight, logging, and risk management before EU sales. Document intended use and affected people.",
+    "sources": [
+     "EUAI-HR",
+     "EUAI-5",
+     "NIST-MAP"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "high",
+    "severityWhy": "High: a large store of keystrokes and screenshots is highly sensitive, and no safeguards were described.",
+    "when": "now",
+    "title": "Keystroke and screenshot store is a high-value breach target",
+    "why": "Keystroke logs can contain credentials and confidential content, and screenshots can expose company and personal secrets. EU/UK security and breach-reporting duties may apply, and California and other US breach rules may too. Fine-tuning on this data could also leak it through model output.",
+    "fix": "Encrypt data in transit and at rest with per-customer keys and strict role-based access, with logged access. Never store raw keystroke text; keep only derived activity metrics. Keep customer data out of model training, or de-identify it first. Test for training-data leakage, and write an incident response and breach notification plan.",
+    "sources": [
+     "GDPR-32",
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Medium: plausibly applies and needs mitigation before scaling, since it depends on how you market and disclose.",
+    "when": "before-scaling",
+    "title": "Accuracy claims and undisclosed monitoring could be seen as deceptive or unfair",
+    "why": "Marketing the score as an objective measure of productivity, or letting employers monitor staff covertly, could draw scrutiny under US consumer-protection principles. Transparency duties may also apply if AI-generated outputs are shown to users.",
+    "fix": "Substantiate every performance claim with validation data, and describe the score as a limited signal. Contractually require employers to give employees notice, and build a visible monitoring indicator into the agent. Do not offer a hidden or stealth mode.",
+    "sources": [
+     "FTC-5",
+     "EUAI-50"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   }
+  ],
+  "askLawyer": [
+   "Is our product likely to be a high-risk AI system under EU rules, and what does the answer mean for our EU/UK launch? Which employee-monitoring and works-council rules apply country by country?",
+   "What lawful basis, notice, and impact assessment do we need for EU/UK employee data, and how do California privacy rules apply to employee and candidate data, including automated decision-making?",
+   "How should we split responsibilities between us and employer customers (notice, consent, adverse-action reviews), and should we avoid monitoring job candidates altogether?"
+  ]
+ },
+ "plain": {
+  "text": ""
+ }
+}

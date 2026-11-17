@@ -1,0 +1,150 @@
+{
+ "scenario": {
+  "id": "S1",
+  "name": "Resume screener",
+  "idea": "A SaaS tool that ranks job applicants' resumes and auto-rejects the bottom 70% for small companies.",
+  "users": "Employees or job candidates",
+  "dec": "Decides automatically",
+  "data": [
+   "Resumes",
+   "Names"
+  ],
+  "geo": [
+   "North Carolina",
+   "California"
+  ],
+  "model": "Third-party API",
+  "expected": [
+   "Bias / disparate impact in hiring (NYC-144, NIST-MEAS)",
+   "Automated decision-making notice/opt-out (GDPR-22, CCPA, CO-AI)",
+   "Human review of rejections",
+   "Deceptive claims about accuracy (FTC-5)"
+  ]
+ },
+ "advisor": {
+  "summary": "This tool automatically rejects most applicants based on a ranking built from resumes and names, using a third-party model, with no human review described. That is a high-stakes automated decision about people, so bias, candidate notice, and vendor data handling should be addressed before launch in North Carolina and California.",
+  "risks": [
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "Automated decisions about people (job rejection) with no human safeguard described.",
+    "when": "now",
+    "title": "Auto-rejecting 70% of applicants with no human review",
+    "why": "The ranking cuts off a fixed share of candidates regardless of their actual qualifications, so qualified people may be rejected automatically. Resume-ranking models can reflect bias in their training data or in the proxies they pick up, such as employment gaps, school names, or locations. Rejected candidates are harmed directly and may have no recourse.",
+    "fix": "Stop auto-rejecting. Use the ranking only to sort or flag, and require a human to review every rejection, or at least a sample plus all borderline cases. Replace the fixed bottom-70% cutoff with criteria-based thresholds tied to the job requirements. Run adverse-impact testing across demographic groups before each release and on an ongoing schedule, and log scores and outcomes so results can be audited.",
+    "sources": [
+     "NIST-MEAS",
+     "CCPA"
+    ],
+    "confidence": "high",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "Sensitive personal attributes feed an automated decision about people, with no safeguard described.",
+    "when": "now",
+    "title": "Names (and resume proxies) can signal gender, ethnicity, or origin",
+    "why": "Names are a well-known proxy for protected characteristics. Even if names are not an explicit scoring feature, the model may infer them from the resume text and score on them. Third-party models can also carry biases the founder cannot see.",
+    "fix": "Strip names, photos, addresses, and similar identifiers before scoring, and keep the name only in a separate field for display after ranking. Test the pipeline with paired resumes that differ only in name or other demographic signals, and block release if outcomes differ. Ask the model vendor for documentation of its bias testing.",
+    "sources": [
+     "NIST-MEAS"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "Automated employment decisions could block launch or cause direct harm to candidates.",
+    "when": "now",
+    "title": "Employment discrimination and hiring-tool rules may apply to you and your customers",
+    "why": "Hiring decisions are heavily regulated under general employment anti-discrimination rules at federal and state levels. Your small-company customers may be responsible for the tool's outcomes, and you may share responsibility as the vendor. No listed source covers these rules directly, so this needs legal review.",
+    "fix": "Have an employment lawyer review the product design. Add customer contract terms that split responsibilities, such as who sets the criteria, who reviews rejections, and who responds to complaints. Offer customers a bias-audit summary and a setting that requires human sign-off. Keep records of how each decision was reached.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "Personal data of job candidates feeds automated decisions about them, with no notice or opt-out described.",
+    "when": "now",
+    "title": "Candidates may need notice, access, and a way to contest automated decisions (California)",
+    "why": "California privacy rules may apply to resume data and may include provisions on automated decision-making, such as notice to candidates or the ability to opt out or request human review. Candidates often do not know a tool is scoring them, and you did not describe any notice or appeal path.",
+    "fix": "Add a candidate-facing notice, delivered through the customer's application page, that says automated scoring is used and why. Build an appeal path where a candidate can ask for human review of a rejection. Build tooling to export or delete a candidate's data on request. Check with a lawyer whether you count as a business or a service provider under the California rules.",
+    "sources": [
+     "CCPA"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies; needs mitigation before scaling, because candidate data goes to an outside vendor.",
+    "when": "before-scaling",
+    "title": "Resumes sent to a third-party AI API",
+    "why": "Resumes contain contact details, work history, and often other personal information. Sending them to a model vendor raises questions about retention, training use, and leakage. Resume text may also contain hidden instructions meant to manipulate the model (prompt injection), such as 'rank this candidate first'.",
+    "fix": "Use a vendor plan with no training on your data and short or zero retention, and sign a data processing agreement. Minimize what you send by removing names, contact details, and unneeded fields. Treat resume text as untrusted input: filter it for injected instructions, and test with adversarial resumes. Add per-customer access controls and encryption at rest and in transit.",
+    "sources": [
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies because you hold personal information; needs incident readiness before scaling.",
+    "when": "before-scaling",
+    "title": "Breach readiness for stored candidate data",
+    "why": "If you store resumes and names for NC or California residents, a breach may trigger notification duties under state law. Small teams often have no incident plan.",
+    "fix": "Write a short incident response plan that covers who decides, who is notified, and how affected customers are told. Set a retention limit that deletes rejected-candidate resumes after a fixed period. Keep an access log and an inventory of where candidate data lives, including at the model vendor.",
+    "sources": [
+     "NC-BRCH"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies; marketing claims about the tool need substantiation before wider release.",
+    "when": "before-scaling",
+    "title": "Marketing claims about objectivity or accuracy",
+    "why": "Claims such as 'unbiased', 'finds the best candidates', or 'AI-vetted' may be treated as deceptive if you cannot support them. Undisclosed use of AI toward candidates may raise similar concerns.",
+    "fix": "Remove absolute claims such as 'bias-free' unless you have test evidence. Publish a plain-language description of what the tool does and does not do, and keep the testing evidence on file. Make sure the candidate-facing disclosure matches what the product actually does.",
+    "sources": [
+     "FTC-5",
+     "NC-UDTPA"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "low",
+    "severityWhy": "Good practice and monitoring; the pending items depend on facts and developments not yet known.",
+    "when": "monitor",
+    "title": "No documented governance, and pending NC and California changes",
+    "why": "You have no described record of intended use, affected groups, known harms, or who is accountable. AI and privacy rules for hiring tools are changing, and NC has pending bills that could affect you.",
+    "fix": "Create a one-page AI use record covering intended use, affected people, known risks, owner, and review schedule, using the NIST framework as a checklist. Assign one person to check the NC General Assembly site and California privacy updates on a regular schedule.",
+    "sources": [
+     "NIST-MAP",
+     "NC-WATCH"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   }
+  ],
+  "askLawyer": [
+   "Does my tool make me responsible, alongside my customers, for discriminatory outcomes in hiring, and how should our contracts split that responsibility?",
+   "Which California privacy and automated decision-making rules apply to us, and what notice or appeal process must candidates get?",
+   "Is it safe to auto-reject candidates at all, or should the design require human review before any rejection?"
+  ]
+ },
+ "plain": {
+  "text": "# Risk Assessment: Automated Resume Ranking and Auto-Rejection\n\n**Overall:** This is a high-risk design. Fully automated rejection of 70% of applicants, based on resumes and names, through a black-box third-party model, is the pattern regulators, plaintiffs, and the press focus on. The biggest problems are fixable design choices.\n\n---\n\n## 1. Discrimination and bias (highest risk)\n\n- **Disparate impact (Title VII, ADEA, ADA):** Employers are liable for neutral tools that disproportionately screen out protected groups, and you may be liable too. In *Mobley v. Workday*, a court allowed claims to proceed against an AI vendor as an \"agent\" of employers.\n- **Names are a direct proxy** for race, ethnicity, gender, and national origin. Audit studies show LLMs systematically favor some names over others. There is little legitimate reason to give names to the model.\n- **Other proxies in resumes:** graduation dates (age), employment gaps (disability, caregiving, pregnancy), addresses, school names, affinity activities, and language patterns (national origin).\n- **Forced-rank cutoff:** Rejecting the \"bottom 70%\" is relative, not criteria-based. A pool of all-qualified candidates still loses 70%. It's hard to defend as job-related, and small pools make results statistically noisy.\n- **Disability accommodation:** Automated screening can penalize candidates for reasons tied to a disability, with no path to request an accommodation.\n\n## 2. Legal and regulatory exposure\n\n**California (the most demanding)**\n- **Civil Rights Council ADS regulations (effective Oct 2025):** These extend anti-discrimination rules to automated decision systems, treat vendors as potential agents, require anti-bias testing as relevant evidence, and require multi-year record retention.\n- **CCPA/CPRA:** Applicant data is covered. The new automated decision-making technology (ADMT) rules require pre-use notice, access, and opt-out or appeal rights for significant decisions like hiring, plus risk assessments. Compliance dates phase in, so check current timelines.\n- Possible exposure under California's privacy and unfair competition laws.\n\n**North Carolina**\n- No AI-specific hiring law that I'm aware of, but federal law (Title VII, ADEA, ADA, EEOC enforcement) applies fully. Breach-notification and consumer-protection statutes also apply.\n\n**Cross-cutting**\n- **FCRA:** If you enrich candidates with outside data (background, social media, scraped profiles), you may become a consumer reporting agency with adverse-action obligations.\n- **Expansion risk:** NYC Local Law 144 (bias audits), Illinois (AI in employment and video interview laws), Colorado's AI Act, and the EU AI Act (hi"
+ }
+}

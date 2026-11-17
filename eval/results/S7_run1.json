@@ -1,0 +1,123 @@
+{
+ "scenario": {
+  "id": "S7",
+  "name": "Marketing copy generator",
+  "idea": "A tool that writes ads and product reviews for small online stores.",
+  "users": "Businesses (B2B)",
+  "dec": "No",
+  "data": [
+   "Product info"
+  ],
+  "geo": [
+   "North Carolina",
+   "Other US states"
+  ],
+  "model": "Third-party API",
+  "expected": [
+   "Fake or deceptive reviews/claims (FTC-5, NC-UDTPA)",
+   "Disclosure of AI-generated content (EUAI-50, NIST-GAI)",
+   "IP or copyright of outputs"
+  ]
+ },
+ "advisor": {
+  "summary": "This B2B ad and review writer makes no decisions about people and uses only product info, so the main risks are about what it outputs. The biggest is generated product reviews that could look like real customer reviews and mislead shoppers, followed by made-up ad claims and unchecked use of a third-party model.",
+  "risks": [
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "Could block launch or cause direct harm to people: shoppers could be misled by fake reviews, and no safeguard is described.",
+    "when": "now",
+    "title": "Generated product reviews may be presented as real customer reviews",
+    "why": "A tool that writes reviews can produce content that looks like genuine customer feedback when no customer wrote it. Federal and NC consumer-protection rules on deceptive practices, and FTC guidance on reviews and endorsements, may apply to your users and possibly to you. Whether your product is exposed depends on how reviews are labelled and where they are posted.",
+    "fix": "Remove or restrict 'write a customer review' modes that invent a buyer's experience. If you keep reviews, limit the feature to drafting from real customer-supplied feedback, or to clearly labelled sample or template text. Block prompts that ask for fake star ratings or fake personas. Add in-product warnings and terms of use that prohibit posting generated text as genuine customer reviews.",
+    "sources": [
+     "FTC-5",
+     "NC-UDTPA"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs a mitigation before scaling: the model may invent product claims that your users then publish.",
+    "when": "before-scaling",
+    "title": "Made-up or unsubstantiated claims in generated ads",
+    "why": "Generative models can invent features, results, certifications, or comparisons. If merchants publish these, consumers could be misled. Regulators may look at AI-related claims and at who is responsible for ad content. Health, safety, or 'best/#1' claims carry more risk.",
+    "fix": "Ground generation strictly in the merchant's supplied product fields and tell the model not to add facts. Flag claim-like phrases (health, 'clinically proven', superlatives, comparisons, guarantees) for human confirmation before export. Show a 'review before publishing' step and keep the merchant responsible for approval in your terms.",
+    "sources": [
+     "FTC-5",
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs a mitigation before scaling: the tool could be used to harm competitors or flood platforms with fake content.",
+    "when": "before-scaling",
+    "title": "Misuse for fake, bulk, or competitor-targeted reviews",
+    "why": "With no described misuse controls, users could generate large batches of fake positive reviews or negative reviews about rivals. You may face questions about whether you enabled deceptive practices. This is also a platform-policy risk, since marketplaces may ban such content.",
+    "fix": "Add rate limits on review generation, detect repeated near-duplicate batches, and require an accountable business account. Keep an abuse-reporting and account-suspension process. Write down intended and prohibited uses and who owns misuse response.",
+    "sources": [
+     "NIST-MAP",
+     "FTC-5"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs a mitigation before scaling: a third-party API is a data-leakage path and a prompt-injection path.",
+    "when": "before-scaling",
+    "title": "Third-party model API: data leakage and prompt injection",
+    "why": "Merchants may paste unreleased product details, pricing, supplier info, or even customer data into prompts. If you accept product pages or URLs as input, hidden instructions in that text could steer the output. Your vendor's data retention and training terms are unknown.",
+    "fix": "Review the API vendor's terms and turn off retention or training on your data where possible. Warn users not to paste customer personal data. Strip or detect personal data in inputs. Treat pasted or scraped product text as untrusted, separate it from system instructions, and filter outputs. Log and monitor for abuse.",
+    "sources": [
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "privacy",
+    "severity": "low",
+    "severityWhy": "Good practice or conditional: you say the data is product info, but account and prompt data may still hold personal information.",
+    "when": "monitor",
+    "title": "Personal information in accounts, prompts, and logs",
+    "why": "Even a product-info tool typically holds business contact and billing details and may store prompts. If those include personal information, NC breach-notification rules and other states' privacy laws, such as California's, may apply, depending on your size and data. You did not state what you store.",
+    "fix": "Map what you store (accounts, prompts, outputs, logs) and set a short retention period. Encrypt data and restrict access. Prepare a basic incident-response plan that covers who decides on notifying customers and regulators. Check whether California or other state privacy rules apply as you gain users there.",
+    "sources": [
+     "NC-BRCH",
+     "CCPA"
+    ],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "low",
+    "severityWhy": "Good practice: no decisions about people are made, so this only matters if outputs stereotype or target groups.",
+    "when": "monitor",
+    "title": "Stereotyped or discriminatory ad copy",
+    "why": "Generated ads could reflect stereotypes or imply targeting by protected traits, which could harm people and embarrass merchants. The risk is limited because you make no decisions about people and you do not choose ad audiences.",
+    "fix": "Test a sample of prompts across product categories and audiences for stereotyped or exclusionary language. Add an output filter and a user feedback button. Review results on a schedule and record fixes.",
+    "sources": [
+     "NIST-MEAS"
+    ],
+    "confidence": "medium",
+    "needsReview": false
+   }
+  ],
+  "askLawyer": [
+   "Could my company share responsibility if customers publish generated reviews as if they were real customer reviews, and what terms or product limits would reduce that exposure?",
+   "What disclosure or labelling, if any, should apply to AI-written ads or reviews for merchants selling in NC and other US states?",
+   "Which state privacy or breach-notice rules might apply to the account and prompt data I hold, given my user locations?"
+  ]
+ },
+ "plain": {
+  "text": "# Risk Assessment: AI Ad and Product Review Writer\n\n## Highest risk: the \"product reviews\" feature\n\n**Fake or deceptive reviews (legal and regulatory)**\n- The FTC's Consumer Review Rule (effective late 2024) prohibits fake or AI-generated reviews that misrepresent themselves as coming from real customers, and it covers buying, selling, or disseminating them. Civil penalties can exceed $50,000 per violation.\n- If the tool generates \"customer reviews\" for a product the reviewer never used, you and your customers are exposed. Knowingly facilitating this could create liability for your company, not just your users.\n- North Carolina's Unfair and Deceptive Trade Practices Act (N.C.G.S. \u00a7 75-1.1) allows treble damages and attorney's fees. Other states have similar laws.\n- **Platform enforcement:** Amazon, Google, Yelp, Shopify apps, and Meta ban fake reviews. Your customers could lose their accounts or listings, which would also hurt your retention and reputation.\n\n**Safer product designs**\n- Draft review *requests*, response templates, or summaries of real customer feedback.\n- Help customers write their own reviews, with AI as an assist.\n- Generate clearly labeled sample or demo content that can't be published as real reviews.\n- If you keep review generation, add guardrails, usage terms, and detection of misuse.\n\n## High risk: ad content\n\n- **False or unsubstantiated claims:** LLMs hallucinate features, certifications, statistics, and comparisons (\"clinically proven,\" \"#1 rated\"). The FTC Act, the Lanham Act, and state laws apply, and advertisers must be able to substantiate their claims.\n- **Regulated categories:** Supplements, CBD, cosmetics, alcohol, vaping, financial products, and children's products carry specific claim restrictions. Small stores often sell these.\n- **Endorsements and testimonials:** Fabricated quotes, influencer-style endorsements, or \"as seen on\" claims violate the FTC Endorsement Guides.\n- **Ad platform policies:** Google and Meta ads can be disapproved for prohibited claims, which creates customer frustration.\n- **Emerging AI disclosure laws:** Some states are adding rules on synthetic content in advertising (for example, New York's synthetic performer disclosure law). Monitor these.\n\n## Medium risk\n\n**Intellectual property**\n- Outputs may mimic competitors' copy, use trademarked terms, or reproduce copyrighted text.\n- AI-generated text has limited copyright protection, so customers may not get exclusive rights.\n- Customers may input competitor product info or scraped content they don't have rights to use.\n\n**Third-party API dependency**\n- Model updates can change output quality or behavior without warning.\n- Outages, rate limits, and price increases affect your margins and reliability.\n- Provider terms may restrict certain use cases (check the usage policy on deceptive content and reviews).\n- Review the provider's data retention and training policies. Customers' unreleased product info may be confidential.\n- Provider-side safety filters can cause unpredictable refusals.\n\n**Accuracy and quality**\n- Errors in specs, pricing, sizing, compatibility, or safety warnings can cause returns, complaints, and product liability issues.\n- Generic, repetitive output across customers can make stores look spammy or hurt SEO.\n\n**Brand safety and bias**\n- Output may include stereotypes, insensitive language, or inappropriate tone.\n- Customers will blame your tool for embarrassing content.\n\n## Lower but still relevant\n\n- **Privacy and security:** Product info is low-sensitivity, but users may paste in customer"
+ }
+}

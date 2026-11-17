@@ -1,0 +1,136 @@
+{
+ "scenario": {
+  "id": "S3",
+  "name": "Loan pre-approval",
+  "idea": "An app that pre-approves personal loans using bank transaction data and a trained credit model.",
+  "users": "Consumers",
+  "dec": "Decides automatically",
+  "data": [
+   "Financial data",
+   "Transaction history"
+  ],
+  "geo": [
+   "Other US states"
+  ],
+  "model": "Own trained model",
+  "expected": [
+   "Discriminatory outcomes / proxies (bias)",
+   "Explainability for denials (GDPR-22, CCPA)",
+   "Security of financial data (GDPR-32)",
+   "Regulated activity: lending laws (ask lawyer)"
+  ]
+ },
+ "advisor": {
+  "summary": "This app makes fully automated credit-style decisions about consumers using bank transaction data, which is high-impact for both people and regulators. The biggest gaps to check before launch are fair-lending bias, explanation and appeal paths, and how sensitive financial data is collected and protected.",
+  "risks": [
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "Meets 'automated decisions about people' with direct harm potential: the model can deny credit access with no safeguard described.",
+    "when": "now",
+    "title": "Credit model may discriminate through proxy variables",
+    "why": "Transaction data (merchant types, locations, payment patterns) can act as a proxy for protected traits, so a model trained on it may produce unfair outcomes for some groups even if those traits are never used as inputs.",
+    "fix": "Before launch, test approval rates and error rates across groups (using proxy or imputed demographics if needed). Remove or limit features that correlate strongly with protected traits. Document the results, and set a threshold at which you pause or retrain the model. Re-test on a schedule.",
+    "sources": [
+     "NIST-MEAS",
+     "CO-AI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "Could block launch: lending products may fall under sector-specific credit rules, and none of your listed sources cover them.",
+    "when": "now",
+    "title": "Consumer-lending and fair-lending rules likely apply",
+    "why": "Credit decisions are typically covered by US federal and state consumer-credit, fair-lending, and credit-reporting regimes. These may include requirements about explaining adverse decisions, and about lender licensing or partner-bank arrangements. They are not in my source list, so I can't say what applies to you.",
+    "fix": "Map how your product is structured: who the lender is, whether you or a partner bank make the decision, and whether you use or furnish credit reports. Build a decision-reason record for every approval or denial so explanations are possible.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "Meets 'automated decisions about people': decisions are fully automated and no human review or appeal is described.",
+    "when": "now",
+    "title": "No human review, explanation, or appeal path",
+    "why": "Fully automated denials can harm people if the data is wrong or the model errs. Some state privacy rules include automated decision-making provisions, and your accountability expectations may rise under frameworks like NIST.",
+    "fix": "Show applicants the main factors behind a decision in plain language. Add an appeal route to a human reviewer, and let users correct or re-link bad transaction data. Log each decision with the model version and inputs used.",
+    "sources": [
+     "CCPA",
+     "NIST-MAP"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "Meets 'sensitive data' with no safeguard described: bank transaction history reveals highly personal details.",
+    "when": "now",
+    "title": "Bank transaction data is highly sensitive and easy to over-collect",
+    "why": "Transactions can reveal health, religion, relationships, and location. Collecting more than the model needs, or reusing it for other purposes such as marketing or model training on non-applicants, raises privacy and unfairness concerns. State privacy rules (e.g. California's, if you have users there) may apply.",
+    "fix": "Collect only the fields the model needs. Show a clear consent screen explaining what is pulled and why. Set a retention limit and delete raw transactions after scoring unless the user opts in. Do not reuse the data for other purposes without separate consent. Offer access and deletion requests.",
+    "sources": [
+     "CCPA",
+     "FTC-5"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "high",
+    "severityWhy": "Meets 'sensitive data' with no safeguard described: a breach of bank-linked financial data could cause direct financial harm.",
+    "when": "now",
+    "title": "Protecting bank-linked data and handling breaches",
+    "why": "Financial data and account-access tokens are attractive targets. Weak security can also be treated as an unfair practice, and breach-notice rules vary by state, so you may owe notices in multiple states.",
+    "fix": "Encrypt data in transit and at rest. Use a reputable bank-data aggregator so you never store bank credentials. Apply least-privilege access and audit logs. Separate identity data from transaction features. Write an incident response plan and a state-by-state breach notice checklist based on where your users live.",
+    "sources": [
+     "FTC-5"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs mitigation before wider release: it depends on which states you serve, which you haven't listed.",
+    "when": "before-scaling",
+    "title": "State AI rules for consequential decisions may reach lending",
+    "why": "Some states have AI rules aimed at high-impact decisions such as lending. Colorado's is one example in my sources, and its status and scope should be checked. 'Other US states' is too broad to say which apply.",
+    "fix": "List the states of your actual users. For each, check for AI or automated-decision rules on lending. Prepare an impact assessment, a notice to applicants, and a risk-management document you can reuse across states.",
+    "sources": [
+     "CO-AI",
+     "NIST-MAP"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs mitigation before scaling: 'pre-approved' marketing and accuracy claims can mislead.",
+    "when": "before-scaling",
+    "title": "Pre-approval and AI accuracy claims could be misleading",
+    "why": "Calling users 'pre-approved' when final terms can change, or overstating how accurate or fair the model is, may draw deceptive-practice scrutiny.",
+    "fix": "Show clearly what pre-approval means, including conditions, and avoid claims about accuracy or fairness you haven't tested. Keep evidence for every claim in your marketing and app copy.",
+    "sources": [
+     "FTC-5"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   }
+  ],
+  "askLawyer": [
+   "Which consumer-lending, fair-lending, and credit-reporting rules apply to my model and to how I'm structured (me or a partner bank as lender), and what must I tell applicants who are denied?",
+   "Which states' privacy and AI/automated-decision rules apply to the places my users are, and what notices, assessments, or opt-outs do I need before launch?",
+   "Does my use of bank transaction data for scoring, and any later reuse for model training, need specific consent or other disclosures?"
+  ]
+ },
+ "plain": {
+  "text": "# Risk Assessment: AI Loan Pre-Approval App\n\nThis is a high-risk use case. Credit decisions are among the most heavily regulated automated decisions in the US. The biggest risks are below, roughly in order of severity.\n\n## 1. Legal and Regulatory Risks (Highest)\n\n**Fair lending (ECOA / Regulation B)**\n- Disparate impact liability applies even without discriminatory intent. Transaction data can proxy for protected classes: spending at certain merchants or locations, remittances, religious giving, and childcare or medical spending can correlate with race, religion, sex, national origin, age, or disability.\n- You must be able to show you searched for and considered less discriminatory alternatives.\n- Using public-assistance income as a negative factor is specifically problematic.\n\n**Adverse action and explainability (ECOA / FCRA)**\n- Denied or less-favorably-treated applicants must receive specific, accurate reasons. The CFPB has stated that \"the algorithm is complex\" is not a defense, and that generic checklist reasons are insufficient when the model uses nontraditional data.\n- A black-box model without reliable reason-code generation is a major compliance gap.\n\n**FCRA**\n- If you use transaction data to make eligibility decisions, you may be acting as a consumer reporting agency, or using consumer reports, with obligations around accuracy, disputes, permissible purpose, and consumer access.\n\n**State licensing and lending laws**\n- Operating across states means state lender or broker licenses, interest-rate caps and usury laws, and state-specific disclosure rules. Requirements vary widely, and some states have their own AI or automated-decision laws (Colorado's AI Act, for example).\n- If you partner with a bank to originate loans, \"true lender\" challenges are a risk.\n\n**Other federal requirements**\n- TILA/Reg Z disclosures\n- UDAAP (unfair, deceptive, or abusive acts): \"pre-approved\" marketing language can be deceptive if final approval often differs\n- Military Lending Act and SCRA\n- BSA/AML, KYC, and OFAC screening\n- E-SIGN\n\n## 2. Fairness and Model Risks\n\n- **Proxy discrimination and bias**: historical lending data embeds past discrimination. Thin-file and unbanked consumers may be systematically disadvantaged.\n- **Data quality problems**: transaction data is messy. Miscategorized transactions, shared accounts, one-off events (medical emergency, job loss), and gig or cash-based income can all produce wrong decisions.\n- **Selection bias**: if you train only on approved applicants, the model has no outcome data for rejected ones (reject inference problem).\n- **Drift and macro shocks**: a model trained in one economic environment can fail in another.\n- **Gaming and adversarial behavior**: users may manipulate account activity, or submit fabricated or altered data if you don't verify via an aggregator.\n- **Model governance**: regulators expect model risk management practices (SR 11-7 style), including validation, documentation, monitoring, and challenger models, even for non-bank lenders.\n\n## 3. Privacy and Data Security Risks\n\n- **GLBA**: privacy notices, safeguards rule, and information security program requirements.\n- **State privacy laws** (CCPA/CPRA and others): rights to access, delete, and opt out of profiling or automated decision-making; limits on sensitive data use.\n- **CFPB open banking rule (Section 1033)**: if you pull data via aggregators, you must follow consent, purpose-limitation, and retention requirements.\n- **Breach exposure**: bank credentials and full transaction histories are a high-value target, and a breach would be severe in both legal and reputational terms.\n- **Secondary use**: using transaction data for marketing, model training on non-customers, or sharing with third parties without clear consent.\n- **Revealing inferences**: transactions can reveal health conditions, pregnancy, religion, sexual orientation, or political affiliation, even if you never intended to use them.\n\n## 4. Consumer Harm Risks\n\n- **Fully automated decisions with no human review**: errors have no safety net, and there is no easy path to contest a decision.\n- **Predatory outcomes**: a model optimized for profit may approve borrowers likely to struggle, or push high-APR products toward vulnerable users.\n- **Credit impact confusion**: users may"
+ }
+}

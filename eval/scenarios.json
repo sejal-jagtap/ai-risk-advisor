@@ -1,0 +1,219 @@
+[
+    {
+        "id": "S1",
+        "name": "Resume screener",
+        "idea": "A SaaS tool that ranks job applicants' resumes and auto-rejects the bottom 70% for small companies.",
+        "users": "Employees or job candidates",
+        "dec": "Decides automatically",
+        "data": [
+            "Resumes",
+            "Names"
+        ],
+        "geo": [
+            "North Carolina",
+            "California"
+        ],
+        "model": "Third-party API",
+        "expected": [
+            "Bias / disparate impact in hiring (NYC-144, NIST-MEAS)",
+            "Automated decision-making notice/opt-out (GDPR-22, CCPA, CO-AI)",
+            "Human review of rejections",
+            "Deceptive claims about accuracy (FTC-5)"
+        ]
+    },
+    {
+        "id": "S2",
+        "name": "Mental wellness chatbot",
+        "idea": "A chatbot for college students that offers coping advice and mood tracking and keeps chat history.",
+        "users": "Students or minors",
+        "dec": "No",
+        "data": [
+            "Health or mood",
+            "Chat logs"
+        ],
+        "geo": [
+            "North Carolina",
+            "Other US states"
+        ],
+        "model": "Third-party API",
+        "expected": [
+            "Sensitive health data handling (GDPR-9)",
+            "Harmful or unsafe advice, crisis escalation",
+            "Breach notification and security (NC-BRCH, GDPR-32)",
+            "Minors/age checks",
+            "Transparency that it is AI (EUAI-50)"
+        ]
+    },
+    {
+        "id": "S3",
+        "name": "Loan pre-approval",
+        "idea": "An app that pre-approves personal loans using bank transaction data and a trained credit model.",
+        "users": "Consumers",
+        "dec": "Decides automatically",
+        "data": [
+            "Financial data",
+            "Transaction history"
+        ],
+        "geo": [
+            "Other US states"
+        ],
+        "model": "Own trained model",
+        "expected": [
+            "Discriminatory outcomes / proxies (bias)",
+            "Explainability for denials (GDPR-22, CCPA)",
+            "Security of financial data (GDPR-32)",
+            "Regulated activity: lending laws (ask lawyer)"
+        ]
+    },
+    {
+        "id": "S4",
+        "name": "AI tutor",
+        "idea": "A homework tutor for high school students that stores each student's answers and progress.",
+        "users": "Students or minors",
+        "dec": "Informs a human",
+        "data": [
+            "Student records",
+            "Chat logs"
+        ],
+        "geo": [
+            "North Carolina"
+        ],
+        "model": "Third-party API",
+        "expected": [
+            "Children's data and parental consent",
+            "Education records privacy",
+            "Hallucinated or wrong answers",
+            "Content safety for minors"
+        ]
+    },
+    {
+        "id": "S5",
+        "name": "Dental assistant",
+        "idea": "A tool that listens to dentist-patient visits, writes clinical notes and suggests diagnoses.",
+        "users": "Businesses (B2B)",
+        "dec": "Informs a human",
+        "data": [
+            "Health records",
+            "Audio"
+        ],
+        "geo": [
+            "Other US states"
+        ],
+        "model": "Third-party API",
+        "expected": [
+            "Health data privacy (HIPAA-type; KB gap)",
+            "Recording consent (NC-WATCH / state wiretap)",
+            "Clinical hallucination / medical device oversight (FDA; KB gap)",
+            "Vendor/data sharing with model API"
+        ]
+    },
+    {
+        "id": "S6",
+        "name": "Face-match door access",
+        "idea": "A building access system that uses face recognition to unlock doors for tenants.",
+        "users": "Consumers",
+        "dec": "Decides automatically",
+        "data": [
+            "Face images",
+            "Biometrics"
+        ],
+        "geo": [
+            "Other US states",
+            "EU/UK"
+        ],
+        "model": "Own trained model",
+        "expected": [
+            "Biometric data rules (GDPR-9)",
+            "Accuracy differences across skin tones (bias)",
+            "High-risk/prohibited AI classification (EUAI-5, EUAI-HR)",
+            "Impact assessment (GDPR-35)"
+        ]
+    },
+    {
+        "id": "S7",
+        "name": "Marketing copy generator",
+        "idea": "A tool that writes ads and product reviews for small online stores.",
+        "users": "Businesses (B2B)",
+        "dec": "No",
+        "data": [
+            "Product info"
+        ],
+        "geo": [
+            "North Carolina",
+            "Other US states"
+        ],
+        "model": "Third-party API",
+        "expected": [
+            "Fake or deceptive reviews/claims (FTC-5, NC-UDTPA)",
+            "Disclosure of AI-generated content (EUAI-50, NIST-GAI)",
+            "IP or copyright of outputs"
+        ]
+    },
+    {
+        "id": "S8",
+        "name": "Peer help marketplace",
+        "idea": "A student-to-student marketplace where AI matches helpers to requests and payments go through the app.",
+        "users": "Students or minors",
+        "dec": "Informs a human",
+        "data": [
+            "Location",
+            "Payment info",
+            "Messages"
+        ],
+        "geo": [
+            "North Carolina"
+        ],
+        "model": "Third-party API",
+        "expected": [
+            "Payments and fraud handling (KB gap)",
+            "Safety of meeting strangers (KB gap)",
+            "Location data privacy",
+            "Matching bias",
+            "Account/data breach (NC-BRCH)"
+        ]
+    },
+    {
+        "id": "S9",
+        "name": "Employee monitoring",
+        "idea": "Software that scores remote employees' productivity from keystrokes and screenshots and flags low performers.",
+        "users": "Employees or job candidates",
+        "dec": "Informs a human",
+        "data": [
+            "Keystrokes",
+            "Screenshots"
+        ],
+        "geo": [
+            "California",
+            "EU/UK"
+        ],
+        "model": "Fine-tuned open model",
+        "expected": [
+            "Workplace surveillance and notice (GDPR-5, CCPA)",
+            "Unfair or biased scoring",
+            "Automated decision-making (GDPR-22)",
+            "Security of captured screens (GDPR-32)"
+        ]
+    },
+    {
+        "id": "S10",
+        "name": "Insurance claims triage",
+        "idea": "A system that reads claim documents and auto-denies suspected fraud claims.",
+        "users": "Consumers",
+        "dec": "Decides automatically",
+        "data": [
+            "Claim documents",
+            "Personal data"
+        ],
+        "geo": [
+            "Other US states",
+            "California"
+        ],
+        "model": "Third-party API",
+        "expected": [
+            "Wrongful denial, need for human appeal (GDPR-22)",
+            "Bias against groups",
+            "Explainability",
+            "Regulated insurance rules (ask lawyer)"
+        ]
+    }
+]

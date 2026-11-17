@@ -1,0 +1,136 @@
+{
+ "scenario": {
+  "id": "S10",
+  "name": "Insurance claims triage",
+  "idea": "A system that reads claim documents and auto-denies suspected fraud claims.",
+  "users": "Consumers",
+  "dec": "Decides automatically",
+  "data": [
+   "Claim documents",
+   "Personal data"
+  ],
+  "geo": [
+   "Other US states",
+   "California"
+  ],
+  "model": "Third-party API",
+  "expected": [
+   "Wrongful denial, need for human appeal (GDPR-22)",
+   "Bias against groups",
+   "Explainability",
+   "Regulated insurance rules (ask lawyer)"
+  ]
+ },
+ "advisor": {
+  "summary": "This product automatically denies consumer claims on a fraud suspicion, using personal data sent to a third-party AI API. That is a high-risk design because an unreviewed model output directly harms people, and no safeguards were described. The main items to address now are human review, bias and accuracy testing, and controls on data sent to the vendor.",
+  "risks": [
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "Automated decisions about people with direct harm (claim denial) and no human safeguard described.",
+    "when": "now",
+    "title": "Fully automated denials with no human in the loop",
+    "why": "Denying a claim on a fraud suspicion is a consequential decision about a person. California's privacy rules, including any automated decision-making rules, MAY apply. Colorado's AI rules MAY apply if you have Colorado users, so check their current status and scope. Wrongly flagged legitimate claimants bear the harm.",
+    "fix": "Change the system so the model only flags and scores claims, and a trained human reviewer makes every denial. Record the reviewer, the reasons, and the evidence. Add a claimant appeal path. Document intended use, affected people, and accountability.",
+    "sources": [
+     "CCPA",
+     "CO-AI",
+     "NIST-MAP"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "Automated decisions about people with potential for discriminatory harm and no testing described.",
+    "when": "now",
+    "title": "Unmeasured bias and false-positive rates in fraud flags",
+    "why": "Fraud models can pick up proxies for protected traits, such as name, address, language, document quality, or disability-related patterns. They can wrongly flag some groups more often. Documents from non-native writers or with unusual formatting may be penalized.",
+    "fix": "Before launch, build a labeled test set and measure false-positive rates across relevant groups or their proxies. Set an acceptable-error threshold and block launch if it is not met. Remove or limit features that act as proxies. Monitor denial and overturn rates by segment each month, and keep an incident process for discovered bias.",
+    "sources": [
+     "NIST-MEAS",
+     "CO-AI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "Personal and potentially sensitive data (claims may include health, financial, or ID details) goes to a third party with no safeguards described.",
+    "when": "now",
+    "title": "Personal data in claim documents sent to a third-party API",
+    "why": "Claim documents may hold sensitive details such as medical, financial, or identity information. Sending them to an outside model vendor raises questions about vendor retention, training use, and your notice to consumers. California privacy rules MAY apply, including notice, vendor/service-provider terms, and sensitive-data provisions.",
+    "fix": "Redact or tokenize identifiers and unneeded fields before the API call. Use a vendor contract or setting that turns off training on your data and sets short retention. Map exactly which data fields leave your system. Set your own retention limits for stored documents and outputs. Update the consumer privacy notice to describe the processing.",
+    "sources": [
+     "CCPA",
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs mitigation before scaling: the system ingests untrusted documents that can manipulate the model.",
+    "when": "before-scaling",
+    "title": "Prompt injection and manipulation via submitted documents",
+    "why": "Claimants control the document content. Hidden or embedded text could instruct the model to approve a claim or reveal other data. Fraudsters have a direct incentive to probe this. Model output could also be wrong or made up.",
+    "fix": "Treat document text as untrusted data. Keep it separate from system instructions. Constrain outputs to a fixed schema. Never let the model trigger actions directly. Require evidence citations from the document for each fraud flag. Run red-team tests with adversarial documents. Log inputs and outputs, and add rate limits.",
+    "sources": [
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": false
+   },
+   {
+    "category": "security",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs mitigation before scaling: you hold personal data across multiple states and a vendor.",
+    "when": "before-scaling",
+    "title": "Breach exposure and notification across states",
+    "why": "You will store personal data and share it with a vendor. A breach could trigger notification duties under various state laws, and none of the listed sources covers those states directly.",
+    "fix": "Encrypt documents at rest and in transit. Apply least-privilege access and audit logs. Write an incident response plan that includes the vendor and a contact list. Keep a data inventory by user state so you can work out which notice rules to check.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies and needs mitigation before scaling: AI claims and unexplained denials could be treated as deceptive or unfair.",
+    "when": "before-scaling",
+    "title": "Unexplained denials and misleading accuracy claims",
+    "why": "If you or your customers describe the system as accurate or objective, or deny without a clear reason, regulators may view that as deceptive or unfair. FTC guidance on AI claims and data practices is worth checking. California privacy rules MAY also bear on notice and explanation.",
+    "fix": "Give claimants a plain-language notice that automated tools are used. Provide specific reasons for any denial and how to contest it. Keep marketing claims tied to your measured test results. Avoid absolute terms like 'detects fraud'.",
+    "sources": [
+     "FTC-5",
+     "CCPA"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "high",
+    "severityWhy": "Automated decisions about people that cause direct harm, in a sector that may have its own rules, with the facts not given.",
+    "when": "now",
+    "title": "Possible sector rules for claims handling (e.g., insurance)",
+    "why": "If these are insurance or similar benefit claims, state insurance regulators or sector rules may govern claim denials and fraud handling. None of the listed sources covers these, and you did not say which claim type or states are involved.",
+    "fix": "Define the claim type and the states where you operate. Ask counsel or the relevant regulators about claims-handling and anti-fraud rules before launch. Until then, run the system in recommend-only mode with human sign-off.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   }
+  ],
+  "askLawyer": [
+   "Do state insurance or other sector rules in our operating states limit or condition automated claim denials based on fraud suspicion?",
+   "Do California's privacy rules, including automated decision-making provisions, apply to us, and what notices, opt-outs, or explanations would they call for? Does Colorado's AI law apply if we have users there?",
+   "What should our contract with the AI API vendor say about data retention, training use, security, and breach notice?"
+  ]
+ },
+ "plain": {
+  "text": "# Risk Assessment: Auto-Denying Suspected Fraud Claims\n\n**Overall: high risk.** The combination of fully automated adverse decisions, consumers as the affected party, sensitive data, and a third-party model puts this in the highest-scrutiny category. The core problem is that **\"suspected\" fraud is a probabilistic judgment, and you would be turning it into a final, harmful outcome with no human check.**\n\n*(This is a general overview, not legal advice. Have insurance regulatory counsel review it.)*\n\n---\n\n## 1. Legal and regulatory risks\n\n- **Bad-faith claims handling:** Denying claims without a reasonable investigation can create liability for bad faith, including extra-contractual and punitive damages. An automated \"suspicion\" score is hard to defend as a reasonable investigation.\n- **State claims-handling rules:** California's Fair Claims Settlement Practices Regulations require timely, documented investigation and written denials that state specific reasons. Most other states have similar unfair claims practices laws.\n- **AI-specific insurance rules:** Many states have adopted the NAIC model bulletin on insurers' AI use, which requires governance, testing, and vendor oversight. Colorado has algorithm and external-data rules, and New York and California regulators have issued guidance on discriminatory algorithms. Rules vary by state, so a multi-state rollout means a compliance matrix.\n- **Health claims:** If any claims are health-related, California and other states restrict denials made by algorithm without clinician review.\n- **Privacy law:** CCPA/CPRA and California's automated decision-making rules may give consumers notice, access, and opt-out rights, depending on the GLBA and insurance exemptions. Other states' privacy laws add obligations.\n- **Anti-discrimination law:** Disparate impact on protected classes is a liability even if unintentional.\n- **Fraud reporting duties:** Insurers often have mandatory SIU and fraud-bureau reporting obligations. Auto-denial is not a substitute for them, and wrongly labeling someone a fraudster can create defamation exposure.\n- **Litigation precedent:** Class actions already target algorithmic claim denials (e.g., over UnitedHealth's nH Predict and Cigna's PxDx) and biased fraud flagging.\n\n## 2. Harm to consumers and fairness\n\n- **False positives:** Fraud is rare, so even an accurate model flags many honest claimants. Each wrongful denial can mean un"
+ }
+}
