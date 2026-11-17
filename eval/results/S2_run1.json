@@ -23,93 +23,101 @@
   ]
  },
  "advisor": {
-  "summary": "This mental-health-adjacent chatbot handles sensitive mood data and chat logs from students who may include minors, and it relies on a third-party model API. The biggest risks to address now are sensitive and minors' data handling, crisis safety, and transparency about what the bot is and does with data; the pointers below show what may apply and need checking.",
+  "summary": "This chatbot stores mood and chat data from students, some of whom may be minors, and sends it to a third-party model API, so the main risks are sensitive-data handling, harm from poor or unsafe advice in a crisis, and unclear age and consent handling. No automated decisions are made about people, which removes some risks, but the sensitive data and the vulnerable audience make several issues launch-critical.",
   "risks": [
    {
     "category": "privacy",
     "severity": "high",
-    "severityWhy": "Sensitive (health/mood) data and possibly minors' data are involved, which meets the 'sensitive or minors' data' criterion for high.",
+    "severityWhy": "High: sensitive health/mood data, possibly from minors, with no safeguards described.",
     "when": "now",
-    "title": "Sensitive mood data and chat logs, possibly from minors",
-    "why": "Mood tracking and chat history reveal mental health information, and users may include minors. Rules on health data, children's data, and state privacy laws MAY apply depending on your user ages and states. Which rules apply depends on facts not provided, such as user ages, whether you are tied to a school, and your data volume.",
-    "fix": "Collect only the mood and chat data you need. Add an age gate and decide whether to block under-18 users or add a parental-consent flow. Set a short default retention period with a user-facing 'delete my history' button. Keep mood data separate from identity fields. Do not use it for ads or profiling.",
+    "title": "Sensitive mood and chat data collected and retained indefinitely",
+    "why": "Mood tracking and chat history can reveal mental health, relationships, and risky behavior. Keeping it indefinitely raises the harm if it is misused, leaked, or shared. Privacy promises that don't match actual practice may also be treated as deceptive or unfair.",
+    "fix": "Collect only what the features need. Set a short default retention period and give users in-app delete and export. Keep chat logs and mood data in separate stores. Don't use the data for model training, analytics, or ads without separate, clear opt-in. Make sure the privacy policy matches what the product actually does.",
     "sources": [
-     "CCPA",
-     "FTC-5",
-     "NC-WATCH"
+     "FTC-5"
     ],
     "confidence": "medium",
     "needsReview": true
-   },
-   {
-    "category": "privacy",
-    "severity": "medium",
-    "severityWhy": "Plausibly applies to a third-party data flow and needs mitigation before wider release.",
-    "when": "before-scaling",
-    "title": "Chat data shared with a third-party model API",
-    "why": "User messages about mental health go to an outside provider. Their retention, training use, and subprocessor terms may create exposure you don't control, and your privacy notice may need to disclose this.",
-    "fix": "Use an API plan with zero or minimal retention and no training on your data. Strip names, emails, and school identifiers before sending prompts. Sign a data processing agreement and list the provider in your privacy notice. Log what is sent.",
-    "sources": [
-     "CCPA",
-     "FTC-5",
-     "GDPR-5"
-    ],
-    "confidence": "medium",
-    "needsReview": true
-   },
-   {
-    "category": "security",
-    "severity": "high",
-    "severityWhy": "Breach of sensitive mental health logs could cause direct harm to people and no safeguards are described.",
-    "when": "now",
-    "title": "Protecting sensitive chat history and breach readiness",
-    "why": "Stored mood and chat logs are a high-value, high-harm target. If you hold personal information of NC residents, NC breach notification rules MAY apply, and other states have their own.",
-    "fix": "Encrypt data at rest and in transit, use role-based access with audit logs, and restrict staff access to chat content. Enable MFA for admin accounts. Write a short incident response plan listing who decides on notification and which states' residents you hold data on.",
-    "sources": [
-     "NC-BRCH",
-     "GDPR-32"
-    ],
-    "confidence": "medium",
-    "needsReview": true
-   },
-   {
-    "category": "security",
-    "severity": "medium",
-    "severityWhy": "Plausibly applies to LLM-based products and needs mitigation before scaling.",
-    "when": "before-scaling",
-    "title": "Made-up output, prompt injection, and data leakage",
-    "why": "A generative model may give harmful or incorrect coping advice, be manipulated by prompts, or reveal content from other contexts. For a vulnerable audience the consequences of bad output are greater.",
-    "fix": "Add system-prompt guardrails and output filters for self-harm, medication, and diagnosis topics. Isolate each user's session so no other user's data enters prompts. Red-team the bot before release and log flagged outputs for review.",
-    "sources": [
-     "NIST-GAI",
-     "NIST-MEAS"
-    ],
-    "confidence": "medium",
-    "needsReview": false
    },
    {
     "category": "regulatory",
     "severity": "high",
-    "severityWhy": "Could cause direct harm to people: users in distress with no described crisis safeguard.",
+    "severityWhy": "High: minors' data is involved, and no age or consent safeguards are described.",
     "when": "now",
-    "title": "Crisis handling and risk of being seen as mental health care",
-    "why": "Students may disclose self-harm or abuse. Claims like 'therapy' or 'treatment' could create deception concerns, and some states may regulate mental health or chatbot products. No listed source covers crisis duties or health-care regulation directly.",
-    "fix": "Detect crisis language and show 988 and campus resources immediately, with a clear human handoff. Show a persistent notice that the bot is not a clinician or emergency service. Avoid clinical or outcome claims in marketing unless you can substantiate them.",
+    "title": "Minors may be using the product with no age or consent controls",
+    "why": "'Students or minors' means under-18 users are possible. Children's and teen data, parental consent, and school-related rules may apply, and they vary by state. No listed source directly covers this, so a lawyer needs to look at it.",
+    "fix": "Decide whether you will serve under-18 users. If not, add an age gate, state it in the terms, and block known minors. If yes, add age-appropriate consent flows and parental involvement where appropriate, and collect less data from them. Ask any university partner what its student-data rules require.",
     "sources": [],
     "confidence": "low",
     "needsReview": true
    },
    {
     "category": "regulatory",
-    "severity": "medium",
-    "severityWhy": "Plausibly applies to disclosure and marketing claims and needs mitigation before wider release.",
-    "when": "before-scaling",
-    "title": "Disclosure that users are talking to AI, and accurate claims",
-    "why": "Undisclosed bots or overstated claims about privacy, effectiveness, or confidentiality could raise deceptive-practices concerns at the federal level and in NC.",
-    "fix": "Label the chatbot as AI at the start of every session. Make privacy statements match actual practice, for example don't promise 'private' or 'anonymous' if logs are stored and sent to a vendor. Keep evidence for any benefit claims.",
+    "severity": "high",
+    "severityWhy": "High: could cause direct harm to vulnerable people, and no crisis safeguard is described.",
+    "when": "now",
+    "title": "Unsafe or made-up advice, and no crisis escalation",
+    "why": "A generative model can give confident but wrong or harmful coping advice. Users may disclose self-harm, abuse, or suicidal thoughts, and a bot that misses or mishandles these moments can cause real harm.",
+    "fix": "Add crisis-keyword and intent detection that stops normal replies and shows 988 and campus counseling resources. Constrain the system prompt to coping skills, with no diagnosis or medication advice. Test with red-team scenarios for self-harm, eating disorders, and substance use. Log escalations for human review under strict access controls.",
     "sources": [
-     "FTC-5",
-     "NC-UDTPA"
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "high",
+    "severityWhy": "High: sensitive health-related data is sent to a third party and no vendor safeguards are described.",
+    "when": "now",
+    "title": "Sensitive chats sent to a third-party model API",
+    "why": "Every message goes to an outside vendor. The vendor's retention, training use, and access terms are unknown. Chat content can also leak through logs, prompt injection, or cross-user context mix-ups.",
+    "fix": "Use a vendor tier or contract with no training on your data and minimal or zero retention. Strip names, emails, and student IDs before calling the API. Isolate each user's context, encrypt data in transit and at rest, restrict who can read logs, and test for prompt injection and data leakage.",
+    "sources": [
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "medium",
+    "severityWhy": "Medium: a breach plausibly applies and needs a response plan before scaling.",
+    "when": "before-scaling",
+    "title": "No breach response plan for stored personal information",
+    "why": "You store identifiable mood and chat records for NC users and users in other states. A breach could trigger notification duties in NC and elsewhere, and the details depend on your data and facts you haven't given.",
+    "fix": "Write an incident response plan covering who decides, how to contain the breach, and how to notify users and regulators. Add access logging, multi-factor authentication for admin accounts, and a data inventory so you know whose data is affected. Have counsel check notice requirements in each state where you have users.",
+    "sources": [
+     "NC-BRCH"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Medium: plausibly applies and needs a mitigation before wider release.",
+    "when": "before-scaling",
+    "title": "Users may be misled about what the bot is or can do",
+    "why": "Wellness language like 'therapy,' 'clinically proven,' or 'private and confidential' may mislead users if untrue. Not making clear that it is an AI and not a clinician can also be a problem. State consumer-protection rules, including NC's, may apply.",
+    "fix": "Show a clear 'AI, not a therapist' notice at onboarding and in the chat UI. Remove unsupported efficacy or privacy claims from marketing. Add a plain-language summary of how data is stored and shared, and have someone review all claims before launch.",
+    "sources": [
+     "NC-UDTPA",
+     "FTC-5"
+    ],
+    "confidence": "medium",
+    "needsReview": false
+   },
+   {
+    "category": "bias",
+    "severity": "medium",
+    "severityWhy": "Medium: plausibly applies and needs testing before scaling, though no decisions are made about people.",
+    "when": "before-scaling",
+    "title": "Uneven advice quality across student groups",
+    "why": "The model may handle cultural expressions of distress, non-native English, LGBTQ+ topics, disability, or gender differently. It could dismiss or stereotype some users, which matters in a mental health setting.",
+    "fix": "Build a test set of varied student scenarios and compare response quality and safety across groups. Collect user feedback ('this wasn't helpful') and review it by segment. Adjust prompts and add guardrails for any gaps, and repeat the tests when you change models.",
+    "sources": [
+     "NIST-MEAS"
     ],
     "confidence": "medium",
     "needsReview": false
@@ -117,40 +125,25 @@
    {
     "category": "regulatory",
     "severity": "low",
-    "severityWhy": "Only applies under conditions not stated: pending bills and future changes.",
+    "severityWhy": "Low: good practice, since pending bills may or may not become applicable.",
     "when": "monitor",
-    "title": "Pending NC and state chatbot or privacy bills",
-    "why": "Rules on AI chatbots and privacy are changing, and some states may target mental health or minors' use of chatbots.",
-    "fix": "Assign someone to check the NC General Assembly site and the laws of your top user states each quarter, and keep a short document of intended use, affected people, and harms.",
+    "title": "Pending chatbot and privacy bills",
+    "why": "NC and other states are considering AI chatbot and privacy bills. Mental-health-adjacent chatbots tend to attract attention, so rules may change after launch.",
+    "fix": "Assign someone to check the NC General Assembly site and other states' legislative trackers regularly. Keep features such as data deletion, disclosure notices, and retention settings configurable so you can adapt quickly.",
     "sources": [
-     "NC-WATCH",
-     "NIST-MAP"
-    ],
-    "confidence": "low",
-    "needsReview": true
-   },
-   {
-    "category": "bias",
-    "severity": "medium",
-    "severityWhy": "Plausibly applies: uneven advice quality across groups needs mitigation before scaling, even without formal decisions.",
-    "when": "before-scaling",
-    "title": "Uneven advice quality across student groups",
-    "why": "Although the product makes no decisions about people, the model may respond worse to certain dialects, cultures, identities, or neurodivergent users, or may miss crisis cues in some of them.",
-    "fix": "Test a set of sample conversations across diverse personas, including LGBTQ+, international, and minority students. Track crisis-detection misses by group where lawful, add a feedback button for 'this wasn't helpful or felt wrong', and review results regularly.",
-    "sources": [
-     "NIST-MEAS"
+     "NC-WATCH"
     ],
     "confidence": "medium",
     "needsReview": false
    }
   ],
   "askLawyer": [
-   "Given that our users may include minors and we store mood and chat data, which federal and state children's and health-privacy rules may apply, and do we need parental consent or an age restriction?",
-   "Could our features or marketing cause us to be treated as a mental health or health-care service in North Carolina or other states, and what disclaimers or licensing questions follow?",
-   "What should our contract with the third-party model provider cover on retention, training use, breach notice, and subprocessors for sensitive student data?"
+   "Do any health-privacy, children's privacy, or state mental-health chatbot rules apply to a mood-tracking chatbot for students, including minors, in NC and our other states?",
+   "What consent, age-gating, and parental involvement steps should we take if under-18 users can sign up?",
+   "What should our contract with the model API vendor say about data retention, training use, breach notice, and subprocessors?"
   ]
  },
  "plain": {
-  "text": "# Risk Assessment: College Student Coping Chatbot\n\nThis is a high-risk category. The users are young and potentially in distress, and the data is highly sensitive. Here are the main risks, roughly in priority order.\n\n## 1. User safety (highest priority)\n- **Crisis situations:** Users may disclose suicidal ideation, self-harm, abuse, eating disorders, or substance abuse. A missed signal or a poor response could cause real harm.\n- **Harmful or inappropriate advice:** LLMs can hallucinate, be overly validating (sycophancy), or give advice that is wrong for someone's situation, such as on medication, diagnosis, or restrictive eating.\n- **Emotional dependence:** Students may substitute the bot for human support or professional care, especially if it is available 24/7 and always agreeable.\n- **False reassurance:** Mood tracking can imply clinical insight the product doesn't have.\n\n**Mitigations:** Build a tested crisis-detection and escalation flow (988, Crisis Text Line, campus resources). Add hard guardrails against diagnosis and medication advice. Red-team with clinicians. Use clear \"not therapy\" framing. Add session-length and dependency safeguards. Monitor for failures.\n\n## 2. Regulatory and legal exposure\n- **State AI mental health laws are changing fast.** Illinois restricts AI therapy. Utah, Nevada, California, and New York have chatbot or mental health chatbot rules covering disclosure, crisis protocols, and marketing claims. Check each state where you have users.\n- **Unlicensed practice:** Marketing language like \"therapy,\" \"treatment,\" or \"counselor\" can trigger licensing and FDA/medical-device scrutiny.\n- **Health data privacy:** HIPAA may not apply, but the FTC Act and the FTC Health Breach Notification Rule likely do. Washington's My Health My Data Act, California's CCPA/CMIA, and other state laws cover mood and health data. North Carolina has no comprehensive privacy law, but that doesn't cover your out-of-state users.\n- **FERPA:** If universities provide the tool or share student data, FERPA and contract obligations may apply.\n- **Deceptive claims:** Overstating effectiveness or privacy protections creates FTC and state AG risk.\n\n## 3. Minors\n- \"Students or minors\" matters. Dual-enrollment and early-college students may be under 18.\n- **COPPA** applies for under-13s. State teen privacy and design laws (such as age-appropriate design codes) may apply to under-18s.\n- Minors raise consent, parental access, and mandatory-reporting questions.\n- **Mitigations:** Decide whether to exclude minors (with real age gating) or support them properly, with consent flows, stricter defaults, and legal review.\n\n## 4. Privacy and data security\n- **Chat logs plus mood data are extremely sensitive.** They may reveal mental health, sexuality, immigration status, illegal activity, or abuse.\n- **Breach impact is severe:** harm to users, litigation, and loss of trust.\n- **Retention risk:** Stored history can be subpoenaed, requested by campuses or parents, or misused later.\n- **Secondary use:** Using the data for analytics, model training, or advertising without clear consent is a major risk.\n\n**Mitigations:** Data minimization, encryption, short default retention with user-controlled deletion, strict access controls, no ad use or data sale, and clear plain-language consent.\n\n## 5. Third-party model/API risks\n- **Data flow:** Sensitive conversations go to a vendor. Check retention, training use, subprocessors, and whether zero-data-retention terms are available.\n- **Model drift:** Vendor updates"
+  "text": "# Risk Assessment: College Student Coping Chatbot\n\n## Highest-severity risks\n\n**1. Crisis and self-harm handling**\n- Students may disclose suicidal ideation, self-harm, abuse, or eating disorders. LLMs can miss cues, respond inappropriately, or give harmful advice, especially in long conversations where safety behavior degrades.\n- Failure here is the most serious harm to users and the biggest liability and reputational risk for you.\n- **Mitigations:** a separate crisis-detection layer (not just the base model's guardrails), scripted escalation to 988 and campus resources, and no \"therapist\" persona. Red-team with clinicians, test long multi-turn conversations, and log and review safety failures.\n\n**2. Unlicensed practice and misleading claims**\n- Several states have passed or are considering laws restricting AI in mental health. Illinois bans AI therapy, Nevada and Utah regulate mental health chatbots, and California has companion-chatbot rules. The landscape changes quickly.\n- \"Coping advice\" can drift into therapy or diagnosis. FTC and state AG rules on deceptive health claims also apply.\n- **Mitigations:** position it as wellness and self-help, avoid diagnosing or treating, make clear it's an AI and not a clinician, and get a state-by-state legal review. Your NC and multi-state footprint means you need to track each state.\n\n**3. Minors**\n- \"Students or minors\" matters. Dual-enrollment and early-college students may be under 18, and some may be under 13 (COPPA).\n- Minors need stronger protections: parental consent rules in some states, stricter privacy laws, and higher safety expectations.\n- **Mitigations:** decide whether to exclude minors (18+ with age gating) or fully support them. Don't leave this ambiguous.\n\n## Privacy and data risks\n\n**4. Sensitive data exposure**\n- Mood data and chat logs about mental health are highly sensitive. A breach could cause real harm, such as stigma or effects on employment or immigration.\n- Keeping chat history by default increases the exposure.\n- **Mitigations:** data minimization, encryption in transit and at rest, short default retention, user-controlled deletion and export, and strict access controls with audit logs for staff.\n\n**5. Regulatory patchwork**\n- **HIPAA** likely doesn't apply unless you partner with a covered entity, but a university health center partnership could change that.\n- **FERPA** may apply if the school deploys it and shares student records.\n- **FTC Act and Health Breach Notification Rule** apply to health apps outside HIPAA.\n- **State laws:** Washington's My Health My Data Act, Nevada's health data law, California's CCPA/CMIA, and others. NC's general breach notification law applies, and other states' laws apply to their residents.\n- **Mitigations:** map data flows, do a privacy impact assessment, publish a plain-language privacy policy, and get explicit consent for sensitive data.\n\n**6. Secondary use**\n- Pressure to use mood data for analytics, model training, marketing, or sharing with universities can erode trust and violate law.\n- **Mitigations:** prohibit ad use and data sale, make school reporting opt-in and aggregate-only, and be transparent about any exceptions (e.g., imminent danger).\n\n## Third-party API risks\n\n**7. Vendor dependency and data handling**\n- Chat content goes to the API provider. Check retention, training use, subprocessors, and breach terms.\n- Model updates can change behavior and safety performance without warning. Outages or policy changes can break the product, which is especially bad during a crisis.\n- **Mitigations:** zero-retention or no-training agreements, a BAA if needed, version pinning, regression tests on safety scenarios, a fallback for outages (static crisis resources), and PII minimization before sending data to the API.\n\n## Product-quality and ethical risks\n\n**8. Bad or overconfident advice.** Hallucinations, generic or culturally insensitive advice, and advice that conflicts with medical care (such as medication) are all possible. Constrain scope, use vetted content for coping techniques, and have clinicians review.\n\n**9. Dependency and displacement.** Students may rely on the bot instead of seeking human help, and engagement-optimized design can worsen this. Build in nudges toward human support, avoid manipulative retention tactics, and measure wellbeing rather than just usage.\n\n**10. Bias and inequity.** Performance may vary across cultures, languages, dialects, and identities (LGBTQ+, international students, students with disabilities). Test across groups and ensure accessibility.\n\n**11. Mood tracking misinterpretation.** Users may over-trust trend insights or feel worse seeing low scores. Avoid diagnostic language and frame insights carefully.\n\n**12. Duty-to-warn ambiguity.** Decide in advance what you do if a user expresses imminent danger. Whether to break confidentiality and how to do it are legal and ethical questions, and the policy must be disclosed to users up front.\n\n## Business and institutional risks\n\n- **Liability and insurance:** you may need tech E&O and cyber coverage, and your terms of service need clear limits.\n- **Institutional partnerships:** universities will require security reviews (HECVAT), accessibility compliance, and contractual data terms.\n- **App store policies:** Apple and Google have specific requirements for health and mental health apps.\n- **Reputational risk:** a single incident of harmful output can be existential.\n\n## Suggested priorities\n\n1. Decide the age policy (18+ vs. minors).\n2. Design the crisis protocol with clinical input.\n3. Get legal review of the wellness vs. therapy positioning and state laws.\n4. Lock down the API vendor's data terms and minimize data sent.\n5. Set retention and deletion defaults.\n6. Run clinician-led red-teaming before launch, with ongoing monitoring afterward.\n\n*This is a general overview, not legal advice. Given the health data and the minors question, consult counsel with health-privacy experience.*\n\nI can go deeper on any of these, such as a crisis-response design, a state-law checklist, or vendor questions to ask your API provider."
  }
 }

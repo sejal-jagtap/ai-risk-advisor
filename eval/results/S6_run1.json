@@ -22,19 +22,18 @@
   ]
  },
  "advisor": {
-  "summary": "This face-recognition door system processes biometric data of consumers in the EU/UK and other US states, and it automatically decides who gets into their homes. Most of the main risks (sensitive data, accuracy and bias, lockouts, spoofing, and biometric-specific rules) need attention before launch.",
+  "summary": "This face-recognition door system processes biometric data and makes automatic access decisions about people in their own homes, so it carries high privacy, bias, and security exposure, especially with EU/UK users. Several risks depend on facts not yet given (consent flow, retention, fallback entry, where the data is stored), so most items need review.",
   "risks": [
    {
     "category": "privacy",
     "severity": "high",
-    "severityWhy": "High: biometric data used to identify people (sensitive data) and no safeguards were described.",
+    "severityWhy": "High: biometric data, which is sensitive, is processed and no safeguard is described.",
     "when": "now",
-    "title": "Face biometrics are likely sensitive data",
-    "why": "Face templates used to identify individuals may count as special category data for EU/UK users, which can mean extra conditions beyond a normal lawful basis. Tenants may not be able to give freely chosen consent if the door is their only way in.",
-    "fix": "Map every place face images and templates are collected, stored and used. Offer a non-biometric alternative (key fob, PIN, app) so enrolment is a real choice. Store templates, not raw images, and delete them when a tenant moves out or withdraws. Write a retention schedule and a purpose-limitation rule that bars using the data for anything but door access.",
+    "title": "Face templates are sensitive biometric data",
+    "why": "Face images and templates used to identify tenants may count as special category data for EU/UK users, which can mean extra conditions beyond ordinary consent or contract.",
+    "fix": "Store only encrypted templates, not raw images. Process matching on-device or on a local door controller where possible. Add a separate, explicit enrolment step with a clear notice. Write down which condition for processing sensitive data you will rely on.",
     "sources": [
-     "GDPR-9",
-     "GDPR-5"
+     "GDPR-9"
     ],
     "confidence": "medium",
     "needsReview": true
@@ -42,72 +41,55 @@
    {
     "category": "privacy",
     "severity": "high",
-    "severityWhy": "High: biometric data of consumers, and the rules differ by US state, with no safeguards described.",
+    "severityWhy": "High: tenants have little real choice about enrolling, and the data is sensitive.",
     "when": "now",
-    "title": "US state biometric and privacy rules vary by state",
-    "why": "Some US states have biometric-specific or consumer privacy rules covering notice, consent, retention and sometimes private lawsuits. California privacy rules may apply, and which other states matter depends on where your tenants live, which you did not specify.",
-    "fix": "List the states where buildings will operate. Build per-tenant written notice, an explicit opt-in screen, a published retention and deletion policy, and a deletion flow that removes templates on request. Do not sell or share face data.",
+    "title": "Consent, purpose limits, retention, and non-tenant faces",
+    "why": "Tenants may not be able to refuse freely if the face system is the only way into their home. Cameras may also capture visitors, neighbours, or delivery staff who never enrolled. Your lawful basis, purpose limits, and retention may be hard to defend.",
+    "fix": "Offer a non-biometric alternative (key fob, PIN, or mobile key) with no penalty for choosing it. Match against enrolled templates only and discard non-matching frames immediately. Set automatic deletion when a tenant moves out. Don't reuse the data to train models without a separate review.",
     "sources": [
-     "CCPA"
-    ],
-    "confidence": "low",
-    "needsReview": true
-   },
-   {
-    "category": "bias",
-    "severity": "high",
-    "severityWhy": "High: automated decisions about people that can lock them out of their homes, with no testing described.",
-    "when": "now",
-    "title": "Uneven accuracy across skin tones, genders, ages and disabilities",
-    "why": "A self-trained face model can have higher false-reject rates for some groups, which would lock those residents out more often. Changes in appearance (face coverings, injury, aging) can cause the same problem.",
-    "fix": "Test the model on a labelled dataset covering skin tone, gender, age and appearance changes, and set a maximum acceptable gap in error rates between groups before release. Log false rejects by group in production. Re-test after every model update, and keep a record of the results.",
-    "sources": [
-     "NIST-MEAS"
-    ],
-    "confidence": "high",
-    "needsReview": false
-   },
-   {
-    "category": "bias",
-    "severity": "high",
-    "severityWhy": "High: it decides automatically about people's access to their homes and no human fallback was described.",
-    "when": "now",
-    "title": "Fully automated denial of entry with no human review",
-    "why": "A wrong rejection stops a person entering their home, and it may count as an automated decision with significant effect, so rules on human review and explanation may apply to EU/UK users.",
-    "fix": "Provide an always-available fallback (a code, a key, a call button to a staff member or the landlord) and a clear in-app way to contest a denial. Tell denied users why and how to fix it. Document who is accountable for the system and handle lockouts as incidents. Check emergency exit and fire-safety rules separately.",
-    "sources": [
-     "GDPR-22",
-     "NIST-MAP"
+     "GDPR-5"
     ],
     "confidence": "medium",
-    "needsReview": true
-   },
-   {
-    "category": "regulatory",
-    "severity": "high",
-    "severityWhy": "High: could block launch in the EU if biometric identification falls into a restricted or high-risk category.",
-    "when": "now",
-    "title": "EU AI Act classification for biometric identification",
-    "why": "Biometric identification systems may be treated as high-risk, and some uses of biometrics are in the banned list. Whether a closed-group door-access system is covered depends on the exact design and use, which you should confirm.",
-    "fix": "Write down exactly what the system does (one-to-one verification of an enrolled tenant versus identifying unknown people). Avoid features such as scanning passers-by or inferring traits like emotions. Get the classification confirmed before selling into the EU.",
-    "sources": [
-     "EUAI-HR",
-     "EUAI-5"
-    ],
-    "confidence": "low",
     "needsReview": true
    },
    {
     "category": "privacy",
     "severity": "medium",
-    "severityWhy": "Medium: plausibly applies and needs a mitigation before scaling.",
+    "severityWhy": "Medium: a formal assessment plausibly applies and should be done before wider release.",
     "when": "before-scaling",
-    "title": "Impact assessment and non-tenant bystanders",
-    "why": "Large-scale biometric processing in homes may call for a data protection impact assessment in the EU/UK. Cameras at doors can also capture visitors, delivery staff and neighbours who never enrolled.",
-    "fix": "Do a DPIA before EU/UK rollout. Process camera frames on the device where possible, discard non-matching faces right away without storing them, and put signage and a privacy notice at each door.",
+    "title": "Impact assessment for large-scale biometric processing",
+    "why": "Systematic biometric processing of residents may call for a data protection impact assessment in the EU/UK. You haven't mentioned one.",
+    "fix": "Complete and keep a written impact assessment before rollout. Cover necessity, alternatives, risks to tenants, and mitigations. Review it whenever the model or the sites change.",
     "sources": [
-     "GDPR-35",
-     "GDPR-5"
+     "GDPR-35"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "High: automated decisions about people could wrongly lock tenants out of their homes, and no testing is described.",
+    "when": "now",
+    "title": "Uneven accuracy across skin tones, ages, genders, and disabilities",
+    "why": "A self-trained face model can have different false-reject and false-accept rates for different groups. This can mean repeated lockouts for some tenants, or strangers being let in. Training data and test results have not been described.",
+    "fix": "Test error rates by skin tone, age, gender, and in different lighting, and by factors such as glasses, masks, and facial changes. Set a maximum acceptable gap between groups. Don't ship if the gap is exceeded. Re-test after every model update and monitor live failure rates by group where lawful.",
+    "sources": [
+     "NIST-MEAS"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "bias",
+    "severity": "high",
+    "severityWhy": "High: the system decides automatically about access to people's homes, and no human review or fallback is described.",
+    "when": "now",
+    "title": "Fully automated access decisions with no fallback or human review",
+    "why": "A wrong rejection can block someone from their home, with significant effects for the person. EU/UK rules on solely automated decisions may be relevant, including human review and the ability to contest.",
+    "fix": "Provide an always-available alternative entry method, such as a code, key, or intercom to a human. Add a fast path for staff to override a rejection. Log decisions and give tenants a way to contest them and get an explanation.",
+    "sources": [
+     "GDPR-22"
     ],
     "confidence": "medium",
     "needsReview": true
@@ -115,11 +97,11 @@
    {
     "category": "security",
     "severity": "high",
-    "severityWhy": "High: biometrics cannot be changed if leaked, and no safeguards were described.",
+    "severityWhy": "High: biometric data is sensitive and a breach or spoof gives direct physical-access harm, with no safeguards described.",
     "when": "now",
-    "title": "Template theft, spoofing and breach exposure",
-    "why": "Stolen face templates are permanent identifiers, and attackers may try photos, videos or deepfakes at the door. A breach would involve sensitive data and might trigger notification duties in the EU/UK and US states.",
-    "fix": "Encrypt templates in storage and in transit, and keep them in a secure enclave on the device if you can. Add liveness (anti-spoofing) detection and test it against photo and video attacks. Limit staff access, log all access, and keep a breach-response plan with a contact list covering the jurisdictions you serve.",
+    "title": "Template theft, spoofing, and physical break-in",
+    "why": "Biometrics can't be reset like a password. A leaked template database is permanent harm. Photos, videos, or masks could also fool the camera and open the door. Breach duties may also apply.",
+    "fix": "Encrypt templates at rest and in transit, ideally in a secure hardware element on the device. Add liveness / anti-spoofing detection. Separate templates from identity data, limit admin access, and log all access. Write a breach-response plan and test it. Run a penetration test on the door hardware and the model.",
     "sources": [
      "GDPR-32"
     ],
@@ -128,26 +110,39 @@
    },
    {
     "category": "regulatory",
-    "severity": "medium",
-    "severityWhy": "Medium: plausibly applies and needs a mitigation before scaling.",
-    "when": "before-scaling",
-    "title": "Accuracy and privacy claims in marketing",
-    "why": "Claims like 'secure', 'unbiased' or 'data never leaves the building' can be treated as deceptive if the product doesn't match them.",
-    "fix": "Only publish accuracy and security claims you can back with your test results. Keep a claims log linked to the evidence, and make sure your privacy notice matches what the system actually does with face data.",
+    "severity": "high",
+    "severityWhy": "High: it could block launch in the EU if a feature is prohibited or classed as high-risk.",
+    "when": "now",
+    "title": "EU AI Act classification of biometric identification",
+    "why": "Biometric identification can be treated specially under EU AI rules. You should check whether your system counts as a banned practice or a listed high-risk use, and what that would mean. Whether a residential building counts depends on facts such as who can enter the space and how the system is set up.",
+    "fix": "Write a short use-case description: who is identified, where, whether the space is public, and whether it is one-to-one verification or one-to-many search. Design for one-to-one matching against a template the tenant enrolled. Get the classification checked before EU launch.",
     "sources": [
-     "FTC-5"
+     "EUAI-5",
+     "EUAI-HR"
     ],
-    "confidence": "medium",
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
+    "category": "regulatory",
+    "severity": "medium",
+    "severityWhy": "Medium: plausibly applies to some US states, but you haven't said which, so a mitigation is needed before scaling.",
+    "when": "before-scaling",
+    "title": "US state biometric privacy laws",
+    "why": "Some US states have specific biometric privacy rules, which may cover notice, written consent, retention, and private lawsuits. None of the listed sources directly covers them, and you haven't named the states.",
+    "fix": "List each state where buildings will operate. Use per-state consent and notice screens and a published retention and deletion schedule. Don't sell or share face data. Have counsel confirm requirements per state before launching there.",
+    "sources": [],
+    "confidence": "low",
     "needsReview": true
    }
   ],
   "askLawyer": [
-   "Do the biometric-specific and consumer privacy laws in the US states where we'll operate require written consent, a retention policy or other steps before we enrol tenants' faces?",
-   "Does our design count as biometric identification under EU AI Act rules, and which GDPR conditions could support processing face data when the landlord controls access to the home?",
-   "Who is the controller or processor between us, the landlord and the tenants, and how should that be set out in contracts and notices?"
+   "Which state biometric privacy laws apply to the states we plan to operate in, and what notice, consent, and retention terms do we need for tenants and visitors?",
+   "Does a tenant-only, one-to-one face unlock in a residential building fall under a prohibited or high-risk category in the EU AI Act, and what would we need to do?",
+   "Can we rely on consent or another lawful basis for tenants' biometric data when it is a condition of access to their home, and do we need a non-biometric alternative?"
   ]
  },
  "plain": {
-  "text": "# Risk Assessment: Face-Recognition Building Access\n\n**Overall:** This is a high-risk product, mainly because it processes biometric data, makes automated decisions about people's access to their homes, and operates in strict legal regimes (EU/UK, and several US states). The biggest risks are legal and security-related, followed by accuracy, fairness, and safety.\n\n## 1. Legal and regulatory (highest risk)\n\n**US**\n- **Biometric privacy laws:** Illinois BIPA (private right of action, statutory damages, a major class-action target), Texas CUBI, Washington's biometric law and My Health My Data Act, and others. They generally require written notice, informed consent, a public retention policy, and a ban on selling the data.\n- **City and state housing rules:** New York's Tenant Privacy Act restricts smart-access systems that collect biometric data in residential buildings. Other jurisdictions are following.\n- **State privacy laws (CCPA/CPRA, Colorado, Connecticut, etc.):** biometric data is \"sensitive,\" which triggers opt-in consent or opt-out rights, and sometimes risk assessments.\n- **FTC Act:** The FTC has acted against deceptive or unfair facial recognition practices (e.g., Rite Aid, Everalbum), including requiring deletion of models trained on improperly obtained data.\n- **Fair Housing Act and ADA:** Disparate impact or inaccessible alternatives can create discrimination liability.\n\n**EU/UK**\n- **GDPR/UK GDPR, Art. 9:** Biometric data used for unique identification is special-category data. You need an explicit Art. 9 condition, usually explicit consent.\n- **Consent problem:** Consent from tenants is hard to treat as \"freely given\" when the landlord controls housing. Regulators are skeptical unless there is a genuinely equivalent non-biometric alternative.\n- **Necessity and proportionality:** Regulators (CNIL, ICO, and others) have often found facial recognition disproportionate when keys or fobs would do.\n- **Art. 22:** Solely automated decisions with significant effects need safeguards such as human review and a way to contest. Being locked out of your home may qualify.\n- **DPIA:** Mandatory. You will also likely need an EU/UK representative and possibly a DPO.\n- **EU AI Act:** 1:1 biometric *verification* is generally carved out of the \"high-risk remote biometric identification\" category, but this depends on the design. Any 1:N identification, emotion or categorization features, or scope creep could change the classification. The Act also bans untargeted scraping of facial images to build databases, which matters for how you trained your model.\n- **Cross-border transfers:** Moving EU/UK biometric data to the US requires a valid transfer mechanism.\n\n## 2. Security and privacy\n\n- **Irreversible breach impact:** Faces can't be reset like passwords. A template leak causes permanent harm and large regulatory and class-action exposure.\n- **Spoofing and presentation attacks:** Photos, videos, masks, and deepfakes can be used to gain entry. Without strong liveness detection, the system gives a false sense of security and creates physical safety risk.\n- **Attacks on the model and system:** Adversarial inputs, template inversion (reconstructing faces from embeddings), and compromised ed"
+  "text": "# Risk Assessment: Face-Recognition Building Access\n\nThe biggest risks are legal exposure from biometric privacy laws, the irreversibility of a biometric data breach, and the harm of automated lockouts with no fallback. Below they are grouped by category, followed by mitigations. This is not legal advice, and you'll need counsel in each jurisdiction.\n\n## 1. Legal and regulatory (highest severity)\n\n**US (multi-state patchwork)**\n- **Illinois BIPA** is the biggest litigation risk. It requires written consent, a public retention and destruction policy, and bans profiting from biometrics. It has a private right of action with statutory damages ($1,000 per negligent violation, $5,000 per intentional or reckless one), which drives class actions.\n- **Texas CUBI and Washington's biometric law** are enforced by state attorneys general and require notice and consent.\n- **Colorado** has biometric-specific amendments to its privacy act. **California (CCPA/CPRA)** treats biometrics as sensitive personal information.\n- **New York** has residential-specific rules, such as the Tenant Data Privacy Act, restricting smart-access and biometric data collection by landlords. NYC also has a commercial biometric identifier law. Other states and cities are moving in the same direction.\n- **FTC Act Section 5:** The FTC has acted against companies for unfair or deceptive facial recognition practices (e.g., Rite Aid), including bias and inadequate testing.\n- **Housing and discrimination law:** The Fair Housing Act and ADA are relevant if the system excludes people with disabilities, facial differences, or religious face coverings, or if data is used to monitor or evict tenants.\n\n**EU/UK**\n- **GDPR/UK GDPR Art. 9:** Biometric data used for unique identification is special category data, so you need an Art. 9 condition, usually explicit consent. Consent is hard to treat as \"freely given\" when it's a condition of accessing your home, so regulators expect a real non-biometric alternative.\n- A **DPIA is mandatory**, and data minimization and necessity are scrutinized heavily. Regulators often say less intrusive means, such as key fobs or codes, make facial recognition disproportionate.\n- **Art. 22 (automated decisions):** Denying someone entry to their home arguably has significant effects, so you need human intervention and contestability.\n- **EU AI Act:** 1:1 verification (\"is this the person they claim to be?\") is generally excluded from the high-risk biometric category. 1:N identification (searching a gallery) may be high-risk or restricted. Your architecture choice has major compliance consequences. As developer of your own model, you'd carry provider obligations.\n- Data protection authorities (CNIL, Garante, ICO) have a history of enforcement against facial recognition for access control.\n- **Cross-border transfers:** Storing EU/UK biometrics in the US needs a valid transfer mechanism.\n\n**Role confusion:** The landlord is your customer but the tenant is the data subject. You must define controller and processor roles, and who obtains consent and handles access and deletion requests.\n\n## 2. Security and privacy\n\n- **Biometrics can't be reset.** A template breach is permanent harm, unlike a leaked password.\n- **Spoofing and presentation attacks:** Photos, videos, masks, and deepfakes could unlock doors, so physical security is at stake.\n- **Template and model attacks:** Template inversion, model extraction, and adversarial examples.\n- **Third-party capture:** Cameras will image visitors, delivery workers, children, and passersby who never consented.\n- **Function creep and surveillance:** Logs reveal tenants' movements and routines. Risks include landlord misuse, law enforcement requests, sale of data, and use in disputes or evictions.\n- **Domestic abuse and stalking:** Staff or ex-partners with access to logs or enrollment could track or lock out a person.\n\n## 3. Model performance and fairness\n\n- **Demographic performance gaps:** Face recognition error rates often vary by skin tone, gender, and age. With your own model, you own the training data provenance and bias testing.\n- **Training data legality:** Scraped or non-consented face datasets create privacy, copyright, and regulatory risk (and could be ordered deleted along with the model).\n- **False rejects** lock residents out of their homes. **False accepts** let strangers in.\n- **Real-world variability:** Low light, glare, weather, masks, glasses, injuries, aging, and children growing.\n- **Drift and updates:** Retraining can change performance and may require re-validation.\n\n## 4. Safety and operational risks\n\n- **Life safety:** Egress must work during power or network failure, and fire codes require free exit.\n- **Fully automated denial:** With no human in the loop, someone can be stuck outside at night, with no recourse for elderly, disabled, or ill residents.\n- **Outages:** Cloud dependency, camera failure, and lockouts during updates.\n- **Enrollment and offboarding:** Verifying identity at enrollment, handling roommates and guests, and deleting data at move-out.\n\n## 5. Business and reputational\n\n- Class action and regulatory fine exposure (GDPR up to 4% of global turnover or \u20ac20M).\n- Landlords and tenants may resist adoption, and press coverage of \"landlord facial recognition\" is typically negative.\n- Insurance and procurement hurdles, and potential bans or moratoria in some cities.\n\n## Key mitigations\n\n1. **Make it opt-in with a real alternative** (fob, code, app) that's equally convenient and not penalized.\n2. **Use 1:1 verification where possible,** such as on-device matching against a template the user holds, rather than a central 1:N database.\n3. **Store templates on device or in secure hardware** where feasible, encrypted, never raw images beyond enrollment, with no sharing or sale.\n4. **Build in liveness and anti-spoofing detection** and test it against standards (e.g., ISO/IEC 30107-3).\n5. **Run independent bias and accuracy testing** across demographics and conditions (NIST FRVT-style), and document thresholds.\n6. **Do a DPIA and"
  }
 }

@@ -1,0 +1,5 @@
+scenario,name,expected risk (written BEFORE running),FairPlay found? (1/0),Plain prompt found? (1/0),notes
+S9,Employee monitoring,"Workplace surveillance and notice (GDPR-5, CCPA)",,,
+S9,Employee monitoring,Unfair or biased scoring,,,
+S9,Employee monitoring,Automated decision-making (GDPR-22),,,
+S9,Employee monitoring,Security of captured screens (GDPR-32),,,

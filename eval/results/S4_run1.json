@@ -21,45 +21,56 @@
   ]
  },
  "advisor": {
-  "summary": "This tutor stores minors' answers, progress and chat logs and sends them to a third-party AI model, so child data handling, vendor sharing and storage security are the main launch risks. Because it only informs a human and serves North Carolina users, the focus is on NC and US sources, and several issues need a lawyer's review.",
+  "summary": "This homework tutor stores minors' answers, progress and chat logs and sends them to a third-party AI model, so the biggest risks are student-data privacy, data sharing with the API vendor, and unsafe or wrong AI output for minors. Because only North Carolina users are listed, the pointers below are limited to NC and general US sources, and several risks depend on facts you haven't given (school contracts, student ages, vendor terms).",
   "risks": [
    {
     "category": "privacy",
     "severity": "high",
-    "severityWhy": "High: minors' data is collected and no safeguards are described.",
+    "severityWhy": "Meets the 'minors' data' criterion: stores identifiable records and chat logs of high school students with no safeguards described.",
     "when": "now",
-    "title": "Collecting and keeping minors' records and chat logs",
-    "why": "You store identifiable student answers, progress and free-text chats from minors. Chat logs can reveal personal details, struggles, or things students share unprompted. Children's privacy and student-records laws may apply depending on student ages and whether schools are involved. Parental consent and school contracts may also matter. None of these are in the source list, so check them directly.",
-    "fix": "Collect only what tutoring needs. Add a plain-language notice written for teens and parents. Set a retention limit and auto-delete chat logs. Give parents or students a way to view and delete data. Block students from entering names, addresses or other personal details in chat, or warn them not to.",
+    "title": "Collecting and keeping more minor data than needed",
+    "why": "Chat logs and progress records can reveal grades, struggles, personal disclosures and family details. Over-collection, indefinite retention, or using the data for purposes you did not tell users about may be treated as an unfair or deceptive data practice.",
+    "fix": "List each data field and its purpose, and drop what the tutor doesn't need. Set a retention limit with automatic deletion of chat logs. Give students and parents a way to view and delete their data. Keep student data out of marketing and model training. Keep your privacy notice consistent with these practices.",
     "sources": [
-     "FTC-5"
-    ],
-    "confidence": "low",
-    "needsReview": true
-   },
-   {
-    "category": "privacy",
-    "severity": "high",
-    "severityWhy": "High: minors' data is sent to a third party and no safeguard is described.",
-    "when": "now",
-    "title": "Student chats flowing to a third-party AI vendor",
-    "why": "Sending chat logs and student context to an outside API creates a data-sharing chain. Vendor retention, model-training use and subprocessors are unknown, and a mismatch with your privacy promises could be a deceptive practice.",
-    "fix": "Send only the minimum text needed and strip names and IDs before API calls. Use a vendor agreement or setting that disables training on your data and limits retention. Never put full student records in prompts. Document the vendor in your privacy notice.",
-    "sources": [
-     "NIST-GAI",
      "FTC-5"
     ],
     "confidence": "medium",
     "needsReview": true
    },
    {
+    "category": "privacy",
+    "severity": "high",
+    "severityWhy": "Meets the 'minors' data' criterion: student records may fall under child- or education-specific privacy rules, and no consent or school-contract approach is described.",
+    "when": "now",
+    "title": "Child and student privacy laws may apply (not covered by the source list)",
+    "why": "Products that serve minors, and products used through schools, may be subject to federal or state child and student privacy rules, including parental consent and school-contract requirements. None of the listed sources directly addresses this, so it needs professional review.",
+    "fix": "Decide whether you will sell direct to families or through schools. Build an age gate and a parental consent or school-authorization flow to match. Keep a data map showing who can access student records.",
+    "sources": [],
+    "confidence": "low",
+    "needsReview": true
+   },
+   {
     "category": "security",
     "severity": "high",
-    "severityWhy": "High: a store of minors' personal data with no security safeguards described.",
+    "severityWhy": "Meets the 'minors' data' criterion: student chat logs are sent to a third-party API with no safeguards described.",
     "when": "now",
-    "title": "Breach exposure for stored student data",
-    "why": "A central database of student records and chats is an attractive target, and a breach would harm minors directly. NC's breach-notice law may apply to the personal information you hold.",
-    "fix": "Encrypt data in transit and at rest. Use role-based access with logging, and keep API keys out of client code. Separate student identity from chat content. Write an incident response plan with a named owner. Review NC breach-notice duties before launch.",
+    "title": "Student data leaking through the third-party AI API",
+    "why": "Chat logs may contain names, schools and personal details that go to an outside vendor. The vendor may retain or train on them, and prompt injection could expose other students' stored data to the model.",
+    "fix": "Strip names and identifiers before calling the API. Send only the current session's context, never other students' records. Sign vendor terms for zero retention and no training on your data. Use the model without access to your database, and apply per-student access controls on your side.",
+    "sources": [
+     "NIST-GAI"
+    ],
+    "confidence": "medium",
+    "needsReview": true
+   },
+   {
+    "category": "security",
+    "severity": "medium",
+    "severityWhy": "Plausibly applies: you hold personal information about NC users, so you need a breach plan before scaling.",
+    "when": "before-scaling",
+    "title": "No breach response plan for stored student records",
+    "why": "Stored answers, progress data and chat logs are a target. If a breach exposes NC residents' personal information, NC's breach notification rules may apply.",
+    "fix": "Encrypt data at rest and in transit. Use role-based access with audit logs. Write an incident response runbook that names who decides on notification. Keep an inventory of what personal data you hold so you can scope a breach quickly.",
     "sources": [
      "NC-BRCH"
     ],
@@ -69,11 +80,11 @@
    {
     "category": "security",
     "severity": "high",
-    "severityWhy": "High: could cause direct harm to minors, with no safeguard described.",
+    "severityWhy": "Meets the 'direct harm to people' criterion: minors could receive wrong, inappropriate or harmful AI output, and no safeguard is described.",
     "when": "now",
-    "title": "Wrong, unsafe or manipulated AI output shown to teens",
-    "why": "A generative tutor can give incorrect answers, produce age-inappropriate content, or be steered by prompt injection or jailbreaks. Students may trust wrong answers or get harmful responses.",
-    "fix": "Add content filtering on inputs and outputs. Restrict the system prompt to tutoring topics. Add self-harm and safety escalation messaging. Show a 'check this answer' notice. Log and review flagged chats. Test with adversarial prompts before launch.",
+    "title": "Made-up answers and inappropriate content for minors",
+    "why": "Generative models can give confident wrong answers, produce unsuitable content, or respond poorly if a student discloses distress. Wrong answers also undermine the product's educational purpose.",
+    "fix": "Add a system prompt and an output filter tuned for teens. Add a crisis-keyword path that shows human help resources instead of a model reply. Ground math and science answers in checked solutions where possible. Add a 'report a bad answer' button and review flagged chats.",
     "sources": [
      "NIST-GAI"
     ],
@@ -83,14 +94,13 @@
    {
     "category": "bias",
     "severity": "medium",
-    "severityWhy": "Medium: a human uses the output, so harm is plausible but mitigated; it needs safeguards before scaling.",
+    "severityWhy": "Plausibly applies: progress data informs a human (teacher or parent), and skewed assessments could affect students before wider release.",
     "when": "before-scaling",
-    "title": "Progress labels may skew how teachers or parents see students",
-    "why": "Even if a human decides, AI-generated progress summaries or ability labels can anchor their judgment. Performance may differ for English learners, students with disabilities, or different writing styles. Who the human is and what they decide are not stated.",
-    "fix": "Keep outputs descriptive (what was practiced) rather than labelling ability. Show the evidence behind each summary. Test accuracy across student groups. Give humans a way to override or flag wrong summaries. Do not use the tool for grading or placement without separate review.",
+    "title": "Skewed progress assessments shaping how humans view students",
+    "why": "If the AI scores or summarizes student ability, it may do worse for English learners, students with disabilities, or different writing styles. A teacher or parent may over-trust those summaries.",
+    "fix": "Test the tutor's feedback and progress summaries across student groups and language backgrounds. Label summaries as AI estimates, not grades. Show the evidence behind each summary. Let the human reviewer and the student contest or correct it. Document who sees the data and how it may be used. Ban use for discipline or placement without separate review.",
     "sources": [
-     "NIST-MEAS",
-     "NIST-MAP"
+     "NIST-MEAS"
     ],
     "confidence": "medium",
     "needsReview": true
@@ -98,14 +108,14 @@
    {
     "category": "regulatory",
     "severity": "medium",
-    "severityWhy": "Medium: plausibly applies and needs mitigation before wider release.",
+    "severityWhy": "Plausibly applies: AI tutoring claims and undisclosed bot interactions with minors need mitigation before wider release.",
     "when": "before-scaling",
-    "title": "Misleading claims or unclear AI disclosure",
-    "why": "Claims about learning gains, accuracy or privacy, or students not realizing they are talking to AI, could raise deceptive-practice issues under federal or NC consumer protection law.",
-    "fix": "Label the tutor clearly as AI in the interface. Only make outcome claims you can back with evidence. Make sure the privacy notice matches what the product and vendor really do. Keep records supporting your marketing claims.",
+    "title": "Misleading claims or undisclosed AI in marketing and the product",
+    "why": "Claims such as 'improves grades' or 'always correct', or students and parents not knowing they are talking to an AI, may raise deceptive-practice concerns.",
+    "fix": "Label the tutor as AI in the interface and in onboarding. Only make outcome claims you can back with evidence. Be specific in the privacy notice about what is stored and shared with the AI vendor.",
     "sources": [
-     "FTC-5",
-     "NC-UDTPA"
+     "NC-UDTPA",
+     "FTC-5"
     ],
     "confidence": "medium",
     "needsReview": true
@@ -113,25 +123,25 @@
    {
     "category": "regulatory",
     "severity": "low",
-    "severityWhy": "Low: good practice, since pending rules may change over time.",
+    "severityWhy": "Good practice: pending NC bills may affect chatbots or privacy but their scope is unknown.",
     "when": "monitor",
-    "title": "Pending NC chatbot and privacy bills",
-    "why": "NC may consider bills on AI chatbots, minors or privacy that could affect a student-facing chat product. Their status changes and is not covered here.",
-    "fix": "Assign someone to check the NC General Assembly site on a schedule. Keep a feature and data inventory so you can assess changes quickly.",
+    "title": "Pending NC chatbot and privacy legislation",
+    "why": "NC bills on AI chatbots or privacy, especially those involving minors, may change your obligations.",
+    "fix": "Assign someone to check the NC General Assembly site on a regular schedule. Keep consent, retention and AI-disclosure settings configurable so you can adapt quickly.",
     "sources": [
      "NC-WATCH"
     ],
-    "confidence": "medium",
+    "confidence": "low",
     "needsReview": true
    }
   ],
   "askLawyer": [
-   "Which children's privacy and student-records laws apply to us given student ages and whether schools or parents sign up, and what consent or contracts do we need?",
-   "Is our AI vendor agreement adequate for minors' data, covering retention, training use and subprocessors?",
-   "What are our NC breach-notification and consumer-protection duties, and how should our privacy notice and AI disclosures be worded for teens and parents?"
+   "Which federal and NC child and student privacy rules apply to us, and does selling through schools versus directly to families change what consent and contracts we need?",
+   "What should our contract with the third-party AI vendor say about retention, training on student data, and breach notification?",
+   "Are our planned AI disclosures and marketing claims about learning outcomes low-risk under NC deceptive-practice rules?"
   ]
  },
  "plain": {
-  "text": "# Risk Assessment: High School Homework Tutor\n\n## 1. Privacy and legal compliance (highest priority)\n\n**Applicable laws (confirm with counsel):**\n- **FERPA**: If schools or districts deploy this, you likely act as a \"school official,\" so data use is limited to the school's purposes, and the school controls the data. Student records and progress data are probably education records.\n- **COPPA**: Most high schoolers are 14+, but 13-year-old freshmen or younger accelerated students may use it. If you have actual knowledge of users under 13, you need verifiable parental consent, or you must rely on school authorization within its limits.\n- **North Carolina Student Online Privacy Protection Act (G.S. 115C-401.2)**: Restricts operators of K-12 services from targeted advertising, building non-educational profiles, and selling student data. It also requires security safeguards and deletion practices.\n- **NC Identity Theft Protection Act**: Requires breach notification and reasonable security.\n- **FTC Act Section 5**: Applies to deceptive or unfair practices, such as claiming \"we never share data\" while sending chat logs to an API vendor.\n- **PPRA**: Applies if the tool collects sensitive information, which students may disclose in chat.\n\n**Key risks:**\n- Chat logs from teens often contain sensitive disclosures (mental health, family problems, sexuality, immigration status, abuse) that go well beyond homework.\n- Over-collection and indefinite retention increase breach exposure.\n- Unclear consent: who consents, the student, the parent, or the school?\n- Using student data to improve models or product without authorization.\n\n## 2. Third-party API risks\n- Student data, including potentially identifying details, flows to a vendor. Check their retention, training-on-data policy, subprocessors, and whether they will sign a data processing agreement that fits FERPA and NC requirements.\n- Vendor outages, price changes, model updates that change behavior, or policy changes.\n- Many general-purpose API terms restrict or have special requirements for use by minors.\n- Limited visibility into the model's safety behavior.\n\n**Mitigations:** Zero-data-retention or no-training agreements, PII minimization and redaction before API calls, a written DPA, and a vendor change-management plan.\n\n## 3. Child safety\n- **Crisis disclosures**: Students may mention self-harm, abuse, or violence. You need detection, a response protocol, and clarity on escalation, including how it interacts with teachers' and counselors' mandatory reporting duties in NC.\n- **Inappropriate content**: Sexual content, dangerous instructions, or harmful advice from the model.\n- **Emotional dependence**: Teens may treat the tutor as a confidant.\n- **Contact with strangers or manipulation**: Jailbreaks and prompt injection could be used to push the model into harmful output.\n\n## 4. Accuracy and educational harm\n- **Hallucinations**: Wrong math steps, false historical claims, or fabricated citations that students trust.\n- **Answer-giving instead of teaching**: This undermines learning and creates academic integrity issues.\n- **Over-reliance**: Students may stop developing independent problem-solving skills.\n- **Misalignment with curriculum**: NC Standard Course of Study, teacher methods, and exam expectations.\n\n## 5. \"Informs a human\" risks\n- Reports to teachers or parents may be wrong, over-interpreted, or taken as authoritative (e.g., \"struggling,\" \"likely cheating\").\n- **Bias**: Performance summaries may disadvantage English learners, students with disabilities, or those with different writing styles.\n- **Chilling effects or surveillance concerns**: Students who know chats are visible to adults may stop asking honest questions, or may be punished for them.\n- AI-detection or cheating flags are error-prone, and false accusations carry real consequ"
+  "text": "# Risk Assessment: High School AI Homework Tutor (North Carolina)\n\n## Highest-priority risks\n\n### 1. Student privacy and legal compliance\n- **FERPA:** If schools or districts provide the product or student records, you're likely a \"school official\" handling education records. That requires a contract limiting data use, and the school keeps control of the data.\n- **COPPA:** High schoolers are mostly 13+, but 9th graders, early-college students, and accelerated students may be under 13. Without age gating, you risk collecting data from children without verifiable parental consent.\n- **North Carolina law:** NC has a student online privacy statute for school-service providers (G.S. 115C-401.2) that limits targeted advertising, profiling, and selling student data. NC also has breach notification requirements (G.S. 75-65). Verify current requirements with counsel.\n- **Other:** PPRA if you collect surveys or sensitive info, and CIPA-related district requirements. Many districts also require their own data privacy agreements.\n- **Risk:** Sales to districts stall, contracts are breached, or you face FTC or state AG enforcement.\n\n### 2. Sensitive data in chat logs\nStudents will disclose more than homework: mental health struggles, abuse, sexuality, immigration status, family problems, and self-harm. Chat logs are far more sensitive than answer data.\n- **Self-harm and crisis:** The model might respond badly, or no one sees the disclosure in time.\n- **Mandatory reporting:** NC has broad child-abuse reporting duties (G.S. 7B-301). You need a clear policy on what the system and your staff do when a disclosure appears, and who is responsible.\n- **Secondary use:** Retaining logs indefinitely, using them for training, or sharing them creates long-term harm and liability.\n\n### 3. Third-party API exposure\n- Student data flows to a vendor you don't control. Check retention, training-on-data defaults, subprocessors, data location, and breach notification terms.\n- The API provider's terms may restrict use with minors or require specific safeguards.\n- Vendor model changes, deprecations, outages, or price hikes can disrupt a school-year product.\n- You'll need a zero-data-retention or equivalent agreement, and your school contracts must accurately describe this data flow.\n\n### 4. Child safety and content\n- Inappropriate, sexual, violent, or biased outputs, and jailbreaks by creative teenagers.\n- Emotional dependence on a chatbot, or students treating it as a confidant.\n- Inappropriate relationships or manipulation, including users impersonating tutors or peers if there's any social feature.\n- Harmful advice on health, safety, or college and legal decisions.\n\n## Educational and product risks\n\n### 5. Accuracy and learning quality\n- Hallucinated or incorrect answers, especially in math, science, and history, delivered confidently. Students often can't tell.\n- Giving answers instead of teaching, which undermines learning and encourages dependence.\n- Misalignment with NC Standard Course of Study, teacher methods, or EOC/AP expectations.\n- Academic integrity: teachers may see the tool as a cheating enabler, and students may be accused of misconduct.\n\n### 6. \"Informs a human\" decisions\nEven if humans make the final call, progress reports can shape how teachers, parents, or counselors see a student.\n- **Automation bias:** Staff over-trust AI-generated summaries or risk scores.\n- **Labeling:** A student flagged as \"struggling\" or \"at risk\" may be treated differently, with self-fulfilling effects.\n- **Bias:** Performance may differ for English learners, students with disabilities, dialect speakers, and students with limited technology access, so analytics may misread these groups.\n- **Transparency:** Students and parents may not know what is recorded, who sees it, or how to contest it.\n\n## Operational and security risks\n\n### 7. Security\n- A centralized store of minors' academic records and chat logs is a prime target.\n- Risks include account takeover, weak authentication for students, over-broad staff access, insecure logging, and prompt injection that exposes other students' data.\n- Schools are frequent ransomware targets, and your product extends the attack surface.\n\n### 8. Access and governance\n- Who can see a student's chats: parents, teachers, admins, or your staff?\n- Students turning 18 gain their own rights over their records.\n- Deletion and retention: end of year, transfer, or contract termination.\n- Parents may demand access, while students may expect confidentiality.\n\n### 9. Equity and access\n- Uneven home internet and device access, with the risk of widening gaps.\n- Accessibility needs (screen readers, IEP/504 accommodations).\n- Rural and under-resourced NC districts may be less equipped to evaluate vendors, which raises your responsibility.\n\n### 10. Business and reputational\n- A single incident involving a minor (a harmful response or a leak) can end district relationships.\n- Media and parent backlash over \"AI surveilling kids.\"\n- Changing state and federal AI-in-education rules. NC DPI has issued AI guidance for schools, so check current versions.\n\n## Recommended mitigations\n\n| Area | Actions |\n|---|---|\n| **Data** | Collect only what's needed. Set short retention windows. Don't train on student data. Support deletion and export. Separate identity from chat content where possible. |\n| **Vendor** | Zero-retention terms, a signed DPA, subprocessor transparency, and a fallback model or provider. |\n| **Safety** | Content filters, a tuned system prompt, red-teaming with teen-style misuse, crisis detection with escalation to humans, and clear on-screen crisis resources. |\n| **Pedagogy** | Socratic or hint-first design, citations or worked steps, subject-matter review of outputs, and teacher controls. |\n| **Human oversight** | Present AI summaries as suggestions with their basis. Train staff on limitations. Avoid risk scores or labels without explanation and a way to dispute them. |\n| **Governance** | Role-based access, an audit log, a written policy for parent, teacher, and student visibility, and age gating. |\n| **Security** | SSO via the school, MFA for staff, encryption, penetration testing, and an incident response plan with NC breach notification timelines. |\n| **Transparency** | Plain-language notices for students and parents, and a clear AI disclosure. |\n| **Legal** | Counsel review of FERPA, COPPA, and NC law. Prepare district-ready privacy documentation. |\n| **Evaluation** | Test accuracy and learning outcomes across student subgroups before and after launch. |\n\n## Key questions to resolve early\n1. Is it sold to districts (FERPA path) or directly to families (COPPA and consumer path)?\n2. Who sees chat logs, and what happens when a student discloses harm?\n3. What does your API vendor retain, and can you contractually prevent training use?\n4. What exactly will teachers or parents be told, and could that cause harm to a student?\n\nI can go deeper on any of these, such as a crisis-escalation design or a district-ready privacy checklist."
  }
 }
