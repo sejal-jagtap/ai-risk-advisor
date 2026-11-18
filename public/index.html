@@ -975,7 +975,19 @@
         .app.done .sumline { display: block }
         .editbtn { display: none; font: inherit; font-weight: 600; font-size: 14px; color: var(--navy); background: var(--ti); border: 0; border-radius: 10px; padding: 9px 16px; cursor: pointer }
         .app.done .editbtn { display: inline-block }
+        .newbtn { background: var(--navy); color: #fff; margin-left: 8px }
         @media(max-width:1000px) { .snapx, .start2, .risks { grid-template-columns: 1fr } .hero2 { flex-direction: column; align-items: flex-start } .app.done .res { padding: 20px } }
+        .vs h3 { font: 600 24px Newsreader, Georgia, serif; color: var(--navy); margin: 0 0 4px }
+        .vsp { color: var(--mu); margin: 0 0 16px }
+        .vsgrid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; border: 1px solid var(--ln); border-radius: 16px; overflow: hidden; background: #fff }
+        .vh { padding: 12px 16px; font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; background: var(--ti); color: var(--mu) }
+        .vh.f { background: var(--navy); color: #fff }
+        .vl, .vg, .vf { padding: 14px 16px; border-top: 1px solid var(--ln); display: flex; flex-direction: column; justify-content: center }
+        .vl span { font-size: 12.5px; color: var(--mu) }
+        .vg { color: var(--mu); font-size: 15px }
+        .vf { background: #F4F7FF; color: var(--navy); font-weight: 700; font-size: 16px }
+        .vbl { margin: 14px 0; border-radius: 12px; background: #FFF6DE; border-left: 5px solid var(--gold); padding: 12px 16px; color: #5A3D00 }
+        .both summary { cursor: pointer; font-weight: 600; color: var(--navy); margin: 6px 0 10px }
         @media(max-width:1000px) {
             .app {
                 grid-template-columns: 1fr;
@@ -1149,8 +1161,7 @@
         </section>
         <section class="card res">
             <div class="tabs" role="tablist" hidden><button role="tab" aria-selected="true" data-t="rep">Advisor
-                    report</button><button role="tab" aria-selected="false" data-t="cmp">Side by side with a plain
-                    prompt</button></div>
+                    report</button><button role="tab" aria-selected="false" data-t="cmp">Compare with a generic AI</button></div>
             <div id="body"></div>
         </section>
     </main>
@@ -1224,13 +1235,30 @@
                 (a.askLawyer && a.askLawyer.length ? `<p><b>Ask a lawyer</b></p><ul>${a.askLawyer.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : "") + `<label for="nt">Reviewer notes</label><textarea id="nt" rows="3">${esc(S.notes)}</textarea><div class="acts"><button class="sec pri" data-x="1">Download report</button><button class="sec" data-x="2">Email this report</button><button class="sec" data-x="3">Copy summary</button></div>`
         }
         function cmp() {
-            if (!S.adv && !S.plain) return `<p class="empty">Run an assessment to compare the advisor with one generic "what are the risks?" prompt on the same description.</p>`;
+            if (!S.adv && !S.plain) return `<p class="empty">Run an assessment first. This tab then compares FairPlay with a generic AI answer to the same description.</p>`;
             const s = S.adv ? stats() : null, t = S.tally, c = t && Array.isArray(t.categories) ? t.categories.filter(x => CATS.includes(x)).length : null;
-            return `<p class="note">The same description, sent to a generic "what are the risks?" prompt. It shows what the advisor adds: checked citations, severity ratings and human-review flags.</p><table><tr><th></th><th>Plain prompt</th><th>Advisor</th></tr><tr><td>Risk areas covered (of 4)</td><td>${c ?? "..."}</td><td>${s ? s.cats : "..."}</td></tr><tr><td>Specific provisions cited</td><td>${t ? +t.cites || 0 : "..."}</td><td>${s ? s.cites + " (checked against the knowledge base)" : "..."}</td></tr><tr><td>Concrete fixes</td><td>${t ? +t.fixes || 0 : "..."}</td><td>${s ? s.fixes : "..."}</td></tr><tr><td>Flagged for human review</td><td>None</td><td>${s ? s.flags : "..."}</td></tr></table>
-<div class="cmp"><div><b>Plain prompt</b><div class="col">${S.plain ? esc(S.plain) : "Running..."}</div></div><div><b>Advisor</b><div class="col">${S.adv ? esc(S.adv.risks.map(r => `${r.title} [${r.category}, ${r.severity}]\n${r.fix}`).join("\n\n")) : "Running..."}</div></div></div><p class="note">Plain figures are tallied by an AI reader, so treat them as indicative. Repeat across 10 of your own cases before quoting a result.</p>`
+            const rows = [
+                ["Risk areas covered", "out of 4: privacy, bias, security, regulatory", c ?? "...", s ? s.cats : "..."],
+                ["Laws and standards named", "FairPlay links each one to an official page", t ? (+t.cites || 0) + " named, unchecked" : "...", s ? s.cites + " linked and checked" : "..."],
+                ["Concrete fixes", "actions you could take", t ? +t.fixes || 0 : "...", s ? s.fixes : "..."],
+                ["Severity for each risk", "how urgent it is", "Not built in", s ? "Included" : "..."],
+                ["Human-review flags", "points a person must verify", "Not built in", s ? s.flags + " flagged" : "..."]
+            ];
+            return `<div class="vs"><h3>FairPlay vs a generic AI answer</h3><p class="vsp">We gave your description to a general-purpose AI with no knowledge base and no rules, then compared its answer with FairPlay's.</p><div class="vsgrid"><div class="vh"></div><div class="vh">Generic AI</div><div class="vh f">FairPlay</div>${rows.map(r => `<div class="vl"><b>${r[0]}</b><span>${r[1]}</span></div><div class="vg">${r[2]}</div><div class="vf">${r[3]}</div>`).join("")}</div><div class="vbl"><b>Bottom line:</b> both can spot risks. FairPlay adds what you need to act on them: links to official sources, a severity for each risk, and flags for what a person must check.</div><details class="both"><summary>Read both answers in full</summary><div class="cmp"><div><b>Generic AI</b><div class="col">${S.plain ? esc(S.plain) : "Running..."}</div></div><div><b>FairPlay</b><div class="col">${S.adv ? esc(S.adv.risks.map(r => `${r.title} [${r.category}, ${r.severity}]\n${r.fix}`).join("\n\n")) : "Running..."}</div></div></div></details><p class="note">Generic-AI figures are counted by an AI reader, so treat them as indicative.</p></div>`
         }
         function appState() { const A = document.querySelector(".app"), on = !!(S.adv || S.busy || S.err); if (S.busy) A.classList.remove("edit"); if (!on) A.classList.remove("edit"); if (S.busy && !appState.b) window.scrollTo(0, 0); appState.b = S.busy; A.classList.toggle("done", on); document.body.classList.toggle("done", on); $("#sumline").textContent = on ? $("#idea").value.trim() : ""; $("#editbtn").textContent = A.classList.contains("edit") ? "Hide inputs" : "Edit inputs" }
         document.querySelector(".setup .chead").insertAdjacentHTML("beforeend", '<div class="sumline" id="sumline"></div><button type="button" class="editbtn" id="editbtn">Edit inputs</button>');
+        $("#editbtn").insertAdjacentHTML("afterend", '<button type="button" class="editbtn newbtn" id="newbtn">New assessment</button>');
+        $("#newbtn").onclick = () => {
+            S = { ...S, adv: null, plain: null, tally: null, err: "", rv: {}, notes: "", busy: false, desc: "", tab: "rep" };
+            if (typeof curId !== "undefined") curId = null;
+            $("#idea").value = ""; document.querySelectorAll(".presets button").forEach(x => x.classList.remove("on"));
+            ["users", "dec", "model"].forEach(k => $("#" + k).selectedIndex = 0);
+            document.querySelectorAll(".chips button").forEach(x => x.setAttribute("aria-pressed", "false"));
+            Object.values(OT).forEach(i => i.value = ""); $("#stat").textContent = "";
+            document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x.dataset.t === "rep"));
+            syncOther(); render(); window.scrollTo(0, 0)
+        };
         $("#editbtn").onclick = () => { document.querySelector(".app").classList.toggle("edit"); appState() };
         function render() { appState(); document.querySelector(".tabs").hidden = !(S.adv || S.plain || S.busy || S.err); $("#body").innerHTML = S.tab === "rep" ? rep() : cmp() }
         $("#body").addEventListener("change", e => { if (e.target.dataset.i !== undefined) { S.rv[e.target.dataset.i] = e.target.checked; persist(); render() } });
