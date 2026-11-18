@@ -948,6 +948,24 @@
             }
         }
             .fb { display:inline-block; margin-top:8px; font-size:12px; color:#00009C; text-decoration:underline; }
+    
+        .topr { display:flex; align-items:center; gap:10px; }
+        .hbtn { font:inherit; font-size:13px; font-weight:600; color:#00009C; background:#fff; border:1px solid #c9d0e6; border-radius:999px; padding:6px 14px; cursor:pointer; }
+        .hbtn:hover { background:#eef0fb; }
+        .hbtn b { display:inline-block; min-width:18px; margin-left:4px; padding:0 5px; border-radius:9px; background:#00009C; color:#fff; font-size:11px; text-align:center; }
+        .hbtn b[hidden] { display:none; }
+        .hov { position:fixed; inset:0; background:rgba(15,20,50,.45); z-index:50; display:flex; justify-content:flex-end; }
+        .hov[hidden] { display:none; }
+        .hpanel { width:min(420px,100%); height:100%; background:#fff; padding:20px; overflow:auto; box-shadow:-8px 0 24px rgba(0,0,0,.18); }
+        .hpanel h2 { margin:0 0 4px; font-size:20px; }
+        .hpanel .sub { margin:0 0 14px; font-size:13px; color:#5b6475; }
+        .hi { border:1px solid #d9deee; border-radius:12px; padding:12px; margin-bottom:10px; }
+        .hi b { display:block; font-size:14px; margin-bottom:2px; }
+        .hi small { color:#5b6475; font-size:12px; }
+        .hi .row { display:flex; gap:8px; margin-top:8px; }
+        .hi button, .hfoot button { font:inherit; font-size:13px; font-weight:600; padding:6px 12px; border-radius:8px; border:1px solid #c9d0e6; background:#fff; color:#00009C; cursor:pointer; }
+        .hi button.pri { background:#00009C; color:#fff; border-color:#00009C; }
+        .hfoot { display:flex; justify-content:space-between; align-items:center; margin-top:14px; }
     </style>
 </head>
 
@@ -959,7 +977,7 @@
                 <div class="wm">FairPlay</div>
                 <div class="tag2">Know what to check before you build</div>
             </div>
-        </div><span class="edition"><i></i>Duke Builder Edition</span>
+        </div><div class="topr"><button id="hbtn" class="hbtn" type="button" aria-haspopup="dialog">History <b id="hct" hidden></b></button><span class="edition"><i></i>Duke Builder Edition</span></div>
     </header>
     <section class="hero">
         <div class="eyebrow">Responsible AI assessment</div>
@@ -1052,6 +1070,7 @@
             <ul id="kbl"></ul>
         </details>
     </footer>
+    <div id="hist" class="hov" hidden><div class="hpanel" role="dialog" aria-modal="true" aria-label="Saved assessments"><h2>Saved assessments</h2><p class="sub">Stored in this browser only. Nothing is sent to a server, and clearing your browser data removes them.</p><div id="hlist"></div><div class="hfoot"><button type="button" id="hclr">Clear all</button><button type="button" id="hx">Close</button></div></div></div>
     <script>
         const fbURL = r => "https://github.com/sejal-jagtap/ai-risk-advisor/issues/new?labels=kb-feedback&title=" + encodeURIComponent("KB feedback: " + r.title) + "&body=" + encodeURIComponent("Category: " + r.category + "\nSources cited: " + ((r.sources || []).join(", ") || "none") + "\n\nWhat is wrong or missing (wrong source / missing source / outdated link / other):\n\n");
         const CATS = ["privacy", "bias", "security", "regulatory"], $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1075,8 +1094,8 @@
         function describe(f) { return `Product: ${f.idea}\nUsers: ${f.users}\nMakes decisions about people: ${f.dec}\nData used: ${f.data.join(", ") || "not stated"}\nUser locations: ${f.geo.join(", ") || "not stated"}\nModel: ${f.model}` }
         $("#run").onclick = async () => {
             const f = form(); if (f.idea.length < 20) { $("#stat").textContent = "Describe what your AI does in at least a sentence."; return }
-            S = { ...S, adv: null, plain: null, tally: null, err: "", rv: {}, busy: true, desc: describe(f) }; $("#run").disabled = true; $("#stat").textContent = "Assessing. This takes up to a minute."; render();
-            const run = async () => { try { const a = await api("assess", f); if (!a || !Array.isArray(a.risks)) throw { code: "invalid_json" }; a.risks = a.risks.map(r => { const s = (r.sources || []).filter(i => K[i]), bad = s.length < (r.sources || []).length; return { ...r, category: CATS.includes(r.category) ? r.category : "regulatory", severity: ["high", "medium", "low"].includes(r.severity) ? r.severity : "medium", sources: s, confidence: bad || !s.length ? "low" : r.confidence, needsReview: bad || !s.length || !!r.needsReview } }); S.adv = a } catch (e) { S.err = copy(e) } S.busy = false; render() };
+            S = { ...S, adv: null, plain: null, tally: null, err: "", rv: {}, busy: true, desc: describe(f), form: f }; curId = null; $("#run").disabled = true; $("#stat").textContent = "Assessing. This takes up to a minute."; render();
+            const run = async () => { try { const a = await api("assess", f); if (!a || !Array.isArray(a.risks)) throw { code: "invalid_json" }; a.risks = a.risks.map(r => { const s = (r.sources || []).filter(i => K[i]), bad = s.length < (r.sources || []).length; return { ...r, category: CATS.includes(r.category) ? r.category : "regulatory", severity: ["high", "medium", "low"].includes(r.severity) ? r.severity : "medium", sources: s, confidence: bad || !s.length ? "low" : r.confidence, needsReview: bad || !s.length || !!r.needsReview } }); S.adv = a; curId = Date.now().toString(36); persist() } catch (e) { S.err = copy(e) } S.busy = false; render() };
             const plain = async () => { try { const t = (await api("plain", f)).text; S.plain = t; render(); const g = await api("tally", { text: t }); S.tally = g } catch (e) { S.plain = S.plain || "Could not run the plain prompt: " + copy(e) } render() };
             await Promise.allSettled([run(), plain()]); $("#run").disabled = false; $("#stat").textContent = ""
         };
@@ -1098,8 +1117,8 @@
 <div class="cmp"><div><b>Plain prompt</b><div class="col">${S.plain ? esc(S.plain) : "Running..."}</div></div><div><b>Advisor</b><div class="col">${S.adv ? esc(S.adv.risks.map(r => `${r.title} [${r.category}, ${r.severity}]\n${r.fix}`).join("\n\n")) : "Running..."}</div></div></div><p class="note">Plain figures are tallied by an AI reader, so treat them as indicative. Repeat across 10 of your own cases before quoting a result.</p>`
         }
         function render() { document.querySelector(".tabs").hidden = !(S.adv || S.plain || S.busy || S.err); $("#body").innerHTML = S.tab === "rep" ? rep() : cmp() }
-        $("#body").addEventListener("change", e => { if (e.target.dataset.i !== undefined) { S.rv[e.target.dataset.i] = e.target.checked; render() } });
-        $("#body").addEventListener("input", e => { if (e.target.id === "nt") S.notes = e.target.value });
+        $("#body").addEventListener("change", e => { if (e.target.dataset.i !== undefined) { S.rv[e.target.dataset.i] = e.target.checked; persist(); render() } });
+        $("#body").addEventListener("input", e => { if (e.target.id === "nt") { S.notes = e.target.value; persist() } });
         $("#body").addEventListener("click", async e => {
             const x = e.target.dataset.x; if (!x || !dl) return; const a = S.adv;
             const md = `# FairPlay Risk Report\n\n${S.desc}\n\n## Summary\n${a.summary}\n\n## Risks\n` + a.risks.map((r, i) => `### ${r.title}\n- ${r.category}, ${r.severity} severity, ${r.confidence} confidence\n- Why ${r.severity}: ${r.severityWhy || ""}\n- Why: ${r.why}\n- Fix: ${r.fix}\n- Sources: ${r.sources.map(s => K[s][1] + ": " + K[s][3] + " (" + K[s][5] + ")").join("; ") || "none in knowledge base"}\n- Human review: ${r.needsReview ? (S.rv[i] ? "completed" : "REQUIRED") : "not flagged"}\n`).join("\n") + `\n## Ask a lawyer\n${(a.askLawyer || []).map(q => "- " + q).join("\n")}\n\n## Reviewer notes\n${S.notes || "(none)"}\n\nNot legal advice. Verify every point at the linked official sources.\n`;
@@ -1109,6 +1128,38 @@
             const body = `FairPlay check\n\n${a.summary}\n\nTop items:\n${top}\n\nVerify every point at the official sources. Not legal advice.`.slice(0, 1800);
             location.href = "mailto:?subject=" + encodeURIComponent("FairPlay check: " + S.desc.split("\n")[0].slice(9, 70)) + "&body=" + encodeURIComponent(body);
         });
+
+        const HK = "fairplay.history.v1"; let curId = null;
+        const hload = () => { try { const a = JSON.parse(localStorage.getItem(HK) || "[]"); return Array.isArray(a) ? a : [] } catch (_) { return [] } };
+        const hsave = a => { try { localStorage.setItem(HK, JSON.stringify(a.slice(0, 20))); return true } catch (_) { return false } };
+        function persist() {
+            if (!S.adv || !curId) return;
+            const f = S.form || {}, h = hload().filter(x => x.id !== curId);
+            h.unshift({ id: curId, ts: Date.now(), title: (f.idea || "").slice(0, 90), form: f, adv: S.adv, rv: S.rv, notes: S.notes, desc: S.desc });
+            hsave(h); hrender();
+        }
+        function hrender() {
+            const h = hload(), c = $("#hct"); c.hidden = !h.length; c.textContent = h.length;
+            $("#hlist").innerHTML = h.length ? h.map(x => { const r = (x.adv && x.adv.risks) || [], hi = r.filter(y => y.severity === "high").length; return `<div class="hi"><b>${esc(x.title || "Untitled")}</b><small>${esc(new Date(x.ts).toLocaleString([], { dateStyle: "medium", timeStyle: "short" }))} · ${r.length} risks · ${hi} high</small><div class="row"><button type="button" class="pri" data-o="${esc(x.id)}">Open</button><button type="button" data-d="${esc(x.id)}">Delete</button></div></div>` }).join("") : `<p class="sub">Nothing saved yet. Each assessment you run is saved here automatically.</p>`;
+        }
+        function hopen(id) {
+            const x = hload().find(i => i.id === id); if (!x) return; curId = x.id;
+            S = { ...S, tab: "rep", adv: x.adv, plain: "Not saved with this report. Run the assessment again to compare.", tally: null, err: "", rv: x.rv || {}, notes: x.notes || "", busy: false, desc: x.desc, form: x.form };
+            const f = x.form || {}; $("#idea").value = f.idea || "";
+            [["users", f.users], ["dec", f.dec], ["model", f.model]].forEach(([k, v]) => { const el = $("#" + k); if (el && v && [...el.options].some(o => o.value === v)) el.value = v });
+            const t = document.querySelector('.tabs button[data-t="rep"]'); if (t) t.click(); else render();
+            $("#hist").hidden = true;
+        }
+        $("#hbtn").onclick = () => { hrender(); $("#hist").hidden = false };
+        $("#hx").onclick = () => { $("#hist").hidden = true };
+        $("#hist").addEventListener("click", e => {
+            if (e.target.id === "hist") { $("#hist").hidden = true; return }
+            if (e.target.dataset.o) hopen(e.target.dataset.o);
+            if (e.target.dataset.d) { hsave(hload().filter(x => x.id !== e.target.dataset.d)); hrender() }
+        });
+        $("#hclr").onclick = () => { if (hload().length && confirm("Delete all saved assessments from this browser?")) { hsave([]); hrender() } };
+        document.addEventListener("keydown", e => { if (e.key === "Escape") $("#hist").hidden = true });
+        hrender();
     </script>
 </body>
 
