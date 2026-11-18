@@ -182,7 +182,7 @@
 
         .app {
             display: grid;
-            grid-template-columns: minmax(400px, .64fr) 1fr;
+            grid-template-columns: minmax(460px, .9fr) 1fr;
             gap: 24px;
             padding: 0 40px 28px;
             align-items: start
@@ -319,6 +319,27 @@
 
         textarea {
             resize: vertical
+        }
+
+        .oth {
+            width: 100%;
+            font: inherit;
+            color: var(--ink);
+            background: #fff;
+            border: 1.5px solid var(--gold);
+            border-radius: 12px;
+            padding: 11px 16px;
+            margin-top: 8px
+        }
+
+        .oth[hidden] {
+            display: none
+        }
+
+        .oth:focus {
+            outline: none;
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10, 32, 101, .1)
         }
 
         textarea:focus,
@@ -882,6 +903,35 @@
             margin: 3px 0
         }
 
+        .flinks { display: flex; gap: 22px; flex-shrink: 0 }
+        .lnk { font: inherit; font-weight: 600; font-size: 13px; color: var(--navy); background: none; border: 0; padding: 4px 0; cursor: pointer; white-space: nowrap }
+        .lnk:hover { text-decoration: underline }
+        dialog { border: 0; border-radius: 16px; padding: 24px 26px; width: min(560px, 92vw); max-height: 80vh; overflow: auto; color: var(--ink); font-size: 14.5px; box-shadow: 0 30px 80px -20px rgba(10, 32, 101, .5) }
+        dialog::backdrop { background: rgba(10, 32, 101, .35); backdrop-filter: blur(2px) }
+        dialog h3 { margin: 0 0 10px; font-family: Newsreader, Georgia, serif; font-size: 22px; color: var(--navy) }
+        dialog ul { padding-left: 20px; margin: 0 0 14px }
+        dialog li { margin: 4px 0 }
+        dialog .x { display: block; margin-left: auto }
+        .seg { display: flex; flex-wrap: wrap; gap: 8px }
+        .seg button { font: inherit; font-size: 14px; color: var(--ink); background: #fff; border: 1.5px solid var(--ln); border-radius: 12px; padding: 9px 14px; cursor: pointer; transition: all .15s }
+        .seg button:hover { border-color: #9AA7CC }
+        .seg button[aria-pressed=true] { background: var(--navy); border-color: var(--navy); color: #fff; box-shadow: 0 6px 14px -8px rgba(10, 32, 101, .8) }
+        .g2 { grid-template-columns: 1fr !important; gap: 18px !important }
+        .lead { margin-bottom: 16px }
+        .hint { margin: 6px 0 0; font-size: 13px; color: var(--mu) }
+        .snap { display: grid; grid-template-columns: repeat(3, 1fr) 1.3fr; gap: 10px; margin: 6px 0 12px }
+        .sv { border-radius: 14px; padding: 12px 14px; color: #fff; display: flex; flex-direction: column }
+        .sv b { font: 700 34px/1 Newsreader, Georgia, serif }
+        .sv span { font-size: 13px; margin-top: 4px; opacity: .95 }
+        .sv.h { background: var(--hi) } .sv.m { background: var(--md); color: #3d2a00 } .sv.l { background: var(--lo) }
+        .sx { border: 1px solid var(--ln); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; gap: 6px; font-size: 13.5px; color: var(--mu); background: #fff }
+        .sx b { font-size: 20px; color: var(--navy); margin-right: 4px }
+        .cats { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px }
+        .cp { border-radius: 999px; background: var(--ti); color: var(--navy); font-size: 13px; font-weight: 600; padding: 5px 12px }
+        .cp b { margin-left: 4px } .cp.z { color: #8A94AE; font-weight: 500 }
+        .start { border: 1px solid var(--ln); border-radius: 14px; padding: 12px 16px; margin: 0 0 12px; background: #fff; font-size: 14.5px }
+        .start ol { margin: 6px 0 0; padding-left: 20px } .start a { color: var(--navy); font-weight: 600 }
+        @media(max-width:600px) { .snap { grid-template-columns: repeat(3, 1fr) } .sx { grid-column: 1 / -1 } .foot { flex-direction: column; align-items: flex-start } }
         @media(max-width:1000px) {
             .app {
                 grid-template-columns: 1fr;
@@ -1064,33 +1114,43 @@
         <p>This tool points you to what to check. It does not state what any law requires and can be incomplete or
             wrong. Verify every point at the linked official source and review with counsel before relying on it. <span
                 id="kbtag"></span></p>
-        <details>
-            <summary>How severity works</summary><p><b>High:</b> could block launch or directly harm people, with no safeguard described. <b>Medium:</b> plausibly applies; mitigate before scaling. <b>Low:</b> good practice or conditional. Severity is an AI judgment against this rubric, so check it. The human-review flag is rule-based: it triggers on low confidence or a missing source.</p></details><details>
-            <summary>Sources</summary>
-            <ul id="kbl"></ul>
-        </details>
+        <div class="flinks"><button type="button" class="lnk" data-d="sev">How severity works</button><button type="button" class="lnk" data-d="src">Sources</button></div>
     </footer>
+    <dialog id="dsev"><h3>How severity works</h3><p><b>High:</b> could block launch or directly harm people, with no safeguard described. <b>Medium:</b> plausibly applies; mitigate before scaling. <b>Low:</b> good practice or conditional. Severity is an AI judgment against this rubric, so check it. The human-review flag is rule-based: it triggers on low confidence or a missing source.</p><form method="dialog"><button class="lnk x">Close</button></form></dialog>
+    <dialog id="dsrc"><h3>Sources</h3><ul id="kbl"></ul><form method="dialog"><button class="lnk x">Close</button></form></dialog>
     <div id="hist" class="hov" hidden><div class="hpanel" role="dialog" aria-modal="true" aria-label="Saved assessments"><h2>Saved assessments</h2><p class="sub">Stored in this browser only. Nothing is sent to a server, and clearing your browser data removes them.</p><div id="hlist"></div><div class="hfoot"><button type="button" id="hclr">Clear all</button><button type="button" id="hx">Close</button></div></div></div>
     <script>
         const fbURL = r => "https://github.com/sejal-jagtap/ai-risk-advisor/issues/new?labels=kb-feedback&title=" + encodeURIComponent("KB feedback: " + r.title) + "&body=" + encodeURIComponent("Category: " + r.category + "\nSources cited: " + ((r.sources || []).join(", ") || "none") + "\n\nWhat is wrong or missing (wrong source / missing source / outdated link / other):\n\n");
         const CATS = ["privacy", "bias", "security", "regulatory"], $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
         let KB = [], K = {}; const initKB = kb => { KB = kb; K = Object.fromEntries(KB.map(k => [k[0], k])); $("#kbtag").textContent = KB.length + " sources: NC layer + federal, state, EU"; $("#kbl").innerHTML = KB.map(k => `<li><a href="${k[5]}" target="_blank" rel="noopener">${esc(k[1])}: ${esc(k[3])}</a></li>`).join("") };
         const O = {
-            users: ["Consumers", "Businesses (B2B)", "Employees or job candidates", "Students or minors"], dec: ["No", "Informs a human", "Decides automatically"], model: ["Third-party API (OpenAI, Anthropic, etc.)", "Fine-tuned open model", "Own model trained from scratch"],
-            data: ["Personal contact info", "Health or wellbeing", "Financial", "Biometric (face, voice)", "Children's data", "Employee or candidate data", "User-generated content", "Scraped public data"], geo: ["North Carolina", "Other US states", "California", "EU/UK", "Elsewhere"]
+            users: ["Consumers", "Businesses (B2B)", "Employees or job candidates", "Students or minors", "Patients or health customers", "General public", "Other (describe)"], dec: ["No", "Informs a human", "Decides automatically"], model: ["Third-party API (e.g. OpenAI, Anthropic)", "Fine-tuned open model", "Own model trained from scratch", "Not sure / other (describe)"],
+            data: ["Personal contact info", "Health or wellbeing", "Financial", "Biometric (face, voice)", "Children's data", "Employee or candidate data", "User-generated content", "Scraped public data", "Other"], geo: ["North Carolina", "Other US states", "California", "EU/UK", "Elsewhere", "Other"]
         };
         ["users", "dec", "model"].forEach(k => $("#" + k).innerHTML = O[k].map(o => `<option>${esc(o)}</option>`).join(""));
         ["data", "geo"].forEach(k => $("#" + k).innerHTML = O[k].map(o => `<button type="button" aria-pressed="false">${esc(o)}</button>`).join(""));
         document.addEventListener("click", e => { const b = e.target.closest(".chips button"); if (b) b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true") });
         const P = [["A resume-screening tool that ranks job applicants with an LLM and gives recruiters a 0-100 fit score.", 2, 2, [5], [0, 1, 2], 0], ["A mental-wellness chatbot for college students that remembers past chats and suggests coping exercises.", 3, 1, [1, 6, 0], [0, 3], 0], ["A loan pre-qualification tool that estimates eligibility from bank-linked transaction data.", 0, 2, [2, 0], [0, 2, 1], 2], ["An AI tutor app for high school students in North Carolina. It remembers each student's grades and weak topics, adapts lessons, and emails a weekly progress summary to parents.", 3, 1, [4, 0, 6], [0, 1], 0]];
-        const pick = k => [...document.querySelectorAll("#" + k + " button")].filter(b => b.getAttribute("aria-pressed") === "true").map(b => b.textContent);
+        function syncSeg() { ["users", "dec", "model"].forEach(k => { const sl = $("#" + k); document.querySelectorAll('.seg[data-k="' + k + '"] button').forEach((b, i) => b.setAttribute("aria-pressed", i === sl.selectedIndex)) }) }
+        ["users", "dec", "model"].forEach(k => { const sl = $("#" + k), d = document.createElement("div"); d.className = "seg"; d.dataset.k = k; d.innerHTML = [...sl.options].map(o => `<button type="button" aria-pressed="false">${esc(o.text)}</button>`).join(""); sl.before(d); sl.style.display = "none"; sl.tabIndex = -1; d.onclick = e => { const b = e.target.closest("button"); if (!b) return; sl.selectedIndex = [...d.children].indexOf(b); sl.dispatchEvent(new Event("change")); syncSeg() } });
+        const OT = {}; ["users", "model", "data", "geo"].forEach(k => { const i = document.createElement("input"); i.className = "oth"; i.id = k + "_o"; i.hidden = true; i.maxLength = 80; i.placeholder = k === "data" ? "Other data it uses" : k === "geo" ? "Where else?" : "Describe in a few words"; $("#" + k).insertAdjacentElement("afterend", i); OT[k] = i });
+        const isO = t => /^other|other \(describe\)$/i.test(t || "");
+        function syncOther() { syncSeg(); ["users", "model"].forEach(k => { OT[k].hidden = !isO($("#" + k).value) }); ["data", "geo"].forEach(k => { OT[k].hidden = !document.querySelector("#" + k + " button:last-child[aria-pressed=true]") }) }
+        ["users", "model"].forEach(k => $("#" + k).addEventListener("change", syncOther));
+        document.addEventListener("click", e => { if (e.target.closest(".chips button")) setTimeout(syncOther) });
+        syncSeg(); $("#idea").insertAdjacentHTML("afterend", '<p class="hint">Say what the AI does, who it affects, and what it decides or recommends.</p>');
+        const val = k => { const v = $("#" + k).value; return isO(v) || /other/i.test(v) ? "Other: " + (OT[k].value.trim() || "not specified") : v };
+        const pick = k => [...document.querySelectorAll("#" + k + " button")].filter(b => b.getAttribute("aria-pressed") === "true").map(b => b.textContent === "Other" ? "Other: " + (OT[k].value.trim() || "not specified") : b.textContent);
         document.querySelectorAll(".presets button").forEach(b => b.onclick = () => { document.querySelectorAll(".presets button").forEach(x => x.classList.toggle("on", x === b)); const p = P[+b.dataset.p]; $("#idea").value = p[0]; $("#users").selectedIndex = p[1]; $("#dec").selectedIndex = p[2]; $("#model").selectedIndex = p[5];["data", "geo"].forEach((k, j) => document.querySelectorAll("#" + k + " button").forEach((c, i) => c.setAttribute("aria-pressed", p[3 + j].includes(i)))) });
+        document.querySelectorAll(".presets button").forEach(b => b.addEventListener("click", () => setTimeout(syncOther)));
+        document.querySelectorAll(".lnk[data-d]").forEach(b => b.onclick = () => $("#d" + b.dataset.d).showModal());
+        document.querySelectorAll("dialog").forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close() }));
         let S = { tab: "rep", adv: null, plain: null, tally: null, err: "", rv: {}, notes: "", busy: false, desc: "" }, dl = { save: async ({ filename, data }) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type: "text/markdown" })); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000) } };
         const api = async (p, b) => { const r = await fetch("/api/" + p, { method: "POST", headers: { "content-type": "application/json", "x-access-code": $("#code") ? $("#code").value : "" }, body: JSON.stringify(b) }); const j = await r.json().catch(() => ({})); if (!r.ok) throw { code: j.code || "upstream_error", message: j.error }; return j.data };
         (async () => { try { const j = await (await fetch("/api/kb")).json(); initKB(j.kb); if (j.needsCode) $("#codewrap").hidden = false } catch (e) { $("#stat").textContent = "Could not load the knowledge base. Reload the page." } render() })();
         const ERR = { unauthorized: "Missing or wrong access code.", not_granted: "Claude access was declined for this page. Reload and allow it to run assessments.", rate_limited: "Too many requests. Wait a moment and try again.", invalid_json: "The advisor returned an unreadable answer. Try again." };
         const copy = e => ERR[e && e.code] || "Something went wrong. Try again.";
-        function form() { return { idea: $("#idea").value.trim(), users: $("#users").value, dec: $("#dec").value, data: pick("data"), geo: pick("geo"), model: $("#model").value } }
+        function form() { return { idea: $("#idea").value.trim(), users: val("users"), dec: $("#dec").value, data: pick("data"), geo: pick("geo"), model: val("model") } }
         function describe(f) { return `Product: ${f.idea}\nUsers: ${f.users}\nMakes decisions about people: ${f.dec}\nData used: ${f.data.join(", ") || "not stated"}\nUser locations: ${f.geo.join(", ") || "not stated"}\nModel: ${f.model}` }
         $("#run").onclick = async () => {
             const f = form(); if (f.idea.length < 20) { $("#stat").textContent = "Describe what your AI does in at least a sentence."; return }
@@ -1106,14 +1166,16 @@
             if (S.err) return `<p class="empty">${esc(S.err)}</p>`; if (!S.adv) return S.busy ? `<div class="sk w"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>` : `<div class="empty-state"><div class="orb"><b>4</b></div><div class="ey">Your report will appear here</div><h2>Clarity before complexity</h2><p>Complete the assessment to receive a practical review across four essential risk areas.</p><div class="four"><div><small>01</small><b>Privacy</b><span>Data and consent</span></div><div><small>02</small><b>Bias</b><span>Fair outcomes</span></div><div><small>03</small><b>Security</b><span>Protecting data</span></div><div><small>04</small><b>Regulatory</b><span>Laws to check</span></div></div></div>`;
             const a = S.adv, rs = a.risks.map((r, i) => ({ r, i })).sort((x, y) => sevR[x.r.severity] - sevR[y.r.severity]), open = a.risks.filter((r, i) => r.needsReview && !S.rv[i]).length;
             const led = CATS.map(c => { const n = a.risks.filter(r => r.category === c).length; return `<div class="cell ${n ? "" : "z"}"><b>${n}</b>${c[0].toUpperCase() + c.slice(1)}${n ? "" : " (none flagged)"}</div>` }).join("");
-            return `<p class="lead">${esc(a.summary)}</p><div class="ledger">${led}</div><div class="banner"><span>${open ? `<b>${open} of ${a.risks.length} risks need human review</b> before you rely on them. Tick each one once someone qualified has checked it.` : "All flagged items have been marked reviewed."}</span></div>` +
-                rs.map(({ r, i }) => `<div class="risk ${r.severity} ${S.rv[i] ? "ok" : ""}"><div class="meta"><span class="tag">${esc(r.category)}</span><span class="tag s-${r.severity}">${esc(r.severity)} severity</span>${r.when ? `<span class="tag">${({now:"Fix now","before-scaling":"Fix before scaling",monitor:"Monitor"})[r.when] || ""}</span>` : ""}<span class="tag">${esc(r.confidence)} confidence</span>${r.needsReview ? '<span class="tag rv">Needs human review</span>' : ""}</div><h3>${esc(r.title)}</h3>${r.severityWhy ? `<p class="note"><b>Why ${esc(r.severity)}:</b> ${esc(r.severityWhy)}</p>` : ""}<p>${esc(r.why)}</p><p class="fix"><b>Fix:</b> ${esc(r.fix)}</p><div class="src">${r.sources.length ? r.sources.map(s => `<a href="${K[s][5]}" target="_blank" rel="noopener">${esc(K[s][1])}: ${esc(K[s][3])}</a>`).join("") : '<span class="empty">No source in the knowledge base. Verify independently.</span>'}</div>${r.needsReview ? `<label class="rvl"><input type="checkbox" data-i="${i}" ${S.rv[i] ? "checked" : ""}> Reviewed by a human</label>` : ""}<a class="fb" href="${fbURL(r)}" target="_blank" rel="noopener">Wrong or missing source? Report it</a></div>`).join("") +
+            const cnt = x => a.risks.filter(r => r.severity === x).length, cap = c => c[0].toUpperCase() + c.slice(1);
+            const snap = `<div class="snap"><div class="sv h"><b>${cnt("high")}</b><span>High</span></div><div class="sv m"><b>${cnt("medium")}</b><span>Medium</span></div><div class="sv l"><b>${cnt("low")}</b><span>Low</span></div><div class="sx"><div><b>${a.risks.filter(r => r.when === "now").length}</b>to fix now</div><div><b>${open}</b>need review</div></div></div><div class="cats">${CATS.map(c => { const n = a.risks.filter(r => r.category === c).length; return `<span class="cp ${n ? "" : "z"}">${cap(c)}<b>${n}</b></span>` }).join("")}</div><div class="start"><b>Start here</b><ol>${rs.slice(0, 3).map(({ r, i }) => `<li><a href="#r${i}">${esc(r.title)}</a></li>`).join("")}</ol></div>`;
+            return `<p class="lead">${esc(a.summary)}</p>${snap}<div class="banner"><span>${open ? `<b>${open} of ${a.risks.length} risks need human review</b> before you rely on them. Tick each one once someone qualified has checked it.` : "All flagged items have been marked reviewed."}</span></div>` +
+                rs.map(({ r, i }) => `<div id="r${i}" class="risk ${r.severity} ${S.rv[i] ? "ok" : ""}"><div class="meta"><span class="tag">${esc(r.category)}</span><span class="tag s-${r.severity}">${esc(r.severity)} severity</span>${r.when ? `<span class="tag">${({now:"Fix now","before-scaling":"Fix before scaling",monitor:"Monitor"})[r.when] || ""}</span>` : ""}<span class="tag">${esc(r.confidence)} confidence</span>${r.needsReview ? '<span class="tag rv">Needs human review</span>' : ""}</div><h3>${esc(r.title)}</h3>${r.severityWhy ? `<p class="note"><b>Why ${esc(r.severity)}:</b> ${esc(r.severityWhy)}</p>` : ""}<p>${esc(r.why)}</p><p class="fix"><b>Fix:</b> ${esc(r.fix)}</p><div class="src">${r.sources.length ? r.sources.map(s => `<a href="${K[s][5]}" target="_blank" rel="noopener">${esc(K[s][1])}: ${esc(K[s][3])}</a>`).join("") : '<span class="empty">No source in the knowledge base. Verify independently.</span>'}</div>${r.needsReview ? `<label class="rvl"><input type="checkbox" data-i="${i}" ${S.rv[i] ? "checked" : ""}> Reviewed by a human</label>` : ""}<a class="fb" href="${fbURL(r)}" target="_blank" rel="noopener">Wrong or missing source? Report it on GitHub</a></div>`).join("") +
                 (a.askLawyer && a.askLawyer.length ? `<p><b>Ask a lawyer</b></p><ul>${a.askLawyer.map(q => `<li>${esc(q)}</li>`).join("")}</ul>` : "") + `<label for="nt">Reviewer notes</label><textarea id="nt" rows="3">${esc(S.notes)}</textarea><div class="acts"><button class="sec pri" data-x="1">Download report</button><button class="sec" data-x="2">Email this report</button><button class="sec" data-x="3">Copy summary</button></div>`
         }
         function cmp() {
             if (!S.adv && !S.plain) return `<p class="empty">Run an assessment to compare the advisor with one generic "what are the risks?" prompt on the same description.</p>`;
             const s = S.adv ? stats() : null, t = S.tally, c = t && Array.isArray(t.categories) ? t.categories.filter(x => CATS.includes(x)).length : null;
-            return `<table><tr><th></th><th>Plain prompt</th><th>Advisor</th></tr><tr><td>Risk areas covered (of 4)</td><td>${c ?? "..."}</td><td>${s ? s.cats : "..."}</td></tr><tr><td>Specific provisions cited</td><td>${t ? +t.cites || 0 : "..."}</td><td>${s ? s.cites + " (checked against the knowledge base)" : "..."}</td></tr><tr><td>Concrete fixes</td><td>${t ? +t.fixes || 0 : "..."}</td><td>${s ? s.fixes : "..."}</td></tr><tr><td>Flagged for human review</td><td>None</td><td>${s ? s.flags : "..."}</td></tr></table>
+            return `<p class="note">The same description, sent to a generic "what are the risks?" prompt. It shows what the advisor adds: checked citations, severity ratings and human-review flags.</p><table><tr><th></th><th>Plain prompt</th><th>Advisor</th></tr><tr><td>Risk areas covered (of 4)</td><td>${c ?? "..."}</td><td>${s ? s.cats : "..."}</td></tr><tr><td>Specific provisions cited</td><td>${t ? +t.cites || 0 : "..."}</td><td>${s ? s.cites + " (checked against the knowledge base)" : "..."}</td></tr><tr><td>Concrete fixes</td><td>${t ? +t.fixes || 0 : "..."}</td><td>${s ? s.fixes : "..."}</td></tr><tr><td>Flagged for human review</td><td>None</td><td>${s ? s.flags : "..."}</td></tr></table>
 <div class="cmp"><div><b>Plain prompt</b><div class="col">${S.plain ? esc(S.plain) : "Running..."}</div></div><div><b>Advisor</b><div class="col">${S.adv ? esc(S.adv.risks.map(r => `${r.title} [${r.category}, ${r.severity}]\n${r.fix}`).join("\n\n")) : "Running..."}</div></div></div><p class="note">Plain figures are tallied by an AI reader, so treat them as indicative. Repeat across 10 of your own cases before quoting a result.</p>`
         }
         function render() { document.querySelector(".tabs").hidden = !(S.adv || S.plain || S.busy || S.err); $("#body").innerHTML = S.tab === "rep" ? rep() : cmp() }
