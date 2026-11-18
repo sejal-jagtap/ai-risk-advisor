@@ -1,5 +1,24 @@
 const KB = require("../lib/kb");
-const { ask, parseJSON, allowed, describe } = require("../lib/claude");
+const { askTool, allowed, describe } = require("../lib/claude");
+const STR = { type: "string" };
+const SCHEMA = {
+    type: "object",
+    properties: {
+        summary: STR,
+        risks: { type: "array", items: { type: "object", properties: {
+            category: { type: "string", enum: ["privacy", "bias", "security", "regulatory"] },
+            severity: { type: "string", enum: ["high", "medium", "low"] },
+            severityWhy: STR,
+            when: { type: "string", enum: ["now", "before-scaling", "monitor"] },
+            title: STR, why: STR, fix: STR,
+            sources: { type: "array", items: STR },
+            confidence: { type: "string", enum: ["high", "medium", "low"] },
+            needsReview: { type: "boolean" },
+        }, required: ["category", "severity", "severityWhy", "when", "title", "why", "fix", "sources", "confidence", "needsReview"] } },
+        askLawyer: { type: "array", items: STR },
+    },
+    required: ["summary", "risks", "askLawyer"],
+};
 
 module.exports = async (req, res) => {
     if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
@@ -17,21 +36,22 @@ RULES:
 - If a risk is real but no listed source fits, include it with empty sources, confidence "low", needsReview true.
 - Set needsReview true whenever confidence is low or the risk depends on facts the founder did not give.
 - Only point to sources relevant to the stated user locations. Include North Carolina items when NC users exist.
-- Give 4 to 8 risks covering all four categories where they apply. Fixes must be concrete product or data changes.
+- Give 4 to 7 risks covering all four categories where they apply. Fixes must be concrete product or data changes.
+- BE CONCISE so the answer finishes quickly: summary at most 2 sentences; "why" and "fix" at most 2 short sentences each; "severityWhy" under 15 words; at most 2 askLawyer questions.
 - SEVERITY RUBRIC (apply strictly, and say which criterion you used in "severityWhy"):
   high = could block launch or cause direct harm to people (e.g. automated decisions about people, sensitive or minors' data, no safeguard described).
   medium = plausibly applies and needs a mitigation before scaling or wider release.
   low = good practice, or only applies under conditions the founder did not state.
 - "when" = "now" for high, "before-scaling" for medium, "monitor" for low.
 - Add up to 3 questions to ask a lawyer.
-Return ONLY JSON: {"summary":"2 sentences","risks":[{"category":"privacy|bias|security|regulatory","severity":"high|medium|low","severityWhy":"one line naming the rubric criterion met","when":"now|before-scaling|monitor","title":"","why":"","fix":"","sources":["ids"],"confidence":"high|medium|low","needsReview":true}],"askLawyer":["..."]}
+Answer by calling the report tool, using plain text in every field, in this shape: {"summary":"2 sentences","risks":[{"category":"privacy|bias|security|regulatory","severity":"high|medium|low","severityWhy":"one line naming the rubric criterion met","when":"now|before-scaling|monitor","title":"","why":"","fix":"","sources":["ids"],"confidence":"high|medium|low","needsReview":true}],"askLawyer":["..."]}
 
 SOURCES TO POINT TO:
 ${sources}
 
 ${describe(f)}`;
 
-        res.status(200).json({ data: parseJSON(await ask(prompt)) });
+        res.status(200).json({ data: await askTool(prompt, SCHEMA) });
     } catch (e) {
         const rl = e.status === 429;
         res.status(rl ? 429 : 500).json({ code: rl ? "rate_limited" : e.message === "invalid_json" ? "invalid_json" : "upstream_error", error: e.message });
