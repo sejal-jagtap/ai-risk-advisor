@@ -359,7 +359,7 @@ node scripts/check_links.js
 
 ## Team
 
-**Team 9, "FAIR PLAY"**: Sam Arokiaswamy, Sejal Jagtap, Pranav Yellarthi, Mihir Kosuri
+**Team 9, "FAIR PLAY"**: Sejal Jagtap,  Sam Arokiaswamy, Pranav Yellarthi, Mihir Kosuri
 AIPI 590, AI in Product Management, Duke University.
 
 Repository author: **Sejal Jagtap**, M.S. Interdisciplinary Data Science, Duke University
